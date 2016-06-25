@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?> 
-
-<mappers>
-    <mapper resource="com/cheyooh/service/sdk/db/xmlmap/SdkLogAccessMapper.xml"/>    
-</mappers>	
