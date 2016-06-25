@@ -1,0 +1,163 @@
+/**
+ * 
+ */
+package com.cheyooh.service.sdk.action.notify;
+
+import java.util.Date;
+
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang.StringUtils;
+
+import com.cheyooh.service.dal.DAL;
+import com.cheyooh.service.dal.DALFactory;
+import com.cheyooh.service.framework.idata.Result;
+import com.cheyooh.service.framework.idata.ResultXJContent;
+import com.cheyooh.service.sdk.db.dao.SdkCmccMtdlOrderMapper;
+import com.cheyooh.service.sdk.db.dao.SdkNotifyMmdoMapper;
+import com.cheyooh.service.sdk.db.entity.SdkCmccMtdlOrder;
+import com.cheyooh.service.sdk.db.entity.SdkNotifyMmdo;
+import com.cheyooh.service.sdk.idata.notify.CmdCmccMtdlNotifyData;
+
+/**
+ * @author Merlin
+ * 
+ *         移动明天动力计费回调
+ */
+public class CmccMtdlNotify extends AbstractNotifyService<CmdCmccMtdlNotifyData> {
+  private static final Integer CHINA_MOBILE = 1;
+  private static final String CMCC_MTDL_PM = "cmccmtdlpm";
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.cheyooh.service.framework.basic.Service#verify(com.cheyooh.service.framework.idata.Cmd)
+   */
+  @Override
+  protected Result verify(CmdCmccMtdlNotifyData cmd) {
+    return null;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.cheyooh.service.framework.basic.Service#execute(com.cheyooh.service.framework.idata.Cmd)
+   */
+  @Override
+  protected Result execute(CmdCmccMtdlNotifyData cmd) {
+    DAL dal = DALFactory.createDAL();
+    try {
+      Integer mtdlId = parseMtdlId(cmd.getCpparam());
+      SdkCmccMtdlOrder mtdl = null;
+      SdkCmccMtdlOrderMapper mtdlMapper = dal.getMapper(SdkCmccMtdlOrderMapper.class);
+      if (mtdlId != null) {
+        mtdl = mtdlMapper.selectByPrimaryKey(mtdlId);
+        if (mtdl == null) {
+          logger.warn("the cmcc mtdl pay sms error, can not found the mtdl order = " + mtdlId);
+        }
+      } else {
+        logger.warn("the cmcc mtdl pay sms error, mtdl order id is null");
+      }
+      
+      Date time = new Date();
+      if (!isSign(cmd)) {
+        if (mtdl != null) {
+          mtdl.setStatus(2);
+          mtdl.setStatusDetail("signature error");
+          mtdl.setUpdatedTime(time);
+          mtdlMapper.updateByPrimaryKeySelective(mtdl);
+          dal.commit();
+        }
+        return response("error");
+      }
+
+      SdkNotifyMmdo notifyMmdo = new SdkNotifyMmdo();
+      notifyMmdo.setAmount(parseAmount(cmd.getPrice()));
+      //notifyMmdo.setCmd(cmd);
+      notifyMmdo.setCreateTime(time);
+      //notifyMmdo.setKey(key);
+      notifyMmdo.setLinkid(cmd.getOrderId());
+      notifyMmdo.setMobile(cmd.getMobile());
+      notifyMmdo.setOperationType(CHINA_MOBILE);
+      notifyMmdo.setPayChannelCode(CMCC_MTDL_PM);
+      notifyMmdo.setSpid(cmd.getChannelId());
+      notifyMmdo.setSpnum(cmd.getNumber());
+      
+      if (mtdl != null) {
+        notifyMmdo.setGameId(mtdl.getGameId());
+        
+        mtdl.setStatus(1);
+        mtdl.setUpdatedTime(time);
+        mtdlMapper.updateByPrimaryKeySelective(mtdl);
+      }
+      
+      SdkNotifyMmdoMapper notifyMmdoDao = dal.getMapper(SdkNotifyMmdoMapper.class);
+      notifyMmdoDao.insertSelective(notifyMmdo);
+      
+      dal.commit();
+      
+      return response("0||");
+    } catch (Exception e) {
+      logger.error("the cmcc mtdl pay sms error", e);
+      return response("error");
+    } finally {
+      dal.close();
+    }
+  }
+
+  private boolean isSign(CmdCmccMtdlNotifyData cmd) {
+    String signStr =StringUtils.defaultString( cmd.getOrderId()) + StringUtils.defaultString(cmd.getChannelId()) + 
+        StringUtils.defaultString(cmd.getMobile()) + StringUtils.defaultString(cmd.getPrice()) + 
+        StringUtils.defaultString(cmd.getCpparam()) + StringUtils.defaultString(cmd.getNumber()) + 
+        StringUtils.defaultString(cmd.getProvider());
+    String svrSign = DigestUtils.md5Hex(signStr);
+    if (svrSign.equals(cmd.getSign())) {
+      return true;
+    }
+    logger.error("the cmcc mtdl pay sms error, the sign string = " + signStr);
+    logger.error("the cmcc mtdl pay sms error, sign = " + cmd.getSign() + " server sign = " + svrSign);
+    return false;
+  }
+
+  private Integer parseMtdlId(final String str) {
+    if (StringUtils.isBlank(str)) {
+      return null;
+    }
+    String idStr = str;
+    idStr = leftTrim(idStr, '0');
+    Integer id = null;
+    try {
+      id = Integer.valueOf(idStr);
+    } catch (Exception e) {
+      logger.error("the cmcc mtdl pay sms error, parse mtdl order id = " + str, e);
+    }
+    return id;
+  }
+  
+  private String leftTrim(String str, char trim) {
+    if (StringUtils.isEmpty(str)) {
+      return "";
+    }
+
+    char[] vals = str.toCharArray();
+    int pos = 0;
+    while (pos < vals.length && vals[pos] == trim) {
+      pos++;
+    }
+    return pos > 0 || pos < vals.length ? str.substring(pos) : str;
+  }
+  
+  private float parseAmount(String price) {
+    float amount = 0;
+    try {
+      amount = Float.parseFloat(price);
+      amount = amount / 100;
+    } catch (NumberFormatException e) {
+      logger.error("the cmcc mtdl pay sms error, parse mtdl price = " + price, e);
+    }
+    return amount;
+  }
+
+  private Result response(String msg) {
+    return new Result(new ResultXJContent(msg, msg));
+  }
+}

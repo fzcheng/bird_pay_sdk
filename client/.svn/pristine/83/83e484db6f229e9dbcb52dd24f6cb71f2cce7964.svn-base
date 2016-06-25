@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="lgsdk_user_center_setting_width">265dip</dimen>
+    <dimen name="lgsdk_user_center_setting_height">53dip</dimen>
+    <dimen name="lgsdk_account_security_tip_width">275dip</dimen>
+    <dimen name="lgsdk_account_security_tip_width_land">595px</dimen>
+</resources>

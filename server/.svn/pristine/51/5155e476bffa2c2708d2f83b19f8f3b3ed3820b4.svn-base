@@ -1,0 +1,129 @@
+package com.cheyooh.service.sdk.action.notify;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+import org.apache.commons.lang.StringUtils;
+
+import com.cheyooh.service.dal.DAL;
+import com.cheyooh.service.dal.DALFactory;
+import com.cheyooh.service.framework.idata.Cmd;
+import com.cheyooh.service.framework.idata.Result;
+import com.cheyooh.service.framework.idata.ResultXJContent;
+import com.cheyooh.service.sdk.db.dao.SdkNotifyMmdoMapper;
+import com.cheyooh.service.sdk.db.entity.SdkNotifyMmdo;
+import com.cheyooh.service.sdk.db.entity.SdkNotifyMmdoExample;
+import com.cheyooh.service.sdk.idata.gameserver.JsonCuccYijianResNotifyParam;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+public class CuccYijianNotify extends AbstractNotifyService<Cmd> {
+	private String success_mgs = "0";
+	private String fail_mgs = "fail";
+	
+	private static final ObjectMapper mapper = new ObjectMapper();
+	static {
+		// mapper.setPropertyNamingStrategy(PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES);
+		// or jackson 2.0
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
+				false);
+		mapper.setSerializationInclusion(Include.NON_NULL);
+		// jackson 1.9 and before
+		// mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES,
+		// false);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.cheyooh.service.framework.basic.Service#verify(com.cheyooh.service
+	 * .framework.idata.Cmd)
+	 */
+	@Override
+	protected Result verify(Cmd cmd) {
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.cheyooh.service.framework.basic.Service#execute(com.cheyooh.service
+	 * .framework.idata.Cmd)
+	 */
+	@Override
+	protected Result execute(Cmd cmd) {
+		DAL dal = DALFactory.createDAL();
+		try {
+			logger.debug("enter the cuccyijian pay notify");
+			InputStream in = cmd.getServiceContext().getRequest()
+					.getInputStream();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					in, "UTF-8"));
+			StringBuffer jsonBuff = new StringBuffer();
+			String line;
+			while ((line = reader.readLine()) != null) {
+				jsonBuff.append(line);
+			}
+			String json = jsonBuff.toString();
+			JsonCuccYijianResNotifyParam jsonCuccYijianResNotifyParam = getJsonCuccYijianResNotifyParam(json);
+			
+			String orderNo="";
+			if(StringUtils.isNotEmpty(jsonCuccYijianResNotifyParam.getExtData())&&StringUtils.isNotBlank(jsonCuccYijianResNotifyParam.getExtData())){
+				orderNo=jsonCuccYijianResNotifyParam.getExtData();
+			}
+			logger.info("the cuccyijian pay notify json : " + json+", the orderNo ="+orderNo);
+			
+			SdkNotifyMmdoMapper sdkNotifyMmdoMapper = dal
+					.getMapper(SdkNotifyMmdoMapper.class);
+			SdkNotifyMmdoExample sdkNotifyMmdoExample = new SdkNotifyMmdoExample();
+			sdkNotifyMmdoExample.createCriteria().andOrderNoEqualTo(orderNo);
+			SdkNotifyMmdo sdkNotifyMmdo = sdkNotifyMmdoMapper
+					.selectOne(sdkNotifyMmdoExample);
+			if (sdkNotifyMmdo == null) {
+				return result(fail_mgs);
+			}
+
+			if (sdkNotifyMmdo.getNotifyStatus() == 1) {
+				return result(fail_mgs);
+			}
+			
+			int notifyStatus = 0;
+			String status=jsonCuccYijianResNotifyParam.getStatus();
+			if("1".equals(status)){
+				notifyStatus=1;
+			}
+			logger.debug("the cuccyijian pay notify outtradeid ="+jsonCuccYijianResNotifyParam.getSequence());
+			sdkNotifyMmdo.setLinkid(jsonCuccYijianResNotifyParam.getSequence());
+			sdkNotifyMmdo.setNotifyStatus(notifyStatus);
+			sdkNotifyMmdo.setOriginalcode(status);
+			sdkNotifyMmdoMapper.updateByPrimaryKey(sdkNotifyMmdo);
+			dal.commit();
+		} catch (Exception e) {
+			logger.error("the cuccyijian pay notify error, the error = " + e);
+			return null;
+		} finally {
+			dal.close();
+		}
+		return result(success_mgs);
+	}
+
+	private JsonCuccYijianResNotifyParam getJsonCuccYijianResNotifyParam(String json){
+		JsonCuccYijianResNotifyParam jsonCuccYijianResNotifyParam=new JsonCuccYijianResNotifyParam();
+		try{
+			jsonCuccYijianResNotifyParam= mapper.readValue(json, JsonCuccYijianResNotifyParam.class);
+		}catch(Exception e){
+			logger.error("the cuccyijian pay notify String change to json error = "+e);
+			return null;
+		}finally{
+		}
+		return jsonCuccYijianResNotifyParam;
+	}
+	
+	private Result result(String mgs) {
+		return new Result(new ResultXJContent(mgs, mgs));
+	}
+}

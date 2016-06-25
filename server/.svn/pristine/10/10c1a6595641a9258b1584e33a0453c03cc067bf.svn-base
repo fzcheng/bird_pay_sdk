@@ -1,0 +1,131 @@
+package com.cheyooh.service.sdk.action.notify;
+
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+
+import com.cheyooh.service.sdk.cfg.Cfg;
+import com.cheyooh.service.sdk.idata.gameserver.JsonCallbackToJifutongRes;
+import com.cheyooh.tools.log.Logger;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+public class CallbackToJifutongThread extends Thread {
+	private Logger logger = new Logger(this.getClass());
+
+	private static final ObjectMapper mapper = new ObjectMapper();
+	static {
+		// mapper.setPropertyNamingStrategy(PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES);
+		// or jackson 2.0
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
+				false);
+		mapper.setSerializationInclusion(Include.NON_NULL);
+		// jackson 1.9 and before
+		// mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES,
+		// false);
+	}
+
+	private static final String callbackUrl = Cfg.cfg
+			.getString("sdk.jifutong.callbackUrl");
+
+	private static final String key = Cfg.cfg.getString("sdk.jifutong.key");
+
+	private String order_details_id;
+
+	private String result;
+
+	public CallbackToJifutongThread(String order_details_id, String result) {
+		this.order_details_id = order_details_id;
+		this.result = result;
+	}
+
+	@Override
+	public void run() {
+		boolean flag = true;
+		try {
+			for (int i = 0; i < 3; i++) {
+				try {
+//					JsonCallbackToJifutongRes res = callbackToJifutong(key,
+//							order_details_id, result);
+					String contentResult=callbackToJifutong(key,
+							order_details_id, result);
+					if (StringUtils.isNotBlank(contentResult)
+							&& StringUtils.isNotEmpty(contentResult)) {
+						if (contentResult.equals("succeed")) {
+							flag = false;
+						}
+					}
+					if(StringUtils.isNotBlank(contentResult)&&StringUtils.isNotEmpty(contentResult)){
+						if(contentResult.equals("no_such_order_details_id")){
+							logger.error("the jifutong no_such_order_details_id");
+							flag = false;
+						}
+						if(contentResult.equals("the_key_is_error")){
+							logger.error("the jifutong the_key_is_error");
+							flag = false;
+						}
+						if(contentResult.equals("the_order_details_result_is_error")){
+							logger.error("the jifutong the_order_details_result_is_error");
+							flag = false;
+						}
+						if(contentResult.equals("the_order_details_id_already_confirmed")){
+							logger.error("the jifutong the_order_details_id_already_confirmed");
+							flag = false;
+						}
+					}
+
+				} catch (Exception e) {
+					logger.warn("the callbackToJifutong error!", e);
+				}
+
+				if(!flag){
+					break;
+				}
+				try {
+					Thread.sleep(20000);
+				} catch (InterruptedException e) {
+					logger.warn("sleep error!", e);
+				}
+			}
+		} catch (Exception e) {
+			logger.error("the run error is : " + e);
+			return;
+		} finally {
+		}
+	}
+
+	private String callbackToJifutong(String key,
+			String order_details_id, String order_details_result) {
+		HttpClient httpclient = new DefaultHttpClient();
+//		JsonCallbackToJifutongRes res = new JsonCallbackToJifutongRes();
+		try {
+			String url = callbackUrl;
+			StringBuffer query = new StringBuffer(url);
+			query.append("key=").append(key);
+			query.append("&order_details_id=").append(order_details_id);
+			query.append("&order_details_result=").append(order_details_result);
+			logger.info("the callbackToJifutong send url = "
+					+ query.toString());
+			HttpGet httpGet = new HttpGet(query.toString());
+			HttpResponse response = httpclient.execute(httpGet);
+			HttpEntity entity = response.getEntity();
+			String content = EntityUtils.toString(entity, "UTF-8");
+			logger.info("the callbackToJifutong sms response = " + content);
+//			res = mapper.readValue(content, JsonCallbackToJifutongRes.class);
+//			return res;
+			return content;
+		} catch (Exception e) {
+			logger.error("the callbackToJifutong sms error is: " + e);
+			return null;
+		} finally {
+			httpclient.getConnectionManager().shutdown();
+		}
+	}
+
+}

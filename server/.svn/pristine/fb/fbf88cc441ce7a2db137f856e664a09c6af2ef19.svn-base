@@ -1,0 +1,417 @@
+package com.cheyooh.service.sdk.action.notify;
+
+import java.security.KeyFactory;
+import java.security.PublicKey;
+import java.security.spec.X509EncodedKeySpec;
+import java.text.MessageFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+
+import com.cheyooh.service.dal.DAL;
+import com.cheyooh.service.dal.DALFactory;
+import com.cheyooh.service.framework.idata.Cmd;
+import com.cheyooh.service.framework.idata.Result;
+import com.cheyooh.service.framework.idata.ResultXJContent;
+import com.cheyooh.service.sdk.db.dao.SdkGameEmbedsdkMapper;
+import com.cheyooh.service.sdk.db.dao.SdkNotifyMmdoMapper;
+import com.cheyooh.service.sdk.db.dao.SdkNotifyOpposdkMapper;
+import com.cheyooh.service.sdk.db.entity.SdkGameEmbedsdk;
+import com.cheyooh.service.sdk.db.entity.SdkGameEmbedsdkExample;
+import com.cheyooh.service.sdk.db.entity.SdkNotifyMmdo;
+import com.cheyooh.service.sdk.db.entity.SdkNotifyMmdoExample;
+import com.cheyooh.service.sdk.db.entity.SdkNotifyOpposdk;
+
+public class OppoSDKNotify extends AbstractNotifyService<Cmd> {
+	private static final String payChannelCode = "sdkoppopay";
+//	private String encryptKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCmreYIkPwVovKR8rLHWlFVw7YDfm9uQOJKL89Smt6ypXGVdrAKKl0wNYc3/jecAoPi2ylChfa2iRu5gunJyNmpWZzlCNRIau55fxGW0XEu553IiprOZcaw5OuYGlf60ga8QT6qToP0/dpiL/ZbmNUO9kUhosIjEu22uFgR+5cYyQIDAQAB";
+	private String encryptKey ="";
+	private String success_mgs = "result=OK&resultMsg=成功";
+	private String fail_mgs = "result=FAIL&resultMsg=";
+	private String result = fail_mgs;
+	private int gameId=0;
+
+	@Override
+	protected Result verify(Cmd cmd) {
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.cheyooh.service.framework.basic.Service#execute(com.cheyooh.service
+	 * .framework.idata.Cmd)
+	 */
+	@Override
+	protected Result execute(Cmd cmd) {
+		DAL dal = DALFactory.createDAL();
+		try {
+			HttpServletRequest httpServletRequest = cmd.getServiceContext()
+					.getRequest();
+			httpServletRequest.setCharacterEncoding("UTF-8");
+
+			Map<String, String> map = new HashMap<String, String>();
+			Map<String, String> oppoMap = new HashMap<String, String>();
+			Enumeration<String> paramNames = httpServletRequest
+					.getParameterNames();
+			// 获取所有的参数名
+			while (paramNames.hasMoreElements()) {
+				String name = paramNames.nextElement();
+				// 得到参数名
+				String value = httpServletRequest.getParameter(name);
+				// 通过参数名获取对应的值				
+				logger.debug("oppo获取的参数值: "
+						+ MessageFormat.format("{0}={1}", name, value));
+				map.put(name, value);
+				if ("m".equals(name)) {
+
+				}else {
+					oppoMap.put(name, value);
+				}
+			}
+			
+			String partnerOrder = map.get("partnerOrder");
+			if (StringUtils.isEmpty(partnerOrder)) {
+				partnerOrder = "";
+			}
+			
+			String sign = map.get("sign");
+			if (StringUtils.isEmpty(sign)) {
+				sign = "";
+			}
+			
+			String productDesc = map.get("productDesc");
+			if (StringUtils.isEmpty(productDesc)) {
+				productDesc = "";
+			}
+			
+			String price = map.get("price");
+			if (StringUtils.isEmpty(price)) {
+				price = "";
+			}
+			
+			String count = map.get("count");
+			if (StringUtils.isEmpty(count)) {
+				count = "";
+			}
+			
+			String attach = map.get("attach");
+			if (StringUtils.isEmpty(attach)) {
+				attach = "";
+			}
+			
+			String userId = map.get("userId");
+			if (StringUtils.isEmpty(userId)) {
+				userId = "";
+			}
+			
+			String notifyId = map.get("notifyId");
+			if (StringUtils.isEmpty(notifyId)) {
+				notifyId = "";
+			}
+			
+			String productName = map.get("productName");
+			if (StringUtils.isEmpty(productName)) {
+				productName = "";
+			}
+			
+			//attach参数需要客户端游戏包传入该游戏的名称值
+			SdkGameEmbedsdkMapper sdkGameEmbedsdkMapper = dal
+					.getMapper(SdkGameEmbedsdkMapper.class);
+			SdkGameEmbedsdkExample sdkGameEmbedsdkExample = new SdkGameEmbedsdkExample();
+			sdkGameEmbedsdkExample.createCriteria()
+					.andPayChannelCodeEqualTo(payChannelCode)
+					.andAppidEqualTo(attach);
+			SdkGameEmbedsdk sdkGameEmbedsdk = sdkGameEmbedsdkMapper
+					.selectOne(sdkGameEmbedsdkExample);
+			if (sdkGameEmbedsdk != null) {
+				logger.debug("已获取到支付密钥 =" + sdkGameEmbedsdk.getAppsecret());
+				logger.debug("已获取到游戏ID =" + sdkGameEmbedsdk.getGameId());
+				encryptKey = sdkGameEmbedsdk.getAppsecret();
+				gameId = sdkGameEmbedsdk.getGameId();
+			}
+			
+			String baseString = getBaseString(oppoMap);
+			boolean check = false;
+			try{
+				check = doCheck(baseString, oppoMap.get("sign"), encryptKey);
+			}catch(Exception ex){
+				logger.error("oppo验签失败baseString=" + baseString + ", sing=" + oppoMap.get("sign"), ex);
+			}
+			if(check){
+				//验证成功
+				logger.info("oppo验签成功,the sdkoppopay pay notify outTradeId =" + notifyId +", attach ="+attach);
+				SdkNotifyMmdoMapper sdkNotifyMmdoMapper = dal
+						.getMapper(SdkNotifyMmdoMapper.class);
+				SdkNotifyMmdoExample sdkNotifyMmdoExample = new SdkNotifyMmdoExample();
+				sdkNotifyMmdoExample.createCriteria()
+						.andPayChannelCodeEqualTo(payChannelCode)
+						.andLinkidEqualTo(notifyId);
+				SdkNotifyMmdo sdkNotifyMmdo = sdkNotifyMmdoMapper
+						.selectOne(sdkNotifyMmdoExample);
+				if (sdkNotifyMmdo != null) {
+					// 表示已有订单
+					if (sdkNotifyMmdo.getNotifyStatus() == 1) {
+						// 表示已有订单成功处理过
+						result = success_mgs;
+					} else {
+						// 表示已有订单未成功处理
+						sdkNotifyMmdo.setNotifyStatus(1);
+						sdkNotifyMmdoMapper
+								.updateByPrimaryKeySelective(sdkNotifyMmdo);
+						result = success_mgs;
+					}
+				} else {
+					// 表示未处理过的订单，待处理
+
+					// 在oppo回调表添加记录sdk_notify_opposdk
+					SdkNotifyOpposdk sdkNotifyOpposdk=new SdkNotifyOpposdk();
+					sdkNotifyOpposdk.setNotifyid(notifyId);
+					sdkNotifyOpposdk.setPartnerorder(partnerOrder);
+					sdkNotifyOpposdk.setProductname(productName);
+					sdkNotifyOpposdk.setProductdesc(productDesc);
+					int priceInt=parseInteger(price);
+					sdkNotifyOpposdk.setPrice(priceInt);
+					int countInt=parseInteger(count);
+					sdkNotifyOpposdk.setCount(countInt);
+					sdkNotifyOpposdk.setAttach(attach);
+					sdkNotifyOpposdk.setSignature(sign);
+					Date createTimeDate=new Date();
+					sdkNotifyOpposdk.setCreateTime(createTimeDate);
+					SdkNotifyOpposdkMapper sdkNotifyOpposdkMapper=dal.getMapper(SdkNotifyOpposdkMapper.class);
+					sdkNotifyOpposdkMapper.insert(sdkNotifyOpposdk);
+
+					// 在sdk_notify_mmdo表添加记录
+					SdkNotifyMmdo notifyMmdo = new SdkNotifyMmdo();
+					notifyMmdo.setLinkid(notifyId);
+					notifyMmdo.setSpid(productName);
+					// notifyMmdo.setCmd(cmd);
+					// notifyMmdo.setMobile(mobile);
+					// notifyMmdo.setSpnum(spnum);
+					// notifyMmdo.setKey(key);
+					notifyMmdo.setGameId(gameId);
+					float priceFloat=priceInt/100;
+					notifyMmdo.setAmount(priceFloat);
+					int operationType=0;
+					notifyMmdo.setOperationType(operationType);
+					notifyMmdo.setPayChannelCode(payChannelCode);
+					// notifyMmdo.setAdditionalStatus(additionalStatus);
+					// notifyMmdo.setOrderNo(orderNo);
+//					notifyMmdo.setStatusDetail(failedDesc);
+//					notifyMmdo.setOriginalcode(orderStatus);
+					notifyMmdo.setCreateTime(createTimeDate);
+					Integer notifyStatus = 1;
+					notifyMmdo.setNotifyStatus(notifyStatus);
+					sdkNotifyMmdoMapper.insertSelective(notifyMmdo);
+					result = success_mgs;
+				}
+			}else{
+				//验证失败
+				logger.info("oppo验签失败,the sdkoppopay pay notify outTradeId =" + notifyId +", attach ="+attach);
+				result = fail_mgs+"验签失败";
+			}
+			dal.commit();
+			return response(result);
+		} catch (Exception e) {
+			logger.error("the sdkucsapay pay notify error!", e);
+			result = fail_mgs+"解析异常";
+			return response(result);
+		} finally {
+			dal.close();
+		}
+	}
+
+	private Result response(String result) {
+		return new Result(new ResultXJContent(result, result));
+	}
+	
+	/**
+	 * 测试方法
+	 * 
+	 * @param appId
+	 * @param cpOrderId
+	 * @param cpUserInfo
+	 * @param uid
+	 * @param orderId
+	 * @param orderStatus
+	 * @param payFee
+	 * @param productCode
+	 * @param productName
+	 * @param productCount
+	 * @param payTime
+	 * @param orderConsumeType
+	 * @param partnerGiftConsume
+	 * @return
+	 */
+	private String getContent(Map<String, String> map) {
+		HttpClient httpclient = new DefaultHttpClient();
+		String result = "";
+		try {
+			String sendUrl ="http://sdk.leyogame.cn/api/m/OppoSDKNotify";
+			logger.debug("the sdkoppopay send api = " + sendUrl);
+			HttpPost httpPost = new HttpPost(sendUrl);
+			List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+			for (String mapKey:map.keySet()) {
+				switch(mapKey){
+				case "partnerOrder":{
+						nvps.add(new BasicNameValuePair("partnerOrder", map.get(mapKey)));
+						break;
+						}
+				case "sign":{
+					nvps.add(new BasicNameValuePair("sign", map.get(mapKey)));
+					break;
+					}
+				case "productDesc":{
+					nvps.add(new BasicNameValuePair("productDesc", map.get(mapKey)));
+					break;
+					}
+				case "price":{
+					nvps.add(new BasicNameValuePair("price", map.get(mapKey)));
+					break;
+					}
+				case "count":{
+					nvps.add(new BasicNameValuePair("count", map.get(mapKey)));
+					break;
+					}
+				case "attach":{
+					nvps.add(new BasicNameValuePair("attach", map.get(mapKey)));
+					break;
+					}
+				case "userId":{
+					nvps.add(new BasicNameValuePair("userId", map.get(mapKey)));
+					break;
+					}
+				case "notifyId":{
+					nvps.add(new BasicNameValuePair("notifyId", map.get(mapKey)));
+					break;
+					}
+				case "productName":{
+					nvps.add(new BasicNameValuePair("productName", map.get(mapKey)));
+					break;
+					}
+				default:break; 
+				}
+			}
+			httpPost.setEntity(new UrlEncodedFormEntity(nvps, "UTF-8"));
+			HttpResponse response = httpclient.execute(httpPost);
+			HttpEntity entity = response.getEntity();
+			String content = EntityUtils.toString(entity, "UTF-8");
+			result = content;
+			return result;
+		} catch (Exception e) {
+			logger.error("the sdkoppopay request error is :" + e, e);
+			return "";
+		} finally {
+			httpclient.getConnectionManager().shutdown();
+		}
+	}
+
+	/**
+	 * 日期转换成字符串
+	 * 
+	 * @param date
+	 * @return str
+	 */
+	public static String DateToStr(Date date) {
+
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String str = format.format(date);
+		return str;
+	}
+
+	/**
+	 * 字符串转换成日期
+	 * 
+	 * @param str
+	 * @return date
+	 */
+	public static Date StrToDate(String str) {
+
+		SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+		Date date = null;
+		try {
+			date = format.parse(str);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return date;
+	}
+
+	private Integer parseInteger(String str) {
+		Integer num = null;
+		try {
+			if (StringUtils.isNotBlank(str)) {
+				num = Integer.valueOf(str);
+			}
+		} catch (NumberFormatException e) {
+			logger.warn("parse number string error! str = " + str);
+		}
+		return num;
+	}
+	
+	public boolean doCheck(String content, String sign, String publicKey) throws Exception {
+		KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+		byte[] encodedKey = Base64.decodeBase64(publicKey);
+		PublicKey pubKey = keyFactory.generatePublic(new X509EncodedKeySpec(encodedKey));
+
+		java.security.Signature signature = java.security.Signature.getInstance("SHA1WithRSA");
+
+		signature.initVerify(pubKey);
+		signature.update(content.getBytes("UTF-8"));
+		boolean bverify = signature.verify(Base64.decodeBase64(sign));
+		return bverify;
+	}
+	
+	private String getBaseString(Map<String,String> map) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("notifyId=").append(map.get("notifyId"));
+		sb.append("&partnerOrder=").append(map.get("partnerOrder"));
+		sb.append("&productName=").append(map.get("productName"));
+		sb.append("&productDesc=").append(map.get("productDesc"));
+		sb.append("&price=").append(map.get("price"));
+		sb.append("&count=").append(map.get("count"));
+		sb.append("&attach=").append(map.get("attach"));
+		return sb.toString();
+	}
+	
+	public static void main(String args[]) throws Exception {
+		OppoSDKNotify test = new OppoSDKNotify();
+		Map<String, String> map = new HashMap<String, String>();		
+		map.put("partnerOrder", "1452679441664");
+		map.put("sign","cwqzzCUTnUrQ/mz3yA/j/6cOxyKk5eyCM7UEkUEawQDRwXYHsvbhkLIwoVoVCX8hwzyvxaqnz7pk8X6V8d7/rhw7QPHlZNcOt2y/GRFkOf10KVTderCtUqll1odKC3XgPMxQTWi+/nCG4n+WwwkO/aybctMExAS+c8w1BxeiQlo=");
+		map.put("productDesc", "1050");
+		map.put("price", "100");
+		map.put("count", "1");
+		map.put("attach", "都市特种兵");
+		map.put("userId", "");
+		map.put("notifyId", "GC2016011318040137299000505497");
+		map.put("productName", "超值礼包");
+		
+		String s=test.getContent(map);
+		System.out.println(s);
+		
+//		String s2 = "code=value2name=value3personid=value1202cb962234w4ers2aa";
+//		String s3 = DigestUtils.md5Hex(s2).toLowerCase();
+//		System.out.println("----------" + s3);
+	}
+}

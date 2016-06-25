@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2007 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+  
+          http://www.apache.org/licenses/LICENSE-2.0
+  
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<resources>
+    <string name="app_name">ClientDemo</string>
+    <string name="btn_integrate_sdk">通过SDK集成</string>
+    <string name="btn_integrate_sdk_desc">SDK集成：该种接入模式需要在你的android工程中导入mokredit提供的jar文件，在游戏界面上层打开对话框加载游mo9的支付页面，用户完成支付后关闭对话框返回游戏。</string>
+    <string name="btn_integrate_webview">通过现有WebVew集成</string>
+    <string name="btn_integrate_webview_desc">WebVew集成:该模式可以再支付界面预先定义的Webview中加载支付页面，一般用于将多个支付渠道采用选项卡展示的游戏支付模式.</string>
+    <string name="btn_integrate_browser">使用系统浏览器集成</string>
+    <string name="btn_integrate_browser_desc">浏览器集成:该模式将使用系统默认浏览器打开支付页面，用户完成支付流程后，关闭浏览器后返回游戏界面。</string>
+    
+</resources>
+

@@ -1,0 +1,96 @@
+package com.cheyooh.service.sdk.action.notify;
+
+import java.util.Iterator;
+import java.util.Map;
+
+import com.cheyooh.service.dal.DAL;
+import com.cheyooh.service.dal.DALFactory;
+import com.cheyooh.service.framework.idata.Result;
+import com.cheyooh.service.framework.idata.ResultXJContent;
+import com.cheyooh.service.sdk.cfg.Cfg;
+import com.cheyooh.service.sdk.db.dao.SdkOrderMapper;
+import com.cheyooh.service.sdk.db.dao.SdkOrderVpayMapper;
+import com.cheyooh.service.sdk.db.entity.SdkOrder;
+import com.cheyooh.service.sdk.db.entity.SdkOrderVpay;
+import com.cheyooh.service.sdk.idata.notify.CmdVpayNotify;
+
+public class VpayNotify extends AbstractNotifyService<CmdVpayNotify>{
+
+	@Override
+	protected Result verify(CmdVpayNotify cmd) {
+		
+		Map requestParams = cmd.getServiceContext().getRequest().getParameterMap();
+		
+		StringBuilder sb=new StringBuilder();
+		for (Iterator iter = requestParams.keySet().iterator(); iter.hasNext();) {
+			String name = (String) iter.next();
+			String[] values = (String[]) cmd.getServiceContext().getRequest().getParameterValues(name);
+			String valueStr = "";
+			for (int i = 0; i < values.length; i++) {
+				valueStr = (i == values.length - 1) ? valueStr + values[i]
+						: valueStr + values[i] + ",";
+			}
+			sb.append(name+"="+valueStr);
+		}
+		// 测试 打印请求
+		logger.error("VpayNotify_param:"+sb.toString());
+		// 验证
+		String sppwd=Cfg.cfg.getString("vpay_sppwd");
+		String md5=cmd.getOid()+cmd.getSporder()+cmd.getSpid()+cmd.getMz()+sppwd;
+		if(md5.equalsIgnoreCase(cmd.getMd5())){
+			logger.error("签名错误, 期望值: "+sb.toString());
+			return fail();
+		}
+		
+		return null;
+	}
+
+	@Override
+	protected Result execute(CmdVpayNotify cmd) {
+		DAL dal=DALFactory.createDAL();
+		try {
+			SdkOrderMapper sdkOrderMapper=dal.getMapper(SdkOrderMapper.class);
+			SdkOrderVpayMapper sdkOrderVpayMapper=dal.getMapper(SdkOrderVpayMapper.class);
+			String trade_no=cmd.getSporder();
+			logger.info("tradeNo:"+trade_no);
+			SdkOrder order=sdkOrderMapper.selectByPrimaryKey(trade_no);
+			if(order!=null){
+				SdkOrderVpay sdkOrderVpay=sdkOrderVpayMapper.selectByPrimaryKey(order.getPayId());
+				if(sdkOrderVpay!=null){
+					setupOrderStatus(cmd,order,sdkOrderVpay);
+					sdkOrderVpayMapper.updateByPrimaryKeySelective(sdkOrderVpay);
+					sdkOrderMapper.updateByPrimaryKeySelective(order);
+					dal.commit();
+					NotifyOrder.doNotify(order);
+					logger.info("Paid status: "+order.getStatus()+"("+cmd.getSporder()+"), payid: "+order.getPayId());
+					return success();
+				}
+			}
+			
+			 return fail();	
+		} catch (Exception e) {
+			logger.error(e);
+			 return fail();
+		}finally{
+			 dal.close();
+		 }
+	}
+	
+	private void setupOrderStatus(CmdVpayNotify cmd, SdkOrder order,
+			SdkOrderVpay sdkOrderVpay) {
+		sdkOrderVpay.setNotifyMz(Integer.valueOf(cmd.getMz()));
+		sdkOrderVpay.setNotifyOid(cmd.getOid());
+		sdkOrderVpay.setNotifySpid(cmd.getSpid());
+		sdkOrderVpay.setNotifySporder(cmd.getSporder());
+		sdkOrderVpay.setNotifyZdy(cmd.getZdy());
+		order.setStatus(1);
+	}
+
+	private Result success(){
+		return new Result(new ResultXJContent("okydzf","okydzf"));
+	}
+	private Result fail(){
+		return new Result(new ResultXJContent("failydzf","failydzf"));
+	}
+
+}

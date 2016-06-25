@@ -1,0 +1,10 @@
+package com.cheyooh.service.sdk.action.notify;
+
+import com.cheyooh.service.sdk.db.entity.SdkOrder;
+
+public class NotifyOrder {
+
+	public static void doNotify(SdkOrder order){
+		
+	}
+}

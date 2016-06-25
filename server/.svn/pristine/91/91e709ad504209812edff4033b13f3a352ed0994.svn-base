@@ -1,0 +1,363 @@
+package com.cheyooh.service.sdk.action.notify;
+
+import java.text.MessageFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+
+import com.cheyooh.service.dal.DAL;
+import com.cheyooh.service.dal.DALFactory;
+import com.cheyooh.service.framework.idata.Cmd;
+import com.cheyooh.service.framework.idata.Result;
+import com.cheyooh.service.framework.idata.ResultXJContent;
+import com.cheyooh.service.sdk.db.dao.SdkDanglesdkPointMapper;
+import com.cheyooh.service.sdk.db.dao.SdkGameEmbedsdkMapper;
+import com.cheyooh.service.sdk.db.dao.SdkNotifyMmdoMapper;
+import com.cheyooh.service.sdk.db.entity.SdkDanglesdkPoint;
+import com.cheyooh.service.sdk.db.entity.SdkDanglesdkPointExample;
+import com.cheyooh.service.sdk.db.entity.SdkGameEmbedsdk;
+import com.cheyooh.service.sdk.db.entity.SdkGameEmbedsdkExample;
+import com.cheyooh.service.sdk.db.entity.SdkNotifyMmdo;
+import com.cheyooh.service.sdk.db.entity.SdkNotifyMmdoExample;
+
+public class DangleSDKNotify extends AbstractNotifyService<Cmd> {
+	private static final String payChannelCode = "sdkdanglepay";
+//	private String encryptKey = "pGO1GRihQomb";
+	private String encryptKey ="";
+	private String success_mgs = "success";
+	private String fail_mgs = "failure";
+	private String result = fail_mgs;
+	private int gameId=0;
+	private String appid="";
+
+	@Override
+	protected Result verify(Cmd cmd) {
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.cheyooh.service.framework.basic.Service#execute(com.cheyooh.service
+	 * .framework.idata.Cmd)
+	 */
+	@Override
+	protected Result execute(Cmd cmd) {
+		DAL dal = DALFactory.createDAL();
+		try {
+			HttpServletRequest httpServletRequest = cmd.getServiceContext()
+					.getRequest();
+			httpServletRequest.setCharacterEncoding("UTF-8");
+
+			Map<String, String> map = new HashMap<String, String>();
+			Map<String, String> dangleMap = new HashMap<String, String>();
+			Enumeration<String> paramNames = httpServletRequest
+					.getParameterNames();
+			// 获取所有的参数名
+			while (paramNames.hasMoreElements()) {
+				String name = paramNames.nextElement();
+				// 得到参数名
+				String value = httpServletRequest.getParameter(name);
+				// 通过参数名获取对应的值				
+				logger.debug("当乐获取的参数值: "
+						+ MessageFormat.format("{0}={1}", name, value));
+				map.put(name, value);
+				if ("m".equals(name)) {
+
+				}else {
+					dangleMap.put(name, value);
+				}
+			}
+			
+			String point = map.get("point");
+			if (StringUtils.isEmpty(point)) {
+				point = "";
+			}
+			
+			String seqId = map.get("seqId");
+			if (StringUtils.isEmpty(seqId)) {
+				seqId = "";
+			}
+			
+			String transNo = map.get("transNo");
+			if (StringUtils.isEmpty(transNo)) {
+				transNo = "";
+			}
+			
+			String time = map.get("time");
+			if (StringUtils.isEmpty(time)) {
+				time = "";
+			}
+			
+			String pf = map.get("pf");
+			if (StringUtils.isEmpty(pf)) {
+				pf = "";
+			}
+			
+			String sign = map.get("sign");
+			if (StringUtils.isEmpty(sign)) {
+				sign = "";
+			}
+			
+			//transNo参数需要客户端游戏包传入该游戏在乐游系统的gameId
+			SdkGameEmbedsdkMapper sdkGameEmbedsdkMapper = dal
+					.getMapper(SdkGameEmbedsdkMapper.class);
+			SdkGameEmbedsdkExample sdkGameEmbedsdkExample = new SdkGameEmbedsdkExample();
+			sdkGameEmbedsdkExample.createCriteria()
+					.andPayChannelCodeEqualTo(payChannelCode)
+					.andAppkeyEqualTo(transNo);
+			SdkGameEmbedsdk sdkGameEmbedsdk = sdkGameEmbedsdkMapper
+					.selectOne(sdkGameEmbedsdkExample);
+			if (sdkGameEmbedsdk != null) {
+				logger.debug("已获取到支付密钥 =" + sdkGameEmbedsdk.getAppsecret());
+				logger.debug("已获取到游戏ID =" + sdkGameEmbedsdk.getGameId());
+				logger.debug("已获取到游戏appID =" + sdkGameEmbedsdk.getAppid());
+				encryptKey = sdkGameEmbedsdk.getAppsecret();
+				gameId = sdkGameEmbedsdk.getGameId();
+				appid=sdkGameEmbedsdk.getAppid();
+			}
+			dangleMap.put("appid", appid);
+			
+			boolean check = doCheck(dangleMap,encryptKey);
+			if(check){
+				//验证成功
+				logger.info("dangle验签成功,the sdkdanglepay pay notify outTradeId =" + seqId +", transNo ="+transNo);
+				SdkNotifyMmdoMapper sdkNotifyMmdoMapper = dal
+						.getMapper(SdkNotifyMmdoMapper.class);
+				SdkNotifyMmdoExample sdkNotifyMmdoExample = new SdkNotifyMmdoExample();
+				sdkNotifyMmdoExample.createCriteria()
+						.andPayChannelCodeEqualTo(payChannelCode)
+						.andLinkidEqualTo(seqId);
+				SdkNotifyMmdo sdkNotifyMmdo = sdkNotifyMmdoMapper
+						.selectOne(sdkNotifyMmdoExample);
+				if (sdkNotifyMmdo != null) {
+					// 表示已有订单
+					if (sdkNotifyMmdo.getNotifyStatus() == 1) {
+						// 表示已有订单成功处理过
+						result = success_mgs;
+					} else {
+						// 表示已有订单未成功处理
+						sdkNotifyMmdo.setNotifyStatus(1);
+						sdkNotifyMmdoMapper
+								.updateByPrimaryKeySelective(sdkNotifyMmdo);
+						result = success_mgs;
+					}
+				} else {
+					// 表示未处理过的订单，待处理
+
+					SdkDanglesdkPointMapper sdkDanglesdkPointMapper=dal.getMapper(SdkDanglesdkPointMapper.class);
+					SdkDanglesdkPointExample sdkDanglesdkPointExample=new SdkDanglesdkPointExample();
+					sdkDanglesdkPointExample.createCriteria().andGameidEqualTo(gameId).andPointEqualTo(point);
+					SdkDanglesdkPoint sdkDanglesdkPoint=sdkDanglesdkPointMapper.selectOne(sdkDanglesdkPointExample);
+					float amount=0;
+					if(sdkDanglesdkPoint!=null){
+						amount=sdkDanglesdkPoint.getPrice();
+					}
+					// 在sdk_notify_mmdo表添加记录
+					SdkNotifyMmdo notifyMmdo = new SdkNotifyMmdo();
+					notifyMmdo.setLinkid(seqId);
+					notifyMmdo.setSpid(point);
+					// notifyMmdo.setCmd(cmd);
+					// notifyMmdo.setMobile(mobile);
+					// notifyMmdo.setSpnum(spnum);
+					// notifyMmdo.setKey(key);
+					notifyMmdo.setGameId(gameId);
+					notifyMmdo.setAmount(amount);
+					int operationType=0;
+					notifyMmdo.setOperationType(operationType);
+					notifyMmdo.setPayChannelCode(payChannelCode);
+					// notifyMmdo.setAdditionalStatus(additionalStatus);
+					// notifyMmdo.setOrderNo(orderNo);
+//					notifyMmdo.setStatusDetail(failedDesc);
+//					notifyMmdo.setOriginalcode(orderStatus);
+				    SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				    String sd = sdf.format(new Date(Long.parseLong(time)));   // 时间戳转换成时间
+				    Date createTimeDate=sdf.parse(sd);
+					notifyMmdo.setCreateTime(createTimeDate);
+					Integer notifyStatus = 1;
+					notifyMmdo.setNotifyStatus(notifyStatus);
+					sdkNotifyMmdoMapper.insertSelective(notifyMmdo);
+					result = success_mgs;
+				}
+				result = success_mgs;
+			}else{
+				//验证失败
+				logger.info("dangle验签失败,the sdkdanglepay pay notify outTradeId =" + seqId +", transNo ="+transNo);
+				result = fail_mgs;
+			}
+			dal.commit();
+			return response(result);
+		} catch (Exception e) {
+			logger.error("the sdkucsapay pay notify error!", e);
+			result = fail_mgs+"解析异常";
+			return response(result);
+		} finally {
+			dal.close();
+		}
+	}
+
+	private Result response(String result) {
+		return new Result(new ResultXJContent(result, result));
+	}
+	
+	/**
+	 * 测试方法
+	 * 
+	 * @param appId
+	 * @param cpOrderId
+	 * @param cpUserInfo
+	 * @param uid
+	 * @param orderId
+	 * @param orderStatus
+	 * @param payFee
+	 * @param productCode
+	 * @param productName
+	 * @param productCount
+	 * @param payTime
+	 * @param orderConsumeType
+	 * @param partnerGiftConsume
+	 * @return
+	 */
+	private String getContent(Map<String, String> map) {
+		HttpClient httpclient = new DefaultHttpClient();
+		String result = "";
+		try {
+			String sendUrl ="http://sdk.leyogame.cn/api/m/DangleSDKNotify?";
+			logger.debug("the sdkdanglepay send api = " + sendUrl);
+			StringBuffer query = new StringBuffer(sendUrl);
+			int i = 0;
+			for (String key : map.keySet()) {
+				if (i != 0) {
+					query.append("&");
+				}
+				switch (key) {
+				case "sign": {
+					query.append("sign=").append(map.get(key));
+					break;
+				}
+				case "point": {
+					query.append("point=").append(map.get(key));
+					break;
+				}
+				case "time": {
+					query.append("time=").append(map.get(key));
+					break;
+				}
+				case "pf": {
+					query.append("pf=").append(map.get(key));
+					break;
+				}
+				case "seqId": {
+					query.append("seqId=").append(map.get(key));
+					break;
+				}
+				case "transNo": {
+					query.append("transNo=").append(map.get(key));
+					break;
+				}
+				default:
+					break;
+				}
+				i++;
+			}
+			HttpGet httpget = new HttpGet(query.toString());
+			logger.info("the sdkdanglepay send url =" + query.toString());
+			HttpResponse response = httpclient.execute(httpget);
+			HttpEntity entity = response.getEntity();
+			String content = EntityUtils.toString(entity, "UTF-8");
+			logger.info("the sdkdanglepay send response content = "
+					+ content);
+			result = content;
+			return result;
+		} catch (Exception e) {
+			logger.error("the sdkdanglepay request error is :" + e, e);
+			return "";
+		} finally {
+			httpclient.getConnectionManager().shutdown();
+		}
+	}
+
+	/**
+	 * 日期转换成字符串
+	 * 
+	 * @param date
+	 * @return str
+	 */
+	public static String DateToStr(Date date) {
+
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String str = format.format(date);
+		return str;
+	}
+
+	/**
+	 * 字符串转换成日期
+	 * 
+	 * @param str
+	 * @return date
+	 */
+	public static Date StrToDate(String str) {
+
+		SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+		Date date = null;
+		try {
+			date = format.parse(str);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return date;
+	}
+
+	public boolean doCheck(Map<String,String> map,String encryptKey){
+		boolean result=false;
+		try{
+			String plaintext=map.get("appid")+"|"+map.get("point")+"|"+map.get("time")+"|"+encryptKey+"|"+map.get("seqId");
+			logger.debug("the sdkdanglepay plaintext is :"+plaintext);
+			String md5String=DigestUtils.md5Hex(plaintext);
+			logger.debug("the sdkdanglepay md5String is :"+md5String);
+			if(md5String.equals(map.get("sign"))){
+				result=true;
+			}
+		}catch(Exception ex){
+			logger.error("the sdkdanglepay check occur error is :"+ex);
+		}
+		
+		return result;
+	}
+	
+	public static void main(String args[]) throws Exception {
+		DangleSDKNotify test = new DangleSDKNotify();
+		Map<String, String> map = new HashMap<String, String>();		
+		map.put("sign", "6bfd18aa3063d533aa6383d3d124381d");
+		map.put("point","2016_0_neCif2uI");
+		map.put("time", "1452836859891");
+		map.put("pf", "1");
+		map.put("seqId", "37201601159CI7Uk79");
+		map.put("transNo", "245");
+		String s=test.getContent(map);
+		System.out.println(s);
+		
+		/*Long timeStamp = System.currentTimeMillis();  //获取当前时间戳
+	    SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	    String sd = sdf.format(new Date(Long.parseLong(String.valueOf(timeStamp))));   // 时间戳转换成时间
+	    Date d=sdf.parse(sd);
+	    System.out.println(d);*/
+		
+		
+	}
+}

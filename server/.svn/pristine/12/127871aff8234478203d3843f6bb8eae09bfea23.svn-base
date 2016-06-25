@@ -1,0 +1,631 @@
+/**
+ * 
+ */
+package com.cheyooh.service.sdk.action.notify;
+
+import java.io.ByteArrayInputStream;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import org.nuxeo.common.xmap.XMap;
+
+import com.cheyooh.service.dal.DAL;
+import com.cheyooh.service.dal.DALFactory;
+import com.cheyooh.service.framework.idata.Cmd;
+import com.cheyooh.service.framework.idata.Result;
+import com.cheyooh.service.framework.idata.StatusCode;
+import com.cheyooh.service.sdk.action.client.Pay_mmdo;
+import com.cheyooh.service.sdk.cfg.Cfg;
+import com.cheyooh.service.sdk.db.dao.SdkCmcc49youVerifyMapper;
+import com.cheyooh.service.sdk.db.dao.SdkCuccZhangyunzyVerifyMapper;
+import com.cheyooh.service.sdk.db.dao.SdkGameMapper;
+import com.cheyooh.service.sdk.db.dao.SdkMobileGameBaseVerifyMapper;
+import com.cheyooh.service.sdk.db.dao.SdkOrderMapper;
+import com.cheyooh.service.sdk.db.dao.SdkOrderMmdoMapper;
+import com.cheyooh.service.sdk.db.dao.SdkOrderMmdoVerifycodeMapper;
+import com.cheyooh.service.sdk.db.entity.SdkCmcc49youVerify;
+import com.cheyooh.service.sdk.db.entity.SdkCuccZhangyunzyVerify;
+import com.cheyooh.service.sdk.db.entity.SdkGame;
+import com.cheyooh.service.sdk.db.entity.SdkGameExample;
+import com.cheyooh.service.sdk.db.entity.SdkMobileGameBaseVerify;
+import com.cheyooh.service.sdk.db.entity.SdkOrder;
+import com.cheyooh.service.sdk.db.entity.SdkOrderMmdo;
+import com.cheyooh.service.sdk.db.entity.SdkOrderMmdoVerifycode;
+import com.cheyooh.service.sdk.idata.gameserver.JsonCmccYongzhengReqOrder;
+import com.cheyooh.service.sdk.idata.gameserver.JsonCuccYijianReqChannel;
+import com.cheyooh.service.sdk.idata.gameserver.JsonCuccYijianReqParam;
+import com.cheyooh.service.sdk.idata.gameserver.JsonCuccYijianRes;
+import com.cheyooh.service.sdk.idata.gameserver.XmlCmcc49youVerifycodeRes;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+/**
+ * @author Merlin
+ * 
+ */
+public class Tui3SmsReceive extends AbstractNotifyService<Cmd> {
+	private static final String CUCCZHANGYUNZY = "cucczhangyunzy";
+	private static final String CUCCYIJIANWOMUSIC = "cuccyijianwomusic";
+	private static final String CMCCYONGZHENG = "cmccyongzheng";
+	private static final String ACTION_SMS = "sms";
+	private static final String[] DIGITS = { "c", "e", "y", "u", "m", "o", "b",
+			"a", "w", "x" };
+	private static final ObjectMapper mapper = new ObjectMapper();
+	static {
+		// mapper.setPropertyNamingStrategy(PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES);
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
+				false);
+	}
+
+	private String faileString3="-1,301,302";
+	private String faileString4="104,105,106,107,108,300,317,318";
+	private String faileString5="304,305,331,338,345,352,253,254,355,356,357,358,359,360";
+//	private String faileString6="";
+	private String faileString7="350,351";
+	private String faileString8="102,319";
+	private String faileString9="101,103,109,324";
+	private String faileString10="314,315,361";
+	private String faileString11="303";
+	private String faileString12="306,309,311,320,325,327,329,332,334,336,339,341,343,346,348";
+	private String faileString13="307,310,316,321,326,328,330,333,335,337,340,342,344,347,349";
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.cheyooh.service.framework.basic.Service#verify(com.cheyooh.service
+	 * .framework.idata.Cmd)
+	 */
+	@Override
+	protected Result verify(Cmd cmd) {
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.cheyooh.service.framework.basic.Service#execute(com.cheyooh.service
+	 * .framework.idata.Cmd)
+	 */
+	@Override
+	protected Result execute(Cmd cmd) {
+		DAL dal = DALFactory.createDAL();
+		try {
+			
+			HttpServletRequest request = cmd.getServiceContext().getRequest();
+			String action = request.getParameter("do");
+			logger.info("the tui3SmsReceive mobilephone ="+request.getParameter("mobile")+", the orderNo ="+request.getParameter("content"));
+			if (ACTION_SMS.equals(action)) {
+				String mobile = request.getParameter("mobile");
+				String orderNo = request.getParameter("content");
+
+				SdkOrderMapper orderMapper = dal
+						.getMapper(SdkOrderMapper.class);
+				SdkOrder order = orderMapper.selectByPrimaryKey(orderNo);
+				if (order == null) {
+					logger.error("tui3 get the sms error, order not found, orderNo = "
+							+ orderNo);
+					return StatusCode.SUCCESS();
+				}
+
+				SdkOrderMmdoMapper sdkOrderMmdoMapper = dal
+						.getMapper(SdkOrderMmdoMapper.class);
+				SdkOrderMmdo sdkOrderMmdo = sdkOrderMmdoMapper
+						.selectByPrimaryKey(order.getPayId());
+				if (sdkOrderMmdo == null) {
+					logger.error("tui3 get the sms error, sdkOrderMmdo not found, orderNo = "
+							+ orderNo);
+					return StatusCode.SUCCESS();
+				}
+				String smstype = sdkOrderMmdo.getPayChannelCode();
+				if ("mobilegamebasepm".equals(smstype)) {
+					logger.info("enter the  mobile game base request pay and the orderNo is :"+orderNo);
+					Date now = new Date();
+					SdkMobileGameBaseVerify verify = new SdkMobileGameBaseVerify();
+					verify.setMobile(mobile);
+					verify.setOrderNo(orderNo);
+					verify.setUpdatedTime(now);
+					verify.setCreatedTime(now);
+
+					try {
+						Map<String, String> res=applyPay(verify, order);
+						logger.info("the mobile game base request pay and the orderNo and the CD is :"+orderNo+","+res.get("CD"));
+						if("1000".equals(res.get("CD"))){
+							order.setStatus(2);
+						}else if(faileString3.contains(res.get("CD"))){
+							order.setStatus(3);
+							order.setStatusDetail(res.get("MSG"));
+						}else if(faileString5.contains(res.get("CD"))){
+							order.setStatus(5);
+							order.setStatusDetail(res.get("MSG"));
+						}else if(faileString10.contains(res.get("CD"))){
+							order.setStatus(10);
+							order.setStatusDetail(res.get("MSG"));
+						}else if(faileString4.contains(res.get("CD"))){
+							order.setStatus(4);
+							order.setStatusDetail(res.get("MSG"));
+						}else if(faileString7.contains(res.get("CD"))){
+							order.setStatus(7);
+							order.setStatusDetail(res.get("MSG"));
+						}else if(faileString8.contains(res.get("CD"))){
+							order.setStatus(8);
+							order.setStatusDetail(res.get("MSG"));
+						}else if(faileString9.contains(res.get("CD"))){
+							order.setStatus(9);
+							order.setStatusDetail(res.get("MSG"));
+						}else if(faileString11.contains(res.get("CD"))){
+							order.setStatus(11);
+							order.setStatusDetail(res.get("MSG"));
+						}else if(faileString12.contains(res.get("CD"))){
+							order.setStatus(12);
+							order.setStatusDetail(res.get("MSG"));
+						}else if(faileString13.contains(res.get("CD"))){
+							order.setStatus(13);
+							order.setStatusDetail(res.get("MSG"));
+						}
+						
+						SdkOrderMapper sdkOrderMapper = dal
+								.getMapper(SdkOrderMapper.class);
+						sdkOrderMapper.updateByPrimaryKeySelective(order);
+					} catch (Exception e) {
+						logger.error("the mobile game base apply pay error", e);
+					}
+
+//					String msgContent = Cfg.msg
+//							.getString("sdk.client.send_tosina.sms");
+//					msgContent = StringUtils.replace(msgContent, "%1",
+//							order.getOrderName());
+//					msgContent = StringUtils.replace(msgContent, "%2",
+//							Float.toString(order.getAmount()));
+//
+//					try {
+//						sendsms(mobile, msgContent);
+//					} catch (Exception e) {
+//						logger.error("无法支持此短信发送！", e);
+//					}
+
+					SdkMobileGameBaseVerifyMapper verifyMapper = dal
+							.getMapper(SdkMobileGameBaseVerifyMapper.class);
+					verifyMapper.insertSelective(verify);
+					dal.commit();
+				} else if ("cmcc49you".equals(smstype)) {
+					logger.info("enter the  cmcc49you request pay and the orderNo is :"+orderNo);
+					XmlCmcc49youVerifycodeRes res = null;
+					try {
+						res = getCmcc49youVerifycode(
+								sdkOrderMmdo.getReqSendContent(), mobile);
+						if("200000".equals(res.getResultCode())){
+							order.setStatus(2);
+						}else if("5009".equals(res.getResultCode())||"201278".equals(res.getResultCode())){
+							order.setStatus(10);
+							order.setStatusDetail("请求频繁");
+						}else if("200002".equals(res.getResultCode())){
+							order.setStatus(9);
+							order.setStatusDetail("签名鉴权无效");
+						}
+						SdkOrderMapper sdkOrderMapper = dal
+								.getMapper(SdkOrderMapper.class);
+						sdkOrderMapper.updateByPrimaryKeySelective(order);
+					} catch (Exception e) {
+						logger.error("the mobile game base apply pay error", e);
+					}
+					SdkCmcc49youVerify sdkCmcc49youVerify = new SdkCmcc49youVerify();
+					sdkCmcc49youVerify.setOrderNo(order.getOrderNo());
+					sdkCmcc49youVerify.setMobile(mobile);
+					float amount = order.getAmount();
+					Integer fee = (int) amount * 100;
+					sdkCmcc49youVerify.setPrice(fee);
+					sdkCmcc49youVerify.setGameId(order.getGameId());
+					sdkCmcc49youVerify.setApplyResultcode(res.getResultCode());
+					sdkCmcc49youVerify.setApplyResultmsg(res.getResultMsg());
+					sdkCmcc49youVerify.setOutTradeNo(res.getOrderid());
+					Date d = new Date();
+					sdkCmcc49youVerify.setCreatedTime(d);
+					SdkCmcc49youVerifyMapper sdkCmcc49youVerifyMapper = dal
+							.getMapper(SdkCmcc49youVerifyMapper.class);
+					sdkCmcc49youVerifyMapper
+							.insertSelective(sdkCmcc49youVerify);
+					dal.commit();
+				}else if(CUCCZHANGYUNZY.equals(sdkOrderMmdo.getPayChannelCode())){
+					logger.info("the cucczhangyunzy request pay and the orderNo ="+orderNo);
+					try{
+						String result = getCuccZhangyunZhongyinContent(
+								sdkOrderMmdo.getImei(), sdkOrderMmdo.getReqImsi(),
+								String.valueOf(sdkOrderMmdo.getReqOrderAmount()),
+								order.getOrderNo(), sdkOrderMmdo.getIpAddr(),
+								mobile);
+						String[] r = result.split("<:>");
+						SdkCuccZhangyunzyVerifyMapper sdkCuccZhangyunzyVerifyMapper=dal.getMapper(SdkCuccZhangyunzyVerifyMapper.class);
+						SdkCuccZhangyunzyVerify sdkCuccZhangyunzyVerify=new SdkCuccZhangyunzyVerify();
+						if (r[0].equals("SUCCESS")) {
+							sdkCuccZhangyunzyVerify.setOrderNo(order.getOrderNo());
+							sdkCuccZhangyunzyVerify.setMobile(mobile);
+							sdkCuccZhangyunzyVerify.setOutTradeNo(r[1]);
+							Integer fee = (int) (sdkOrderMmdo.getReqOrderAmount() * 100);
+							sdkCuccZhangyunzyVerify.setPrice(fee);
+							sdkCuccZhangyunzyVerify.setGameId(sdkOrderMmdo.getGameId());
+							sdkCuccZhangyunzyVerify.setApplyResultcode(r[0]);
+							sdkCuccZhangyunzyVerify.setApplyResultmsg(result);
+							sdkCuccZhangyunzyVerify.setCreatedTime(sdkOrderMmdo.getReqTime());
+							order.setStatus(2);
+						}else {
+							sdkCuccZhangyunzyVerify.setOrderNo(order.getOrderNo());
+							sdkCuccZhangyunzyVerify.setMobile(mobile);
+							sdkCuccZhangyunzyVerify.setOutTradeNo(r[1]);
+							logger.error("掌云联通中音获取短信内容失败");
+							Integer fee = (int) (sdkOrderMmdo.getReqOrderAmount() * 100);
+							sdkCuccZhangyunzyVerify.setPrice(fee);
+							sdkCuccZhangyunzyVerify.setGameId(sdkOrderMmdo.getGameId());
+							sdkCuccZhangyunzyVerify.setApplyResultcode(r[0]);
+							sdkCuccZhangyunzyVerify.setApplyResultmsg(result);
+							sdkCuccZhangyunzyVerify.setCreatedTime(sdkOrderMmdo.getReqTime());
+							order.setStatus(3);
+						}
+						SdkOrderMapper sdkOrderMapper = dal
+								.getMapper(SdkOrderMapper.class);
+						sdkOrderMapper.updateByPrimaryKeySelective(order);
+						sdkCuccZhangyunzyVerifyMapper.insertSelective(sdkCuccZhangyunzyVerify);
+						dal.commit();
+					}catch(Exception e){
+						logger.error("the cucczhangyunzy request pay error ="+e);
+					}
+				}else if(CUCCYIJIANWOMUSIC.equals(sdkOrderMmdo.getPayChannelCode())){
+					logger.info("the cuccyijianwomusic request pay and the orderNo ="+orderNo);
+					try{
+						Float price = order.getAmount() * 100;
+						Integer p = price.intValue();
+						String amount = String.valueOf(p);
+						JsonCuccYijianRes jsonCuccYijianRes = getCuccYijianWoMusicContent(
+								order.getOrderNo(), amount,
+								sdkOrderMmdo.getReqImsi(), sdkOrderMmdo.getImei(), sdkOrderMmdo.getIpAddr(),
+								order.getOrderNo(), sdkOrderMmdo.getReqSendContent(),mobile);
+						SdkOrderMmdoVerifycodeMapper sdkOrderMmdoVerifycodeMapper=dal.getMapper(SdkOrderMmdoVerifycodeMapper.class);
+						SdkOrderMmdoVerifycode sdkOrderMmdoVerifycode=new SdkOrderMmdoVerifycode();
+						sdkOrderMmdoVerifycode.setOrderNo(order.getOrderNo());
+						sdkOrderMmdoVerifycode.setMobile(mobile);
+						Integer fee = (int) (sdkOrderMmdo.getReqOrderAmount() * 100);
+						sdkOrderMmdoVerifycode.setPrice(fee);
+						sdkOrderMmdoVerifycode.setGameId(sdkOrderMmdo.getGameId());
+						sdkOrderMmdoVerifycode.setCreatedTime(sdkOrderMmdo.getReqTime());
+						
+						if ("0".equals(jsonCuccYijianRes
+								.getStatus())) {
+							sdkOrderMmdoVerifycode.setOutTradeNo(jsonCuccYijianRes.getNoteChannels().get(0).getSequence());
+							sdkOrderMmdoVerifycode.setApplyResultcode(jsonCuccYijianRes
+								.getStatus());
+							String applyResultmsg=mapper.writeValueAsString(jsonCuccYijianRes);
+							sdkOrderMmdoVerifycode.setApplyResultmsg(applyResultmsg);
+						}else{
+							logger.error("cuccyijianwomusic获取短信内容异常"
+									+ jsonCuccYijianRes.getStatus());
+							sdkOrderMmdoVerifycode.setApplyResultcode(jsonCuccYijianRes
+									.getStatus());
+							String applyResultmsg=mapper.writeValueAsString(jsonCuccYijianRes);
+							sdkOrderMmdoVerifycode.setApplyResultmsg(applyResultmsg);
+						}
+						sdkOrderMmdoVerifycodeMapper.insertSelective(sdkOrderMmdoVerifycode);
+						SdkOrderMapper sdkOrderMapper = dal
+								.getMapper(SdkOrderMapper.class);
+						sdkOrderMapper.updateByPrimaryKeySelective(order);
+						dal.commit();
+					}catch(Exception e){
+						logger.error("the cuccyijianwomusic request pay error ="+e);
+					}
+				}else if(CMCCYONGZHENG.equals(sdkOrderMmdo.getPayChannelCode())){
+					logger.info("the cmccyongzheng request pay and the orderNo ="+orderNo);
+					try{
+						Pay_mmdo pay_mmdo=new Pay_mmdo();
+						Integer fee = order.getAmount().intValue();
+						String price = String.valueOf(fee);
+						String gameName="";
+						SdkGameMapper sdkGameMapper=dal.getMapper(SdkGameMapper.class);
+						SdkGameExample SdkGameExample=new SdkGameExample();
+						SdkGameExample.createCriteria().andGameIdEqualTo(sdkOrderMmdo.getGameId());
+						SdkGame sdkGame=sdkGameMapper.selectOne(SdkGameExample);
+						if(sdkGame!=null){
+							gameName=sdkGame.getName();
+						}
+						String appname=URLEncoder.encode(gameName, "utf-8");
+						JsonCmccYongzhengReqOrder res = pay_mmdo.getYongzhengContent(
+								price, order.getOrderNo(),sdkOrderMmdo.getReqImsi(),appname);
+						SdkOrderMmdoVerifycodeMapper sdkOrderMmdoVerifycodeMapper=dal.getMapper(SdkOrderMmdoVerifycodeMapper.class);
+						SdkOrderMmdoVerifycode sdkOrderMmdoVerifycode=new SdkOrderMmdoVerifycode();
+						sdkOrderMmdoVerifycode.setOrderNo(order.getOrderNo());
+						int p=fee*100;
+						sdkOrderMmdoVerifycode.setPrice(p);
+						sdkOrderMmdoVerifycode.setGameId(order.getGameId());
+						sdkOrderMmdoVerifycode.setCreatedTime(order.getCreateTime());
+						sdkOrderMmdoVerifycode.setMobile(mobile);
+						if ("1".equals(res.getState())) {
+							sdkOrderMmdoVerifycode.setOutTradeNo(res.getOrderNo());
+							JsonCmccYongzhengReqOrder verifycoderes=pay_mmdo.getCmccYongzhengVerifyCode(res.getOrderNo(),mobile);
+							sdkOrderMmdoVerifycode.setApplyResultcode(verifycoderes.getState());
+							String applyResultmsg=mapper.writeValueAsString(verifycoderes);
+							sdkOrderMmdoVerifycode.setApplyResultmsg(applyResultmsg);
+						}else{
+							logger.error("cmccyongzheng获取短信内容异常"
+									+ res.getState());
+							sdkOrderMmdoVerifycode.setApplyResultcode(res.getState()
+									);
+							String applyResultmsg=mapper.writeValueAsString(res);
+							sdkOrderMmdoVerifycode.setApplyResultmsg(applyResultmsg);
+						}
+						sdkOrderMmdoVerifycodeMapper.insertSelective(sdkOrderMmdoVerifycode);
+						sdkOrderMmdoVerifycodeMapper.insertSelective(sdkOrderMmdoVerifycode);
+						SdkOrderMapper sdkOrderMapper = dal
+								.getMapper(SdkOrderMapper.class);
+						sdkOrderMapper.updateByPrimaryKeySelective(order);
+						dal.commit();
+					}catch(Exception e){
+						logger.error("the cmccyongzheng tui3SmsReceive request pay error ="+e);
+					}
+				}
+			}
+			dal.commit();
+			return StatusCode.SUCCESS();
+		} finally {
+			dal.close();
+		}
+	}
+
+	/**
+	 * 移动原宿页游
+	 * @param verify
+	 * @param order
+	 * @return
+	 */
+	private Map<String, String> applyPay(final SdkMobileGameBaseVerify verify,
+			final SdkOrder order){
+		HttpClient httpclient = new DefaultHttpClient();
+		Map<String, String> res=new HashMap<String, String>();
+		try {
+			String smsUrl = Cfg.cfg.getString("sdk.mobilegamebase.url");
+			logger.debug("the mobile game base apply pay api = " + smsUrl);
+
+			HttpPost httpost = new HttpPost(smsUrl);
+			List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+			nvps.add(new BasicNameValuePair("method", "ap"));
+			nvps.add(new BasicNameValuePair("partner", Cfg.cfg
+					.getString("sdk.mobilegamebase.partner")));
+			// nvps.add(new BasicNameValuePair("subcid", order.getChannel()));
+			String encMobile = encodeMobile(verify.getMobile());
+			nvps.add(new BasicNameValuePair("uid", encMobile));
+			int amount = (int) (order.getAmount() * 100);
+			verify.setPrice(amount);
+			nvps.add(new BasicNameValuePair("price", String.valueOf(amount)));
+			// nvps.add(new BasicNameValuePair("exdata",
+			// String.valueOf(order.getGameId())));
+			nvps.add(new BasicNameValuePair("exdata", order.getOrderNo()));
+			nvps.add(new BasicNameValuePair("key", Cfg.cfg
+					.getString("sdk.mobilegamebase.apply.key")));
+			logger.debug("the mobile game base apply parameter : " + nvps);
+
+			httpost.setEntity(new UrlEncodedFormEntity(nvps, "UTF-8"));
+
+			HttpResponse response = httpclient.execute(httpost);
+			HttpEntity entity = response.getEntity();
+			logger.debug("the mobile game base apply response: " + response);
+			String content = EntityUtils.toString(entity, "UTF-8");
+			logger.debug("the mobile game base apply response content - content = "
+					+ content);
+			verify.setApplyRawData(content);
+
+			Map<String, String> jsonMap = mapper.readValue(content,
+					new TypeReference<HashMap<String, String>>() {
+					});
+			verify.setOutTradeNo(jsonMap.get("OID"));
+			res = mapper.readValue(content,
+					new TypeReference<HashMap<String, String>>() {
+					});
+			return res;
+		} catch (Exception e) {
+			logger.error("the mobile game base apply request error is :" + e);
+			return null;
+		}finally {
+			httpclient.getConnectionManager().shutdown();
+		}
+	}
+
+	private static String encodeMobile(String mobile) {
+		char[] chars = mobile.toCharArray();
+		StringBuffer buff = new StringBuffer();
+		for (char c : chars) {
+			buff.append(DIGITS[Integer.parseInt(c + "")]);
+		}
+		return buff.toString();
+	}
+
+	@SuppressWarnings("unused")
+	private void sendsms(String m, String c) throws Exception {
+		HttpClient httpclient = new DefaultHttpClient();
+		try {
+			String sendUrl = Cfg.cfg.getString("sdk.mobilesend.url");
+			logger.debug("the mobile send api = " + sendUrl);
+			HttpPost httpost = new HttpPost(sendUrl);
+			List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+			nvps.add(new BasicNameValuePair("r", "json"));
+			nvps.add(new BasicNameValuePair("p", "1"));
+			nvps.add(new BasicNameValuePair("t", m));
+			nvps.add(new BasicNameValuePair("c", c));
+			httpost.setEntity(new UrlEncodedFormEntity(nvps, "UTF-8"));
+
+			HttpResponse response = httpclient.execute(httpost);
+			HttpEntity entity = response.getEntity();
+			logger.debug("the mobile send response: " + response);
+			String content = EntityUtils.toString(entity, "UTF-8");
+			logger.info("the mobile send response content - content = "
+					+ content);
+
+		} finally {
+			httpclient.getConnectionManager().shutdown();
+		}
+	}
+
+	/**
+	 * 移动页游-49游
+	 * 
+	 * @param consumecode
+	 * @param telephone
+	 * @return
+	 */
+	private XmlCmcc49youVerifycodeRes getCmcc49youVerifycode(
+			String consumecode, String telephone) {
+		HttpClient httpclient = new DefaultHttpClient();
+		XmlCmcc49youVerifycodeRes res = new XmlCmcc49youVerifycodeRes();
+		try {
+			String sendUrl = Cfg.cfg.getString("sdk.cmcc49you.urlreq");
+			logger.debug("the cmcc49you api = " + sendUrl);
+			StringBuffer query = new StringBuffer(sendUrl);
+			query.append("consumecode=").append(consumecode);
+			String channelid = Cfg.cfg.getString("sdk.cmcc49you.channelid");
+			query.append("&channelid=").append(channelid);
+			query.append("&tel=").append(telephone);
+			HttpGet httpget = new HttpGet(query.toString());
+			logger.debug("the cmcc49you send url = " + query.toString());
+			HttpResponse response = httpclient.execute(httpget);
+			HttpEntity entity = response.getEntity();
+			logger.debug("the cmcc49you send response: " + response);
+			String content = EntityUtils.toString(entity, "UTF-8");
+			logger.debug("the cmcc49you send response content - content = "
+					+ content);
+			XMap xmap = new XMap();
+			xmap.register(XmlCmcc49youVerifycodeRes.class);
+			ByteArrayInputStream in = new ByteArrayInputStream(
+					content.getBytes("utf-8"));
+			res = (XmlCmcc49youVerifycodeRes) xmap.load(in);
+			return res;
+		} catch (Exception e) {
+			logger.error("the cmcc49you request error is :" + e);
+			return null;
+		} finally {
+			httpclient.getConnectionManager().shutdown();
+		}
+	}
+
+	/**
+	 * 联通掌云中音通道
+	 * 
+	 * @param imei
+	 * @param imsi
+	 * @param price
+	 * @param orderNo
+	 * @param ipaddr
+	 * @param phone
+	 * @return
+	 */
+	private String getCuccZhangyunZhongyinContent(String imei, String imsi,
+			String price, String orderNo, String ipaddr, String phone) {
+		HttpClient httpclient = new DefaultHttpClient();
+		String result = "";
+		try {
+			String sendUrl = Cfg.cfg.getString("sdk.cucczhangyunzy.requrl");
+			logger.debug("the cucczhangyunzy send api = " + sendUrl);
+			// logger.info("the cucczhangyunzy send api = " + sendUrl);
+			StringBuffer query = new StringBuffer(sendUrl);
+			// pid使用同一个
+			String pid = Cfg.cfg.getString("sdk.zmzf.pid");
+			query.append("pid=").append(pid);
+			query.append("&imei=").append(imei);
+			query.append("&imsi=").append(imsi);
+			query.append("&price=").append(price);
+			query.append("&tradeid=").append(orderNo);
+			query.append("&ipaddr=").append(ipaddr);
+			query.append("&phone=").append(phone);
+			HttpGet httpget = new HttpGet(query.toString());
+			logger.debug("the cucczhangyunzy send url = " + query.toString());
+//			 logger.info("the cucczhangyunzy send url = " + query.toString());
+			HttpResponse response = httpclient.execute(httpget);
+			HttpEntity entity = response.getEntity();
+			logger.debug("the cucczhangyunzy send response =" + response);
+			// logger.info("the cucczhangyunzy send response: " + response);
+			String content = EntityUtils.toString(entity, "UTF-8");
+			logger.debug("the cucczhangyunzy send response content =" + content);
+			// logger.info("the cucczhangyunzy send response content =" +
+			// content);
+			result = content;
+		} catch (Exception e) {
+			logger.error("the cucczhangyunzy request error is :" + e, e);
+			return null;
+		} finally {
+			httpclient.getConnectionManager().shutdown();
+		}
+		return result;
+	}
+
+	/**
+	 * 联通易简沃音乐支付通道
+	 * 
+	 * @param paramString1
+	 * @param paramString2
+	 * @return
+	 */
+	private JsonCuccYijianRes getCuccYijianWoMusicContent(String orderId,
+			String money, String imsi, String imei, String ipAddr,
+			String extData, String feeName,String mobile) {
+		HttpClient httpclient = new DefaultHttpClient();
+		JsonCuccYijianRes jsonCuccYijianRes = new JsonCuccYijianRes();
+		try {
+			String sendUrl = Cfg.cfg.getString("sdk.cuccyijian.url");
+			logger.debug("the cuccyijianwomusic send api = " + sendUrl);
+			// logger.info("the cuccyijianwomusic send api = " + sendUrl);
+			HttpPost post = new HttpPost(sendUrl);
+			JsonCuccYijianReqChannel jsonCuccYijianReqChannel = new JsonCuccYijianReqChannel();
+			jsonCuccYijianReqChannel.setIpAddr(ipAddr);
+			jsonCuccYijianReqChannel.setExtData(extData);
+			String appId = Cfg.cfg.getString("sdk.cuccyijianwomusic.appId");
+			jsonCuccYijianReqChannel.setAppId(appId);
+			jsonCuccYijianReqChannel.setImei(imei);
+			jsonCuccYijianReqChannel.setMoney(money);
+			jsonCuccYijianReqChannel.setFeeName(feeName);
+			jsonCuccYijianReqChannel.setImsi(imsi);
+			jsonCuccYijianReqChannel.setOrderId(orderId);
+			jsonCuccYijianReqChannel.setMobile(mobile);
+			JsonCuccYijianReqParam jsonCuccYijianReqParam = new JsonCuccYijianReqParam();
+			String version = Cfg.cfg.getString("sdk.cuccyijian.version");
+			jsonCuccYijianReqParam.setVersion(version);
+			String operation = Cfg.cfg.getString("sdk.cuccyijian.operation");
+			jsonCuccYijianReqParam.setOperation(operation);
+			jsonCuccYijianReqParam.setReqChannel(jsonCuccYijianReqChannel);
+			
+			String jsonBody = mapper.writeValueAsString(jsonCuccYijianReqParam);
+			logger.debug("the cuccyijianwomusic send jsonBody = " + jsonBody);
+			logger.info("the cuccyijianwomusic send jsonBody = " + jsonBody);
+			post.setEntity(new ByteArrayEntity(jsonBody.getBytes()));
+			HttpResponse response = httpclient.execute(post);
+			HttpEntity entity = response.getEntity();
+			String content = EntityUtils.toString(entity, "UTF-8");
+			logger.debug("the cuccyijianwomusic response = " + content);
+			logger.info("the cuccyijianwomusic response = " + content);
+			jsonCuccYijianRes = mapper.readValue(content,
+					JsonCuccYijianRes.class);
+			logger.debug("the cuccyijianwomusic jsonCuccYijianRes ="
+					+ jsonCuccYijianRes.toString());
+//			 logger.info("the cuccyijianwomusic jsonCuccYijianRes ="+jsonCuccYijianRes.toString());
+		} catch (Exception e) {
+			logger.error("the cuccyijianwomusic request error is :" + e, e);
+			return null;
+		} finally {
+			httpclient.getConnectionManager().shutdown();
+		}
+		return jsonCuccYijianRes;
+	}
+}

@@ -1,0 +1,112 @@
+package com.cheyooh.service.sdk.action.notify;
+
+import java.util.Date;
+
+import org.apache.commons.lang.StringUtils;
+
+import com.cheyooh.service.dal.DAL;
+import com.cheyooh.service.dal.DALFactory;
+import com.cheyooh.service.framework.idata.Cmd;
+import com.cheyooh.service.framework.idata.Result;
+import com.cheyooh.service.framework.idata.ResultXJContent;
+import com.cheyooh.service.sdk.db.dao.SdkNotifyMmdoMapper;
+import com.cheyooh.service.sdk.db.dao.SdkOrderMapper;
+import com.cheyooh.service.sdk.db.dao.SdkOrderMmdoMapper;
+import com.cheyooh.service.sdk.db.dao.SdkTelephoneMapper;
+import com.cheyooh.service.sdk.db.entity.SdkNotifyMmdo;
+import com.cheyooh.service.sdk.db.entity.SdkOrder;
+import com.cheyooh.service.sdk.db.entity.SdkOrderExample;
+import com.cheyooh.service.sdk.db.entity.SdkOrderMmdo;
+import com.cheyooh.service.sdk.db.entity.SdkOrderMmdoExample;
+import com.cheyooh.service.sdk.db.entity.SdkTelephone;
+import com.cheyooh.service.sdk.db.entity.SdkTelephoneExample;
+
+public class CmccmmSzsyNotify extends AbstractNotifyService<Cmd> {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.cheyooh.service.framework.basic.Service#verify(com.cheyooh.service
+	 * .framework.idata.Cmd)
+	 */
+	@Override
+	protected Result verify(Cmd cmd) {
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.cheyooh.service.framework.basic.Service#execute(com.cheyooh.service
+	 * .framework.idata.Cmd)
+	 */
+	@SuppressWarnings("unused")
+	@Override
+	protected Result execute(Cmd cmd) {
+		DAL dal = DALFactory.createDAL();
+		try {
+			String order_id = cmd.getServiceContext().getRequest()
+					.getParameter("order_id");
+			String fee = cmd.getServiceContext().getRequest()
+					.getParameter("fee");
+			String ext = cmd.getServiceContext().getRequest()
+					.getParameter("ext");
+			if(StringUtils.isEmpty(ext)&&StringUtils.isBlank(ext)){
+				ext="";
+			}
+			logger.info("the cmccmmszsy orderNo = " + ext);
+			SdkNotifyMmdo sdkNotifyMmdo = new SdkNotifyMmdo();
+			
+			SdkOrderMapper sdkOrderMapper = dal.getMapper(SdkOrderMapper.class);
+			SdkOrderExample sdkOrderExample = new SdkOrderExample();
+			sdkOrderExample.createCriteria().andOrderNoEqualTo(ext);
+			SdkOrder sdkOrder = sdkOrderMapper.selectOne(sdkOrderExample);
+			if (sdkOrder != null) {
+				SdkOrderMmdoMapper sdkOrderMmdoMapper = dal
+						.getMapper(SdkOrderMmdoMapper.class);
+				SdkOrderMmdoExample sdkOrderMmdoExample = new SdkOrderMmdoExample();
+				sdkOrderMmdoExample.createCriteria().andPayIdEqualTo(
+						sdkOrder.getPayId());
+				SdkOrderMmdo sdkOrderMmdo = sdkOrderMmdoMapper
+						.selectOne(sdkOrderMmdoExample);
+				if (sdkOrderMmdo != null) {
+					sdkNotifyMmdo.setOrderNo(ext);
+					sdkNotifyMmdo.setLinkid(order_id);
+					sdkNotifyMmdo.setSpid(sdkOrderMmdo.getRespSendNumber());
+					sdkNotifyMmdo.setCmd(sdkOrderMmdo.getRespSendContent());
+					SdkTelephoneMapper sdkTelephoneMapper=dal.getMapper(SdkTelephoneMapper.class);
+					SdkTelephoneExample sdkTelephoneExample=new SdkTelephoneExample();
+					sdkTelephoneExample.createCriteria().andImsiEqualTo(sdkOrderMmdo.getRespImsi());
+					SdkTelephone sdkTelephone=sdkTelephoneMapper.selectOne(sdkTelephoneExample);
+					if(sdkTelephone!=null){
+						sdkNotifyMmdo.setMobile(sdkTelephone.getMobilephone());
+						sdkNotifyMmdo.setKey(String.valueOf(sdkTelephone.getProvinceNo()));
+					}
+					sdkNotifyMmdo.setSpnum(sdkOrderMmdo.getReqSendNumber());
+					sdkNotifyMmdo.setGameId(sdkOrderMmdo.getGameId());
+					sdkNotifyMmdo.setAmount(sdkOrderMmdo.getReqOrderAmount());
+					sdkNotifyMmdo.setCreateTime(new Date());
+					sdkNotifyMmdo.setOperationType(sdkOrderMmdo.getOperationType());
+					sdkNotifyMmdo.setPayChannelCode(sdkOrderMmdo
+							.getPayChannelCode());
+					sdkNotifyMmdo.setAdditionalStatus(sdkOrderMmdo.getAdditionalStatus());
+					SdkNotifyMmdoMapper sdkNotifyMmdoMapper = dal
+							.getMapper(SdkNotifyMmdoMapper.class);
+					sdkNotifyMmdoMapper.insertSelective(sdkNotifyMmdo);
+				}
+			}
+			dal.commit();
+		} catch (Exception e) {
+			logger.error("the cmccmmszsy pay notify error!", e);
+			respose("Exception: " + e.getMessage() + ", class: ".getClass());
+		} finally {
+			dal.close();
+		}
+		return respose("ok");
+	}
+
+	private Result respose(String msg) {
+		return new Result(new ResultXJContent(msg, msg));
+	}
+}

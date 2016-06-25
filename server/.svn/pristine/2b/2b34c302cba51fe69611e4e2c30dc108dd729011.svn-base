@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>	 
+	<classPathEntry
+		location="lib/mysql-connector-java-5.1.24.jar" />
+	 	
+	<context id="game_sdk">
+		<property name="autoDelimitKeywords" value="true"/>
+		<property name="beginningDelimiter" value="`"/>
+		<property name="endingDelimiter" value="`"/>
+		
+		<commentGenerator type="org.mybatis.generator.DbCommentGenerator"/>
+		<jdbcConnection 
+			driverClass="com.mysql.jdbc.Driver"
+			connectionURL="jdbc:mysql://121.40.222.39:3306/game_sdk" 
+			userId="root"
+			password="123456" />
+			
+		<javaModelGenerator  targetProject="/magicbirds/SVN/leyosdk/cs-service-sdk/src/main/java" targetPackage="com.cheyooh.service.sdk.db.entity" />
+		<sqlMapGenerator     targetProject="/magicbirds/SVN/leyosdk/cs-service-sdk/src/main/resources" targetPackage="com.cheyooh.service.sdk.db.xmlmap"/>
+		<javaClientGenerator targetProject="/magicbirds/SVN/leyosdk/cs-service-sdk/src/main/java" targetPackage="com.cheyooh.service.sdk.db.dao" type="XMLMAPPER" />
+		<!-- <table schema=""   tableName="sdk_game"/>
+		<table schema=""   tableName="sdk_game_cp"/>
+		<table schema=""   tableName="sdk_order"/>
+		<table schema=""   tableName="sdk_order_alipay"/>
+		<table schema=""   tableName="sdk_order_tenpay"/>
+		<table schema=""   tableName="sdk_order_yeepay"/>
+		<table schema=""   tableName="sdk_order_mo9"/>
+		<table schema=""   tableName="sdk_order_wiipay"/>
+		<table schema=""   tableName="sdk_user"/>
+		<table schema=""   tableName="sdk_user_auto"/>
+		<table schema=""   tableName="sdk_upgrade"/>
+		<table schema=""   tableName="sdk_mobile_vcode"/>
+		
+		<table schema=""   tableName="sdk_new_server"/>
+		<table schema=""   tableName="sdk_information"/>
+		<table schema=""   tableName="sdk_gift"/>
+		<table schema=""   tableName="sdk_gift_vcode"/>
+		<table schema=""   tableName="sdk_bulletin"/>				
+		
+		<table schema=""   tableName="sdk_user_login_game"/>
+		<table schema=""   tableName="sdk_game_plan"/>
+		<table schema=""   tableName="sdk_game_used_plan"/> -->
+<!--         <table schema=""   tableName="sdk_mmdo_setting"/> -->
+<!--         <table schema=""   tableName="sdk_operator_pay_channel"/> -->
+<!--         <table schema=""   tableName="sdk_operator_pay_limit"/> -->
+<!-- 		<table schema=""   tableName="sdk_mmdo_shield"/> -->
+<!-- 		<table schema=""   tableName="sdk_notify_mmdo"/> -->
+<!-- 		<table schema=""   tableName="sdk_notify_wimi"/> -->
+<!--         <table schema=""   tableName="sdk_order_mmdo"/> -->
+<!--         <table schema=""   tableName="sdk_mobile_game_base_verify"/> -->
+<!--         <table schema=""   tableName="sdk_notify_sina_monthly"/> -->
+<!--         <table schema=""   tableName="sdk_woplus_offline_pay_sms"/> -->
+<!--        <table schema=""   tableName="sdk_cmcc_mtdl_order"/> -->
+<!--		 <table schema=""   tableName="sdk_upgrade_jar"/> -->
+<!--		 <table schema=""   tableName="sdk_upgrade_jar_game"/> -->		
+<!--			<table schema=""   tableName="sdk_props_setting"/>-->
+<!--			<table schema=""   tableName="sdk_props"/> -->
+<!--			<table schema=""   tableName="sdk_secondary_sms"/>-->
+<!--			<table schema=""   tableName="sdk_province_addr"/> -->
+<!--			<table schema=""   tableName="sdk_cmcc49you_verify"/>-->
+<!--			<table schema=""   tableName="sdk_city_addr"/>-->
+<!--			<table schema=""   tableName="sdk_sms_game"/>-->
+<!--			<table schema=""   tableName="sdk_game_whitelist"/>-->
+<!--			<table schema=""   tableName="sdk_game_payrepeat"/>-->
+<!--			<table schema=""   tableName="sdk_order_mmdo_payrepeat"/>-->
+<!--			<table schema=""   tableName="sdk_cucc_zhangyunzy_verify"/>-->
+<!--			<table schema=""   tableName="sdk_order_mmdo_verifycode"/>-->
+<!--			<table schema=""   tableName="sdk_game_embedsdk"/>-->
+<!--			<table schema=""   tableName="sdk_notify_hwsdk"/>-->
+<!--			<table schema=""   tableName="sdk_notify_xiaomisdk"/>-->
+<!--			<table schema=""   tableName="sdk_notify_ucsasdk"/>-->
+<!--			<table schema=""   tableName="sdk_notify_opposdk"/>-->
+<!--			<table schema=""   tableName="sdk_danglesdk_point"/>-->
+<!--			<table schema=""   tableName="sdk_xuanwu"/>-->
+<!--			<table schema=""   tableName="sdk_game_alipay"/>-->
+<!--			<table schema=""   tableName="sdk_game_wechat"/>-->
+				<table schema=""   tableName="sdk_order_wechat"/>
+			
+	</context>		 	
+</generatorConfiguration>

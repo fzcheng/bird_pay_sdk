@@ -1,0 +1,58 @@
+package com.cheyooh.service.sdk.action.test;
+
+import com.cheyooh.service.framework.idata.Cmd;
+import com.cheyooh.service.framework.idata.Result;
+import com.cheyooh.service.framework.idata.ResultContentList;
+import com.cheyooh.service.sdk.action.client.Pay_mmdo;
+import com.cheyooh.service.sdk.action.notify.AbstractNotifyService;
+import com.cheyooh.service.sdk.idata.ResultGetCmccMopingDongmanUrl;
+import com.cheyooh.service.sdk.idata.gameserver.JsonCmccMopingDongman;
+
+public class GetCmccPomingDongmanUrl extends AbstractNotifyService<Cmd> {
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.cheyooh.service.framework.basic.Service#verify(com.cheyooh.service
+	 * .framework.idata.Cmd)
+	 */
+	@Override
+	protected Result verify(Cmd cmd) {
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.cheyooh.service.framework.basic.Service#execute(com.cheyooh.service
+	 * .framework.idata.Cmd)
+	 */
+	@Override
+	protected Result execute(Cmd cmd) {
+		try {
+			Pay_mmdo pay_mmdo = new Pay_mmdo();
+			String phone_chengdu = "15928876607";
+			String paycode = "800000000107";
+			String clientOrderNum = "1512161020440101";
+			// String phone_neimenggu="13674767652";
+			JsonCmccMopingDongman res = pay_mmdo.getCmccMopingDongmanContent(
+					phone_chengdu, paycode, clientOrderNum);
+			String url = res.getUrl();
+			logger.info("the GetCmccPomingDongmanUrl url ="+url);
+			ResultGetCmccMopingDongmanUrl resultGetCmccMopingDongmanUrl = new ResultGetCmccMopingDongmanUrl();
+			ResultContentList contentList = new ResultContentList();
+			contentList.setTagName("item");
+			resultGetCmccMopingDongmanUrl.setUrl(url);
+			contentList.addContent(resultGetCmccMopingDongmanUrl);
+			Result result = new Result(contentList);
+			return result;
+		} catch (Exception e) {
+			return null;
+		} finally {
+
+		}
+	}
+
+}

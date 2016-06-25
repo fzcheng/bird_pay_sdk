@@ -1,0 +1,416 @@
+package com.cheyooh.service.sdk.action.notify;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+
+import com.cheyooh.service.dal.DAL;
+import com.cheyooh.service.dal.DALFactory;
+import com.cheyooh.service.framework.idata.Cmd;
+import com.cheyooh.service.framework.idata.Result;
+import com.cheyooh.service.framework.idata.ResultXJContent;
+import com.cheyooh.service.sdk.cfg.Cfg;
+import com.cheyooh.service.sdk.db.dao.SdkNotifyMmdoMapper;
+import com.cheyooh.service.sdk.db.entity.SdkNotifyMmdo;
+import com.cheyooh.service.sdk.db.entity.SdkNotifyMmdoExample;
+import com.cheyooh.service.sdk.idata.gameserver.JsonSdkucsapayDataRes;
+import com.cheyooh.service.sdk.idata.gameserver.JsonSdkucsapayRes;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+public class UcsaQmxdgNotify extends AbstractNotifyService<Cmd> {
+
+	private static final String payChannelCode = "sdkucsapay";
+	private static final String encryptKey = "7980d88b3cf183b8f88e50c59ba39cd7";
+	private String success_mgs = "SUCCESS";
+	private String fail_mgs = "FAILURE";
+
+	private static final ObjectMapper mapper = new ObjectMapper();
+	static {
+		// mapper.setPropertyNamingStrategy(PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES);
+		// or jackson 2.0
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
+				false);
+		mapper.setSerializationInclusion(Include.NON_NULL);
+		// jackson 1.9 and before
+		// mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES,
+		// false);
+	}
+
+	@Override
+	protected Result verify(Cmd cmd) {
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.cheyooh.service.framework.basic.Service#execute(com.cheyooh.service
+	 * .framework.idata.Cmd)
+	 */
+	@Override
+	protected Result execute(Cmd cmd) {
+		DAL dal = DALFactory.createDAL();
+		String result = "";
+		try {
+			HttpServletRequest request = cmd.getServiceContext().getRequest();
+			InputStream in = request.getInputStream();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					in, "UTF-8"));
+			StringBuffer jsonBuff = new StringBuffer();
+			String line;
+			while ((line = reader.readLine()) != null) {
+				jsonBuff.append(line);
+			}
+
+			String jsonStr = jsonBuff.toString();
+			logger.info("the sdkucsapay pay notify jsonString ="+jsonStr);
+			JsonSdkucsapayRes resJson = mapper.readValue(jsonStr,
+					JsonSdkucsapayRes.class);
+
+			logger.info("the sdkucsapay pay notify tradeId ="
+					+ resJson.getData().getTradeId());
+
+			String sign = resJson.getSign();
+			if (StringUtils.isEmpty(sign)) {
+				sign = "";
+			}
+
+			String tradeId = resJson.getData().getTradeId();
+			if (StringUtils.isEmpty(tradeId)) {
+				tradeId = "";
+			}
+
+			String tradeTime = resJson.getData().getTradeTime();
+			if (StringUtils.isEmpty(tradeTime)) {
+				tradeTime = "";
+			}
+
+			String orderId = resJson.getData().getOrderId();
+			if (StringUtils.isEmpty(orderId)) {
+				orderId = "";
+			}
+
+			String gameId = resJson.getData().getGameId();
+			if (StringUtils.isEmpty(gameId)) {
+				gameId = "";
+			}
+
+			String amount = resJson.getData().getAmount();
+			if (StringUtils.isEmpty(amount)) {
+				amount = "";
+			}
+
+			String payType = resJson.getData().getPayType();
+			if (StringUtils.isEmpty(payType)) {
+				payType = "";
+			}
+
+			String attachInfo = resJson.getData().getAttachInfo();
+			if (StringUtils.isEmpty(attachInfo)) {
+				attachInfo = "";
+			}
+
+			String orderStatus = resJson.getData().getOrderStatus();
+			if (StringUtils.isEmpty(orderStatus)) {
+				orderStatus = "";
+			}
+
+			String failedDesc = resJson.getData().getFailedDesc();
+			if (StringUtils.isEmpty(failedDesc)) {
+				failedDesc = "";
+			}
+
+			String signature1 = getSign(tradeId, tradeTime, orderId, gameId,
+					amount, payType, attachInfo, orderStatus, failedDesc);
+
+			SdkNotifyMmdoMapper sdkNotifyMmdoMapper = dal
+					.getMapper(SdkNotifyMmdoMapper.class);
+			SdkNotifyMmdoExample sdkNotifyMmdoExample = new SdkNotifyMmdoExample();
+			sdkNotifyMmdoExample.createCriteria()
+					.andPayChannelCodeEqualTo(payChannelCode)
+					.andLinkidEqualTo(tradeId);
+			SdkNotifyMmdo sdkNotifyMmdo = sdkNotifyMmdoMapper
+					.selectOne(sdkNotifyMmdoExample);
+			if (sdkNotifyMmdo != null) {
+				// 以处理过
+				if (signature1.equals(sign)
+						&& sdkNotifyMmdo.getNotifyStatus() == 0
+						&& "S".equals(orderStatus)) {
+					sdkNotifyMmdo.setNotifyStatus(1);
+					sdkNotifyMmdo.setOriginalcode(orderStatus);
+					sdkNotifyMmdo.setStatusDetail(failedDesc);
+					sdkNotifyMmdoMapper.updateByPrimaryKey(sdkNotifyMmdo);
+					result = success_mgs;
+				} else {
+					result = fail_mgs;
+				}
+			} else {
+				// 未处理，新增
+				if (signature1.equals(sign)) {
+					SdkNotifyMmdo notifyMmdo = new SdkNotifyMmdo();
+					notifyMmdo.setLinkid(tradeId);
+					notifyMmdo.setSpid(payType);
+					notifyMmdo.setOperationType(0);
+					// notifyMmdo.setCmd(cmd);
+					// notifyMmdo.setMobile(mobile);
+					// notifyMmdo.setSpnum(spnum);
+					// notifyMmdo.setKey(key);
+					// notifyMmdo.setAdditionalStatus(additionalStatus);
+					// notifyMmdo.setOrderNo(orderNo);
+					notifyMmdo.setStatusDetail(failedDesc);
+					notifyMmdo.setGameId(250);
+					float p = Float.parseFloat(amount);
+					notifyMmdo.setAmount(p);
+					Date d = StrToDate(tradeTime);
+					notifyMmdo.setCreateTime(d);
+					notifyMmdo.setPayChannelCode(payChannelCode);
+					Integer notifyStatus = 0;
+					if ("S".equals(orderStatus)) {
+						notifyStatus = 1;
+					}
+					notifyMmdo.setNotifyStatus(notifyStatus);
+					notifyMmdo.setOriginalcode(orderStatus);
+					notifyMmdo.setStatusDetail(failedDesc);
+					sdkNotifyMmdoMapper.insertSelective(notifyMmdo);
+					result = success_mgs;
+				} else {
+					result = fail_mgs;
+				}
+			}
+			dal.commit();
+			return response(result);
+		} catch (Exception e) {
+			logger.error("the sdkucsapay pay notify error!", e);
+			result = fail_mgs;
+			return response(result);
+		} finally {
+			dal.close();
+		}
+	}
+
+	private Result response(String result) {
+		return new Result(new ResultXJContent(result, result));
+	}
+
+	/**
+	 * 获取MD5字符串
+	 * 
+	 * @param tradeId
+	 * @param tradeTime
+	 * @param orderId
+	 * @param gameId
+	 * @param amount
+	 * @param payType
+	 * @param attachInfo
+	 * @param orderStatus
+	 * @param failedDesc
+	 * @return
+	 */
+	private String getSign(String tradeId, String tradeTime, String orderId,
+			String gameId, String amount, String payType, String attachInfo,
+			String orderStatus, String failedDesc) {
+		String result = "";
+		try {
+			SortedMap<String, String> map = new TreeMap<String, String>();
+			if (StringUtils.isNotEmpty(tradeId)
+					&& StringUtils.isNotBlank(tradeId)) {
+				map.put("tradeId", tradeId);
+			}
+			if (StringUtils.isNotEmpty(tradeTime)
+					&& StringUtils.isNotBlank(tradeTime)) {
+				map.put("tradeTime", tradeTime);
+			}
+			if (StringUtils.isNotEmpty(orderId)
+					&& StringUtils.isNotBlank(orderId)) {
+				map.put("orderId", orderId);
+			}
+			if (StringUtils.isNotEmpty(gameId)
+					&& StringUtils.isNotBlank(gameId)) {
+				map.put("gameId", gameId);
+			}
+			if (StringUtils.isNotEmpty(amount)
+					&& StringUtils.isNotBlank(amount)) {
+				map.put("amount", amount);
+			}
+			if (StringUtils.isNotEmpty(payType)
+					&& StringUtils.isNotBlank(payType)) {
+				map.put("payType", payType);
+			}
+			if (StringUtils.isNotEmpty(attachInfo)
+					&& StringUtils.isNotBlank(attachInfo)) {
+				map.put("attachInfo", attachInfo);
+			}
+			if (StringUtils.isNotEmpty(orderStatus)
+					&& StringUtils.isNotBlank(orderStatus)) {
+				map.put("orderStatus", orderStatus);
+			}
+//			if (StringUtils.isNotEmpty(failedDesc)
+//					&& StringUtils.isNotBlank(failedDesc)) {
+//				map.put("failedDesc", failedDesc);
+//			}
+			map.put("failedDesc", failedDesc);
+
+			String s1 = "";
+			for (Map.Entry<String, String> me : map.entrySet()) {
+				s1 = s1 + me.getKey() + "=" + me.getValue();
+			}
+			s1 = s1 + encryptKey;
+			logger.info("the sdkucsapay pay notify plaintext is :" + s1);
+			result = DigestUtils.md5Hex(s1).toLowerCase();
+			return result;
+		} catch (Exception e) {
+			logger.error("the sdkucsapay pay notify getSignature error =" + e);
+			return "";
+		}
+	}
+
+	/**
+	 * 测试方法
+	 * 
+	 * @param appId
+	 * @param cpOrderId
+	 * @param cpUserInfo
+	 * @param uid
+	 * @param orderId
+	 * @param orderStatus
+	 * @param payFee
+	 * @param productCode
+	 * @param productName
+	 * @param productCount
+	 * @param payTime
+	 * @param orderConsumeType
+	 * @param partnerGiftConsume
+	 * @return
+	 */
+	private String getContent(String tradeId, String tradeTime,
+			String orderId, String gameId, String amount, String payType,
+			String attachInfo, String orderStatus, String failedDesc) {
+		HttpClient httpclient = new DefaultHttpClient();
+		String result = "";
+		try {
+			String sendUrl = Cfg.cfg.getString("sdk.sdkucsapay.url");
+			// logger.debug("the sdkxiaomipay send api = " + sendUrl);
+			logger.info("the sdkucsapay send api = " + sendUrl);
+			HttpPost post = new HttpPost(sendUrl);
+			
+			JsonSdkucsapayDataRes res = new JsonSdkucsapayDataRes();
+			res.setTradeId(tradeId);
+			res.setTradeTime(tradeTime);
+			res.setOrderId(orderId);
+			res.setGameId(gameId);
+			res.setAmount(amount);
+			res.setPayType(payType);
+			res.setAttachInfo(attachInfo);
+			res.setOrderStatus(orderStatus);
+			res.setFailedDesc(failedDesc);
+			
+			JsonSdkucsapayRes r=new JsonSdkucsapayRes();
+			r.setVer("1.0");
+			r.setData(res);
+			r.setSign("02b9238021851a818f9e0f94fddd26b7");
+			
+			String jsonBody = mapper.writeValueAsString(r);
+			post.setEntity(new StringEntity(jsonBody, "UTF-8"));
+			HttpResponse response = httpclient.execute(post);
+
+			HttpEntity entity = response.getEntity();
+			String content = EntityUtils.toString(entity, "UTF-8");
+			logger.info("the sdkucsapay send response content - content = "
+					+ content);
+			result = content;
+			return result;
+		} catch (Exception e) {
+			logger.error("the sdkucsapay request error is :" + e, e);
+			return "";
+		} finally {
+			httpclient.getConnectionManager().shutdown();
+		}
+	}
+
+	/**
+	 * 日期转换成字符串
+	 * 
+	 * @param date
+	 * @return str
+	 */
+	public static String DateToStr(Date date) {
+
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String str = format.format(date);
+		return str;
+	}
+
+	/**
+	 * 字符串转换成日期
+	 * 
+	 * @param str
+	 * @return date
+	 */
+	public static Date StrToDate(String str) {
+
+		SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+		Date date = null;
+		try {
+			date = format.parse(str);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return date;
+	}
+
+	public static void main(String args[]) throws Exception {
+		UcsaQmxdgNotify test = new UcsaQmxdgNotify();
+		String tradeId = "20151210172842004392";
+		String tradeTime = "20151210172856";
+		String orderId = "1449739720124";
+		String gameId = "600398";
+		String amount = "4.00";
+		String payType = "999";
+		String attachInfo = "";
+		String orderStatus = "S";
+		String failedDesc = "";
+
+//		JsonSdkucsapayDataRes res = new JsonSdkucsapayDataRes();
+//		res.setTradeId(tradeId);
+//		res.setTradeTime(tradeTime);
+//		res.setOrderId(orderId);
+//		res.setGameId(gameId);
+//		res.setAmount(amount);
+//		res.setPayType(payType);
+//		res.setAttachInfo(attachInfo);
+//		res.setOrderStatus(orderStatus);
+//		res.setFailedDesc(failedDesc);
+
+		String s1 = test.getSign(tradeId, tradeTime, orderId, gameId, amount,
+				payType, attachInfo, orderStatus, failedDesc);
+		System.out.println(s1);
+
+//		String s2 = "code=value2name=value3personid=value1202cb962234w4ers2aa";
+//		String s3 = DigestUtils.md5Hex(s2).toLowerCase();
+//		System.out.println("----------" + s3);
+		
+//		String s=test.getContent(tradeId,tradeTime,orderId,gameId,amount,payType,attachInfo,orderStatus,failedDesc);
+//		System.out.println("-----"+s);
+	}
+}

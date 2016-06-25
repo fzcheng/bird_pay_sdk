@@ -1,0 +1,185 @@
+package com.cheyooh.service.sdk.action.notify;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Date;
+
+import org.nuxeo.common.xmap.XMap;
+
+import com.cheyooh.service.dal.DAL;
+import com.cheyooh.service.dal.DALFactory;
+import com.cheyooh.service.framework.idata.Cmd;
+import com.cheyooh.service.framework.idata.Result;
+import com.cheyooh.service.framework.idata.ResultXJContent;
+import com.cheyooh.service.sdk.db.dao.SdkNotifyMmdoMapper;
+import com.cheyooh.service.sdk.db.entity.SdkNotifyMmdo;
+import com.cheyooh.service.sdk.idata.gameserver.XmlCmccGamebaseNotifyReq;
+import com.cheyooh.service.sdk.idata.gameserver.XmlCmccGamebaseNotifyResp;
+
+/**
+ * 此接口用于接入游戏基地,但没有接入乐游SDK的回调接口
+ * @author ljg
+ *
+ */
+public class CmccGamebaseWithoutLeyosdkNotify extends AbstractNotifyService<Cmd> {
+	private int gameid=0;
+	private float amount=0;
+	private int operationType=1;
+	private static final String payChannelCode = "cmccgamebase";
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.cheyooh.service.framework.basic.Service#verify(com.cheyooh.service
+	 * .framework.idata.Cmd)
+	 */
+	@Override
+	protected Result verify(Cmd cmd) {
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.cheyooh.service.framework.basic.Service#execute(com.cheyooh.service
+	 * .framework.idata.Cmd)
+	 */
+	@Override
+	protected Result execute(Cmd cmd) {
+		XmlCmccGamebaseNotifyResp resp = new XmlCmccGamebaseNotifyResp();
+		DAL dal = DALFactory.createDAL();
+		try {
+			InputStream in = cmd.getServiceContext().getRequest()
+					.getInputStream();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					in, "UTF-8"));
+			StringBuffer xmlBuff = new StringBuffer();
+			String line;
+			while ((line = reader.readLine()) != null) {
+				xmlBuff.append(line);
+			}
+			String xml = xmlBuff.toString();
+			
+			XmlCmccGamebaseNotifyReq notify = parseNotify(xml);
+
+//			String orderNo=notify.getCpparam();
+			logger.info("the cmccgamebase notify xml is : " + xml);
+			
+			SdkNotifyMmdo sdkNotifyMmdo = new SdkNotifyMmdo();
+//			sdkNotifyMmdo.setLinkid(linkid);
+			sdkNotifyMmdo.setSpid(notify.getConsumeCode());
+//			sdkNotifyMmdo.setCmd(cmd);
+			sdkNotifyMmdo.setMobile(notify.getUserId());
+//			sdkNotifyMmdo.setSpnum(spnum);
+//			sdkNotifyMmdo.setKey(key);
+			String consumeCode=notify.getConsumeCode();
+			switch(consumeCode){
+				case "006089591011":{
+					amount=4;
+					gameid=245;
+					break;
+				}
+				case "006089591012":{
+					amount=9;
+					gameid=245;
+					break;
+				}
+				case "006089591013":{
+					amount=19;
+					gameid=245;
+					break;
+				}
+				case "006089591014":{
+					amount=29;
+					gameid=245;
+					break;
+				}
+				case "006089591015":{
+					amount=4;
+					gameid=245;
+					break;
+				}
+				case "006089591016":{
+					amount=9;
+					gameid=245;
+					break;
+				}
+				case "006089591017":{
+					amount=19;
+					gameid=245;
+					break;
+				}
+				case "006089591018":{
+					amount=29;
+					gameid=245;
+					break;
+				}
+				case "006089591019":{
+					amount=19;
+					gameid=245;
+					break;
+				}
+				case "006089591020":{
+					amount=1;
+					gameid=245;
+					break;
+				}
+				case "006089591021":{
+					amount=19;
+					gameid=245;
+					break;
+				}
+				default:break;
+
+			}
+			sdkNotifyMmdo.setGameId(gameid);
+			sdkNotifyMmdo.setAmount(amount);
+			Date createTime=new Date();
+			sdkNotifyMmdo.setCreateTime(createTime);
+			sdkNotifyMmdo.setOperationType(operationType);
+			sdkNotifyMmdo.setPayChannelCode(payChannelCode);
+			sdkNotifyMmdo.setAdditionalStatus(0);
+//			sdkNotifyMmdo.setOrderNo(orderNo);
+			int notifyStatus=0;
+			if("0".equals(notify.gethRet())){
+				notifyStatus=1;
+			}else {
+				notifyStatus=0;
+			}
+			sdkNotifyMmdo.setNotifyStatus(notifyStatus);
+			sdkNotifyMmdo.setOriginalcode(notify.getStatus());
+			SdkNotifyMmdoMapper sdkNotifyMmdoMapper = dal
+					.getMapper(SdkNotifyMmdoMapper.class);
+			sdkNotifyMmdoMapper.insertSelective(sdkNotifyMmdo);
+			
+			resp.sethRet("0");
+			resp.setMessage("Successful");
+			dal.commit();
+		} catch (Exception e) {
+			resp.sethRet("1");
+			resp.setMessage("the cmccgamebase notify error!");
+			logger.error("the cmccgamebase notify error, the error is :" + e);
+		} finally {
+			dal.close();
+		}
+		return response(resp.toXml());
+	}
+
+	private XmlCmccGamebaseNotifyReq parseNotify(String xml) throws Exception {
+		XMap xmap = new XMap();
+		xmap.register(XmlCmccGamebaseNotifyReq.class);
+
+		ByteArrayInputStream in = new ByteArrayInputStream(
+				xml.getBytes("UTF-8"));
+		XmlCmccGamebaseNotifyReq notify = (XmlCmccGamebaseNotifyReq) xmap.load(in);
+
+		return notify;
+	}
+
+	private Result response(String msg) {
+		return new Result(new ResultXJContent(msg, msg));
+	}
+}

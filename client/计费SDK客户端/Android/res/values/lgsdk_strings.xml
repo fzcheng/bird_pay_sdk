@@ -1,0 +1,116 @@
+<resources>
+
+    <string name="lgsdk_app_name">PaySDK</string>
+    <string name="lgsdk_please_input_username">请输入用户名</string>
+    <string name="lgsdk_please_input_password">请输入密码</string>
+    <string name="lgsdk_auto_login">自动登录</string>
+    <string name="lgsdk_back">返回</string>
+    <string name="lgsdk_close">关闭</string>
+    <string name="lgsdk_recharge_game">充值游戏：</string>
+    <string name="lgsdk_recharge_un">充值账号：</string>
+    <string name="lgsdk_recharge_amount">充值金额：</string>
+    <string name="lgsdk_forgot_password_or_account">忘记密码或者账号？</string>
+    <string name="lgsdk_forgot_password_or_account_tip">如果您曾经将账号与手机号绑定过，则可以使用该方式找回密码。</string>
+    <string name="lgsdk_onekey_register">一键注册</string>
+    <string name="lgsdk_login">登录</string>
+    <string name="lgsdk_hint">提示</string>
+    <string name="lgsdk_login_please_wait">登录中，请稍候......</string>
+    <string name="lgsdk_login_failed_please_retry">登录失败，请重试</string>
+    <string name="lgsdk_logout_failed">退出登录失败，请重试</string>
+    <string name="lgsdk_logout_success">退出登录成功</string>
+    <string name="lgsdk_secure_payment">安全支付</string>
+    <string name="lgsdk_payment_type">支付方式：</string>
+    <string name="lgsdk_amount">支付金额：</string>
+    <string name="lgsdk_payment_confirmation">支付确认</string>
+    <string name="lgsdk_payment_result">支付结果</string>
+    <string name="lgsdk_no_message">您目前没有消息！</string>
+    <string name="lgsdk_delete">删除</string>
+	<string name="lgsdk_clear_all">清空</string>
+	<string name="lgsdk_please_choose">请选择</string>
+	<string name="lgsdk_tip">提示</string>
+    <string name="lgsdk_network_error">网络出错了:(</string>
+	<string name="lgsdk_mdo">短信支付</string>
+	<string name="lgsdk_mdo_operation_success">短信支付成功</string>
+	<string name="lgsdk_mdo_operation_failed">短信支付失败</string>
+    
+	<string name="lgsdk_woappstroe">沃商店短信支付</string>
+	<string name="lgsdk_woappstroe_operation_success">沃商店短信支付成功</string>
+	<string name="lgsdk_woappstroe_operation_failed">沃商店短信支付失败</string>
+	
+    <!-- user center -->
+    <string name="lgsdk_change_nickname_fail_toast">更改昵称失败，请重试</string>
+    <string name="lgsdk_change_nickname_success_toast">更改昵称成功</string>
+    <string name="lgsdk_user_center_account">乐游账号：%s</string>
+    <string name="lgsdk_user_center_nickname">乐游昵称：</string>
+    <string name="lgsdk_user_center_changename">修改昵称</string>
+    <!-- change pwd -->
+    <string name="lgsdk_change_pwd_account">您的乐游账号：%s</string>
+    <string name="lgsdk_current_pwd_tip">当前密码：</string>
+    <string name="lgsdk_current_pwd_hint">请输入旧密码</string>
+    <string name="lgsdk_new_pwd_tip">新密码：</string>
+    <string name="lgsdk_new_pwd_hint">请输入6&#8211;20位的数字或字母密码</string>
+    <string name="lgsdk_repeat_new_pwd_tip">确认新密码：</string>
+    <string name="lgsdk_repeat_new_pwd_hint">再次确认新密码</string>
+    <string name="lgsdk_confirm_pwd_change">确定</string>
+    <string name="lgsdk_account_security_tip_txt">#我们发现您的账号安全级别：低！#\n建议您绑定手机号，绑定手机后，可以在忘记密码或账号被盗用时通过手机找回密码，以后可以使用手机号码直接登录。</string>
+    <string name="lgsdk_account_security_high_tip_txt">#您的账号安全级别：高！#\n您的账户已经绑定过手机号%s，继续绑定会解除之前的绑定。</string>
+    <string name="lgsdk_account_security_bind_phone_hint">输入您要绑定的手机号码</string>
+    <string name="lgsdk_account_security_cancel">取消</string>
+    <string name="lgsdk_account_security_confirm">绑定</string>
+    <string name="lgsdk_tsk_ongoing">请稍等。。。</string>
+    <string name="lgsdk_change_pwd_fail_toast">更改密码失败，请重试</string>
+    <string name="lgsdk_change_pwd_success_toast">更改密码成功</string>
+    <string name="lgsdk_change_pwd_oldpwd_mismatch_toast">原始密码输入错误，请重新输入</string>
+    <string name="lgsdk_change_pwd_newpwd_mismatch_toast">两次输入的密码不一致，请重新输入</string>
+    <!-- bind phone -->
+    <string name="lgsdk_bind_phone_account">乐游游戏中心账号：%s</string>
+    <string name="lgsdk_bind_phone_phone">要绑定的手机号码：%s</string>
+    <string name="lgsdk_bind_phone_verify_tip">已向您的手机发送了带有验证码的短信</string>
+    <string name="lgsdk_bind_phonenum_verify_code_hint">请输入短信中的验证码</string>
+    <string name="lgsdk_bind_phonenum_confirm">确认绑定</string>
+    <string name="lgsdk_bind_phone_fail_toast">绑定失败，请重试</string>
+    <string name="lgsdk_bind_phone_success_toast">恭喜，绑定手机成功</string>
+    <string name="lgsdk_bind_phone_error_num_toast">请输入正确的手机号码</string>
+    <string name="lgsdk_verify_binding_no_code_toast">请先输入短信中提供的验证码</string>
+    <string name="lgsdk_last_login_time_hint">最近登录时间：</string>
+    <string name="lgsdk_last_login_game_hint">最近登录游戏：</string>
+    <string name="lgsdk_not_have">无</string>
+    <string name="lgsdk_register_success">注册成功</string>
+    <string name="lgsdk_cancel">取消</string>
+    <string name="lgsdk_modify">修改</string>
+    <string name="lgsdk_now_login">立即登录</string>
+    <string name="lgsdk_change_account">切换账号</string>
+    <string name="lgsdk_login_protocol_hint">登录即遵守乐游戏服务条款</string>
+    <string name="lgsdk_one_key_register_pwd_hint">(一键注册生成的密码)</string>
+    <string name="lgsdk_register_please_wait">注册中，请稍候......</string>
+    <string name="lgsdk_register_failed_please_retry">注册失败，请重试</string>
+    <string name="lgsdk_save_pwd_and_login">保存密码并登录</string>
+    <string name="lgsdk_retrive_account">找回账号</string>
+    <string name="lgsdk_please_input_bound_phone">请输入您绑定的手机号码</string>
+    <string name="lgsdk_please_input_received_vcode">请输入您收到短信中的验证码</string>
+    <string name="lgsdk_submitting_data_please_wait">提交数据中，请稍候......</string>
+    <string name="lgsdk_net_error_please_retry">联网失败，请重试</string>
+    <string name="lgsdk_retrive_account_hint">系统已向号码为%s的手机发送了一条短信，请输入短信中的验证码，以找回账号和密码，密码已经被系统重置，您可以在稍候的操作中修改成您熟悉的密码。</string>
+    
+    <string name="lgsdk_merchant_name">商户名称：</string>
+    <string name="lgsdk_pay_money">支付金额：</string>
+    <string name="lgsdk_order_info">订单信息</string>
+    <string name="lgsdk_service_tel">客服电话：400-684-0755</string>
+    <string name="lgsdk_server_tel">400-684-0755</string>
+    <string name="lgsdk_go_pay">去支付</string>
+    <string name="lgsdk_sms_tips">注意：由于运营商相关规定，用户在支付前要确保话费余额充足，且单位时间内操作不宜频繁，若使用话费支付失败，建议关闭其他拦截软件，或选择其他支付方式。</string>
+    <string name="lgsdk_retrive_account_success">账号成功找回</string>
+    <string name="lgsdk_service_terms">乐游戏服务条款</string>
+    <string name="lgsdk_confirm">确定</string>
+    <string name="lgsdk_msg_firstsms">亲爱的用户：\n为了获取最佳的用户体验 ， 我们将发送短信并启动联网以完成相应的适配 ，如遇到拦截弹框提醒 ，请您立即允许。</string>
+
+    <string name="lgsdk_title_default_content">标题</string>
+    
+    <string name="lgsdk_download_notification_default_title">title</string>
+    <string name="lgsdk_download_notification_default_content">text</string>
+    <string name="lgsdk_download_notification_default_time">info</string>
+    
+    <string name="lgsdk_notification_default_title">title</string>
+    <string name="lgsdk_notification_default_content">text</string>
+    <string name="lgsdk_notification_default_time">info</string>
+</resources>

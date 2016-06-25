@@ -1,0 +1,66 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.cheyooh</groupId>
+	<artifactId>parent</artifactId>
+	<version>4.0.0</version>
+	<packaging>pom</packaging>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<repositoryURL>${setting.repositoryURL}</repositoryURL>
+		<snapshotRepositoryURL>${setting.snapshotRepositoryURL}</snapshotRepositoryURL>		 
+		<maven.javadoc.skip>true</maven.javadoc.skip>
+		<svnURL>https://192.168.10.233/svn/Server_2.0</svnURL>					 
+	</properties>
+
+
+	<!-- 建立仓库版本 -->
+	<distributionManagement>
+		<repository>
+			<id>pro-release</id>
+			<name>Proj release Repository</name>
+			<url>${repositoryURL}</url>
+		</repository>
+		<snapshotRepository>
+			<id>pro-snapshot</id>
+			<name>Proj Snapshot Repository</name>
+			<url>${snapshotRepositoryURL}</url>
+		</snapshotRepository>
+	</distributionManagement>
+	
+	<!--
+	<scm>
+	  <connection>scm:svn:${svnURL}/${project.artifactId}/trunk/</connection>
+	  <developerConnection>scm:svn:${svnURL}/${project.artifactId}/trunk/</developerConnection>
+	</scm>
+  -->
+  
+	<build>
+		<plugins>
+			<plugin>
+			  <groupId>org.apache.maven.plugins</groupId>
+			  <artifactId>maven-release-plugin</artifactId>
+			  <configuration>
+			    <tagBase>${svnURL}/${project.artifactId}/tags/</tagBase>
+				<checkModificationExcludes>   
+					<checkModificationExclude>.project</checkModificationExclude>   
+					<checkModificationExclude>.classpath</checkModificationExclude>   
+				</checkModificationExcludes>
+			  <username>${svnUsername}</username>
+			  <password>${svnPassword}</password>
+			  </configuration>
+			</plugin>  
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<compilerVersion>1.6</compilerVersion>
+					<source>1.6</source>
+					<target>1.6</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	
+</project>

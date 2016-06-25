@@ -1,0 +1,220 @@
+package com.cheyooh.service.sdk.action.notify;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.nuxeo.common.xmap.XMap;
+
+import com.cheyooh.service.dal.DAL;
+import com.cheyooh.service.dal.DALFactory;
+import com.cheyooh.service.framework.idata.Cmd;
+import com.cheyooh.service.framework.idata.Result;
+import com.cheyooh.service.framework.idata.ResultXJContent;
+import com.cheyooh.service.sdk.db.dao.SdkNotifyMmdoMapper;
+import com.cheyooh.service.sdk.db.entity.SdkNotifyMmdo;
+import com.cheyooh.service.sdk.idata.gameserver.XmlMmNotifyReq;
+
+public class SdkWimiPayNotify extends AbstractNotifyService<Cmd> {
+	private static final String SDKWIMIPAY = "sdkwimipay";
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.cheyooh.service.framework.basic.Service#verify(com.cheyooh.service
+	 * .framework.idata.Cmd)
+	 */
+	@Override
+	protected Result verify(Cmd cmd) {
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.cheyooh.service.framework.basic.Service#execute(com.cheyooh.service
+	 * .framework.idata.Cmd)
+	 */
+	@Override
+	protected Result execute(Cmd cmd) {
+		DAL dal = DALFactory.createDAL();
+		try {
+			InputStream in = cmd.getServiceContext().getRequest()
+					.getInputStream();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					in, "UTF-8"));
+			StringBuffer xmlBuff = new StringBuffer();
+			String line;
+			while ((line = reader.readLine()) != null) {
+				xmlBuff.append(line);
+			}
+			String xml = xmlBuff.toString();
+			logger.info("sdkwimipay pay notify xml : " + xml);
+
+			XmlMmNotifyReq sdkWimipayNotify = parseNotify(xml);
+
+			// String orderNo = getdecryptOrderNo(sdkWimipayNotify.getExData());
+			SdkNotifyMmdo sdkNotifyMmdo = new SdkNotifyMmdo();
+			sdkNotifyMmdo.setLinkid(sdkWimipayNotify.getOrderId());
+			sdkNotifyMmdo.setCreateTime(new Date());
+			sdkNotifyMmdo.setPayChannelCode(SDKWIMIPAY);
+			float amount = (float) sdkWimipayNotify.getPrice() / 100;
+			sdkNotifyMmdo.setAmount(amount);
+			sdkNotifyMmdo.setOperationType(1);
+			sdkNotifyMmdo.setSpid(sdkWimipayNotify.getPayCode());
+			if (sdkWimipayNotify.getExData().contains("aa")) {
+				String[] gameidAndAdditional = sdkWimipayNotify.getExData()
+						.split("aa");
+				String gameid = gameidAndAdditional[0];
+				String additional ="0";
+				if(gameidAndAdditional[1].length()>1){
+					additional =gameidAndAdditional[1].substring(0,1);
+				}
+				sdkNotifyMmdo.setGameId(Integer.valueOf(gameid));
+				sdkNotifyMmdo.setAdditionalStatus(Integer.valueOf(additional));
+			}
+			// String gameid=sdkWimipayNotify.getExData();
+			// sdkNotifyMmdo.setAdditionalStatus(0);
+			// sdkNotifyMmdo.setGameId(Integer.valueOf(gameid));
+
+			// SdkOrderMapper sdkOrderMapper =
+			// dal.getMapper(SdkOrderMapper.class);
+			// SdkOrderExample sdkOrderExample = new SdkOrderExample();
+			// sdkOrderExample.createCriteria().andOrderNoEqualTo(orderNo);
+			// SdkOrder sdkOrder = sdkOrderMapper.selectOne(sdkOrderExample);
+			// if (sdkOrder != null) {
+			// SdkOrderMmdoMapper sdkOrderMmdoMapper = dal
+			// .getMapper(SdkOrderMmdoMapper.class);
+			// SdkOrderMmdoExample sdkOrderMmdoExample = new
+			// SdkOrderMmdoExample();
+			// sdkOrderMmdoExample.createCriteria().andPayIdEqualTo(
+			// sdkOrder.getPayId());
+			// SdkOrderMmdo sdkOrderMmdo = sdkOrderMmdoMapper
+			// .selectOne(sdkOrderMmdoExample);
+			// if (sdkOrderMmdo != null) {
+			// sdkNotifyMmdo.setOrderNo(orderNo);
+			// sdkNotifyMmdo.setCmd(sdkOrderMmdo.getRespSendContent());
+			// SdkTelephoneMapper sdkTelephoneMapper = dal
+			// .getMapper(SdkTelephoneMapper.class);
+			// SdkTelephoneExample sdkTelephoneExample = new
+			// SdkTelephoneExample();
+			// sdkTelephoneExample.createCriteria().andImsiEqualTo(
+			// sdkOrderMmdo.getRespImsi());
+			// SdkTelephone sdkTelephone = sdkTelephoneMapper
+			// .selectOne(sdkTelephoneExample);
+			// if (sdkTelephone != null) {
+			// sdkNotifyMmdo.setMobile(sdkTelephone.getMobilephone());
+			// sdkNotifyMmdo.setKey(String.valueOf(sdkTelephone
+			// .getProvinceNo()));
+			// }
+			// sdkNotifyMmdo.setSpnum(sdkOrderMmdo.getReqSendNumber());
+			//
+			//
+			// }
+			// }
+			SdkNotifyMmdoMapper sdkNotifyMmdoMapper = dal
+					.getMapper(SdkNotifyMmdoMapper.class);
+			sdkNotifyMmdoMapper.insertSelective(sdkNotifyMmdo);
+			dal.commit();
+
+		} catch (Exception e) {
+			logger.error("read the sdkwimipay pay notify error!", e);
+			response("Exception: " + e.getMessage() + ", class: ".getClass());
+		} finally {
+			dal.close();
+		}
+		return response("success");
+	}
+
+	/**
+	 * 对加密字符串进行解密
+	 * 
+	 * @param encryptOrderNo
+	 * @return
+	 */
+	public String getdecryptOrderNo(String encryptOrderNo) {
+		try {
+			String result = "";
+			Date time = new Date();
+			StringBuilder sb = new StringBuilder();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyMMddHHmmss");
+			sb.append(sdf.format(time));
+			String year = sb.toString().substring(0, 2);
+			result = result + year;
+			String temString = encryptOrderNo;
+			String[] s = new String[6];
+			for (int i = 0; i < 5; i++) {
+				s[i] = temString.substring(0, 1);
+				temString = temString.substring(1);
+			}
+			s[5] = encryptOrderNo.substring(5);
+			for (int i = 0; i < s.length - 1; i++) {
+				String s1 = String.valueOf(StrToHex(s[i], 61));
+				if (s1.length() == 1) {
+					s1 = "0" + s1;
+				}
+				result = result + s1;
+			}
+			String s2 = String.valueOf(StrToHex(s[s.length - 1], 61));
+			if (s2.length() == 3) {
+				s2 = "0" + s2;
+			} else if (s2.length() == 2) {
+				s2 = "00" + s2;
+			} else if (s2.length() == 1) {
+				s2 = "000" + s2;
+			}
+			result = result + s2;
+			return result;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	/**
+	 * 其他进制转换成十进制
+	 * 
+	 * @param s
+	 * @param shift
+	 * @return
+	 */
+	public int StrToHex(String s, int shift) {
+		try {
+			String key = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXY";
+			int result = 0;
+			char[] cArray = s.toCharArray();
+			int[] iArray = new int[cArray.length];
+			for (int i = 0; i < cArray.length; i++) {
+				iArray[i] = key.indexOf(cArray[i]);
+			}
+			for (int i = 0; i < s.length(); i++) {
+				result = result
+						+ (iArray[i] * (int) Math.pow(shift,
+								(s.length() - 1 - i)));
+			}
+			return result;
+		} catch (Exception e) {
+			return -1;
+		}
+
+	}
+
+	private XmlMmNotifyReq parseNotify(String xml) throws Exception {
+		XMap xmap = new XMap();
+		xmap.register(XmlMmNotifyReq.class);
+
+		ByteArrayInputStream in = new ByteArrayInputStream(
+				xml.getBytes("UTF-8"));
+		XmlMmNotifyReq notify = (XmlMmNotifyReq) xmap.load(in);
+
+		return notify;
+	}
+
+	private Result response(String msg) {
+		return new Result(new ResultXJContent(msg, msg));
+	}
+}

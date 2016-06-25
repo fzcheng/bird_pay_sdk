@@ -1,0 +1,136 @@
+package com.cheyooh.service.sdk.action.notify;
+
+
+import org.apache.commons.lang.StringUtils;
+
+import com.cheyooh.service.dal.DAL;
+import com.cheyooh.service.dal.DALFactory;
+import com.cheyooh.service.framework.idata.Cmd;
+import com.cheyooh.service.framework.idata.Result;
+import com.cheyooh.service.framework.idata.ResultXJContent;
+import com.cheyooh.service.sdk.db.dao.SdkNotifyMmdoMapper;
+import com.cheyooh.service.sdk.db.dao.SdkOrderMapper;
+import com.cheyooh.service.sdk.db.dao.SdkOrderMmdoMapper;
+import com.cheyooh.service.sdk.db.entity.SdkNotifyMmdo;
+import com.cheyooh.service.sdk.db.entity.SdkNotifyMmdoExample;
+import com.cheyooh.service.sdk.db.entity.SdkOrder;
+import com.cheyooh.service.sdk.db.entity.SdkOrderExample;
+import com.cheyooh.service.sdk.db.entity.SdkOrderMmdo;
+import com.cheyooh.service.sdk.db.entity.SdkOrderMmdoExample;
+
+public class SdkZhuquepayNotify extends AbstractNotifyService<Cmd> {
+	private String success_mgs = "1";
+	private String fail_mgs = "fail";
+//	private String key=Cfg.cfg.getString("sdk.sdkqipapay.key");;
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.cheyooh.service.framework.basic.Service#verify(com.cheyooh.service
+	 * .framework.idata.Cmd)
+	 */
+	@Override
+	protected Result verify(Cmd cmd) {
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.cheyooh.service.framework.basic.Service#execute(com.cheyooh.service
+	 * .framework.idata.Cmd)
+	 */
+	@Override
+	protected Result execute(Cmd cmd) {
+		DAL dal = DALFactory.createDAL();
+		try {
+			String order_id = cmd.getServiceContext().getRequest()
+					.getParameter("order_id");
+			if (StringUtils.isEmpty(order_id)) {
+				order_id = "";
+			}
+
+			String orderNo = cmd.getServiceContext().getRequest()
+					.getParameter("cpparam");
+			if (StringUtils.isEmpty(orderNo)) {
+				orderNo = "";
+			}
+			
+			float price=0;
+			String pay_price = cmd.getServiceContext().getRequest()
+					.getParameter("pay_price");
+			if (StringUtils.isEmpty(pay_price)) {
+				pay_price = "";
+			}else {
+				Float.parseFloat(pay_price);
+			}
+			
+			logger.info("the sdkzhuquepay pay notify orderNo =" + orderNo);
+			
+			SdkOrderMapper sdkOrderMapper=dal.getMapper(SdkOrderMapper.class);
+			SdkOrderExample sdkOrderExample=new SdkOrderExample();
+			sdkOrderExample.createCriteria().andOrderNoEqualTo(orderNo);
+			SdkOrder sdkOrder=sdkOrderMapper.selectOne(sdkOrderExample);
+			if(sdkOrder==null){
+				return result(fail_mgs);
+			}
+			if(price!=0){
+				sdkOrder.setAmount(price);
+			}
+			sdkOrderMapper.updateByPrimaryKey(sdkOrder);
+			
+			SdkOrderMmdoMapper sdkOrderMmdoMapper=dal.getMapper(SdkOrderMmdoMapper.class);
+			SdkOrderMmdoExample sdkOrderMmdoExample=new SdkOrderMmdoExample();
+			sdkOrderMmdoExample.createCriteria().andPayIdEqualTo(sdkOrder.getPayId());
+			SdkOrderMmdo sdkOrderMmdo=sdkOrderMmdoMapper.selectOne(sdkOrderMmdoExample);
+			if(sdkOrderMmdo==null){
+				return result(fail_mgs);
+			}
+			if(price!=0){
+				sdkOrderMmdo.setReqOrderAmount(price);
+			}
+			sdkOrderMmdoMapper.updateByPrimaryKey(sdkOrderMmdo);
+
+			SdkNotifyMmdoMapper sdkNotifyMmdoMapper = dal
+					.getMapper(SdkNotifyMmdoMapper.class);
+			SdkNotifyMmdoExample sdkNotifyMmdoExample = new SdkNotifyMmdoExample();
+			sdkNotifyMmdoExample.createCriteria().andOrderNoEqualTo(orderNo);
+			SdkNotifyMmdo sdkNotifyMmdo = sdkNotifyMmdoMapper
+					.selectOne(sdkNotifyMmdoExample);
+			if (sdkNotifyMmdo == null) {
+				return result(fail_mgs);
+			}
+
+			if (sdkNotifyMmdo.getNotifyStatus() == 1) {
+				return result(fail_mgs);
+			}
+
+			int notifyStatus = 1;
+			sdkNotifyMmdo.setLinkid(order_id);
+			sdkNotifyMmdo.setNotifyStatus(notifyStatus);
+			sdkNotifyMmdoMapper.updateByPrimaryKey(sdkNotifyMmdo);
+			dal.commit();
+		} catch (Exception e) {
+			logger.error("the sdkzhuquepay pay notify error!", e);
+			result("Exception: " + e.getMessage() + ", class: ".getClass());
+		} finally {
+			dal.close();
+		}
+		return result(success_mgs);
+	}
+
+	private Result result(String mgs) {
+		return new Result(new ResultXJContent(mgs, mgs));
+	}
+	
+	public static void main(String[] args) {
+		String s="10";
+		float p=Float.parseFloat(s);
+		if(p!=0){
+			System.out.println(p);
+		}
+		
+	}
+}

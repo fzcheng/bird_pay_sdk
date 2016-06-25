@@ -1,0 +1,141 @@
+package com.cheyooh.service.sdk.action.notify;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.apache.commons.lang.StringUtils;
+
+import com.cheyooh.service.dal.DAL;
+import com.cheyooh.service.dal.DALFactory;
+import com.cheyooh.service.framework.idata.Cmd;
+import com.cheyooh.service.framework.idata.Result;
+import com.cheyooh.service.framework.idata.ResultXJContent;
+import com.cheyooh.service.sdk.db.dao.SdkNotifyMmdoMapper;
+import com.cheyooh.service.sdk.db.entity.SdkNotifyMmdo;
+import com.cheyooh.service.sdk.db.entity.SdkNotifyMmdoExample;
+
+public class CmccDongmanNotify extends AbstractNotifyService<Cmd> {
+	
+	private static final Integer CHINA_MOBILE = 1;
+	
+	private static final String payChannelCode = "cmccdongman";
+	
+	private String success_mgs = "OK";
+	
+	private String fail_mgs = "ERROR";
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.cheyooh.service.framework.basic.Service#verify(com.cheyooh.service
+	 * .framework.idata.Cmd)
+	 */
+	@Override
+	protected Result verify(Cmd cmd) {
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.cheyooh.service.framework.basic.Service#execute(com.cheyooh.service
+	 * .framework.idata.Cmd)
+	 */
+	@Override
+	protected Result execute(Cmd cmd) {
+		DAL dal = DALFactory.createDAL();
+		try {
+			String tradeId = cmd.getServiceContext().getRequest()
+					.getParameter("TradeId");
+			if (StringUtils.isEmpty(tradeId)) {
+				tradeId = "";
+			}
+			
+			logger.info("the cmccdongman notify outtradeId ="+tradeId);
+
+			String cost = cmd.getServiceContext().getRequest()
+					.getParameter("cost");
+			if (StringUtils.isEmpty(cost)) {
+				cost = "";
+			}
+			
+			String appId = cmd.getServiceContext().getRequest()
+					.getParameter("AppId");
+			if (StringUtils.isEmpty(appId)) {
+				appId = "";
+			}
+			
+			String chargeTime = cmd.getServiceContext().getRequest()
+					.getParameter("ChargeTime");
+			if (StringUtils.isEmpty(chargeTime)) {
+				chargeTime = "";
+			}
+			
+			Date d=StrToDate(chargeTime);
+
+			float p = 0;
+			if (StringUtils.isNotBlank(cost) && StringUtils.isNotEmpty(cost)) {
+				p = Float.valueOf(cost);
+				p=p/100;
+			}
+			
+			SdkNotifyMmdoMapper sdkNotifyMmdoMapperRecord=dal.getMapper(SdkNotifyMmdoMapper.class);
+			SdkNotifyMmdoExample sdkNotifyMmdoExampleRecord=new SdkNotifyMmdoExample();
+			sdkNotifyMmdoExampleRecord.createCriteria().andPayChannelCodeEqualTo(payChannelCode).andLinkidEqualTo(tradeId);
+			SdkNotifyMmdo sdkNotifyMmdoRecord=sdkNotifyMmdoMapperRecord.selectOne(sdkNotifyMmdoExampleRecord);
+			if(sdkNotifyMmdoRecord!=null&&sdkNotifyMmdoRecord.getNotifyStatus()==1){
+				return result(fail_mgs);
+			}
+
+			SdkNotifyMmdoMapper notifyMmdoMapper = dal
+					.getMapper(SdkNotifyMmdoMapper.class);
+			SdkNotifyMmdo sdkNotifyMmdo = new SdkNotifyMmdo();
+			sdkNotifyMmdo.setNotifyStatus(1);
+			sdkNotifyMmdo.setLinkid(tradeId);
+			sdkNotifyMmdo.setSpid(appId);
+			//投放的游戏-钢铁侠
+			sdkNotifyMmdo.setGameId(239);
+			sdkNotifyMmdo.setAmount(p);
+			sdkNotifyMmdo.setCreateTime(d);
+			sdkNotifyMmdo.setOperationType(CHINA_MOBILE);
+			sdkNotifyMmdo.setPayChannelCode(payChannelCode);
+			notifyMmdoMapper.insertSelective(sdkNotifyMmdo);
+			dal.commit();
+		} catch(Exception e){
+			logger.error("the cmccdongman notify error ="+e);
+			return result(fail_mgs);
+		}finally {
+			dal.close();
+		}
+		return result(success_mgs);
+	}
+
+	private Result result(String msg) {
+		return new Result(new ResultXJContent(msg, msg));
+	}
+	
+	/**
+	* 字符串转换成日期
+	* @param str
+	* @return date
+	*/
+	public static Date StrToDate(String str) {
+	  
+	   SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+	   Date date = null;
+	   try {
+	    date = format.parse(str);
+	   } catch (ParseException e) {
+	    e.printStackTrace();
+	   }
+	   return date;
+	}
+	
+	public static void main(String[] args) {
+		float p=1000;
+		p=p/100;
+		System.out.println(p);
+	}
+}

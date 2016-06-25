@@ -1,0 +1,548 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cheyooh.service.dal.db.cms08.dao.Cms08DDQMapper">
+	<!-- 查询热门车型 -->
+	<select id="selectHotCarBrands"
+		resultType="org.apache.commons.collections.map.CaseInsensitiveMap"
+		parameterType="org.apache.commons.collections.map.CaseInsensitiveMap">       
+	   <![CDATA[	   
+	        SELECT
+				a.*, c.*
+			FROM
+				cms_farchives a
+			INNER JOIN cms_farchives_37 c ON c.aid = a.aid
+			WHERE
+				a.fcaid = '1054'
+			AND a.checked = 1
+			AND (
+				a.startdate < '1384828289'
+				AND (
+					a.enddate = 0
+					OR a.enddate > '1384828289'
+				)
+			)
+			ORDER BY
+				a.vieworder ASC,
+				a.updatedate DESC
+			LIMIT 0,27
+	    ]]>
+	</select>
+
+
+	<!-- 查询车型论坛列表 -->
+	<select id="selectForumsByBrandid"
+		resultType="org.apache.commons.collections.map.CaseInsensitiveMap"
+		parameterType="org.apache.commons.collections.map.CaseInsensitiveMap">
+		select a.ccid as ccid, a.logo as logo, a.title as title,
+		a.bbsurl as bbsurl
+		from cms_coclass a, cms_coclass b
+		where a.pid=b.ccid
+		and b.pid=#{brand_id,jdbcType=INTEGER}
+		order by a.title
+	</select>
+
+	<!-- 车型筛选 -->
+	<select id="selectId"
+		resultType="org.apache.commons.collections.map.CaseInsensitiveMap"
+		parameterType="org.apache.commons.collections.map.CaseInsensitiveMap">
+
+		SELECT
+			CONCAT(case when a.`level` =2 then c.title else null end ,a.title) as brandtitle,a.*	
+		 FROM 
+		cms_coclass a
+		INNER JOIN cms_coclass b ON a.cckjb = b.ccid
+		
+		<if test="carType!=null">
+			AND b.title = #{carType,jdbcType=VARCHAR}
+		</if>
+		
+		INNER join
+		cms_coclass c ON a.pid= c.ccid
+		
+		and c.pid in (
+
+	select ccid
+		from cms_coclass
+		where `level`= 0
+		and coid= 1
+		AND cxgb in(
+		SELECT ccid
+		from cms_coclass
+		where 1=1
+		
+		<if test="country!=null">
+			and title = #{country,jdbcType=VARCHAR}
+		</if>
+
+		and coid=6
+			)
+		)
+		
+		WHERE
+
+		a.coid = 1
+
+		AND  ( a.`level` =
+		2 or  a.`level` =
+		1  )
+		<if test="price==1">
+		   <![CDATA[	and  ( a.minguide >= 0 and  a.minguide <= 5 ) or ( a.maxguide >= 0 and  a.maxguide <= 5 ) ]]>
+		</if>
+
+		<if test="price==2">
+		   <![CDATA[	
+		   
+		   and  ( a.minguide >= 5 and  a.minguide <= 8 ) or ( a.maxguide >= 5 and  a.maxguide <= 8 ) 
+		   ]]>
+		</if>
+
+		<if test="price==3">
+		   <![CDATA[	 
+		   
+		   and  ( a.minguide >= 8 and  a.minguide <= 12 ) or ( a.maxguide >= 8 and  a.maxguide <= 12 ) 
+		   
+		    ]]>
+		</if>
+
+		<if test="price==4">
+		   <![CDATA[	
+		   
+		   and  ( a.minguide >= 12 and  a.minguide <= 18 ) or ( a.maxguide >= 12 and  a.maxguide <= 18 ) 
+		    ]]>
+		</if>
+
+		<if test="price==5">
+		   <![CDATA[	
+		   
+		   and  ( a.minguide >= 18 and  a.minguide <= 25 ) or ( a.maxguide >= 18 and  a.maxguide <= 25 ) 
+		   
+		     ]]>
+		</if>
+
+		<if test="price==6">
+		   <![CDATA[	
+		   
+		   and  ( a.minguide >= 25 and  a.minguide <= 40 ) or ( a.maxguide >= 25 and  a.maxguide <= 40) 
+		   
+		    ]]>
+		</if>
+
+		<if test="price==7">
+		   <![CDATA[	
+		   
+		   and  ( a.minguide >= 40 and  a.minguide <= 80 ) or ( a.maxguide >= 40 and  a.maxguide <= 80 ) 
+		   ]]>
+		</if>
+
+		<if test="price==8">
+		   <![CDATA[	 and a.minguide >= 80  ]]>
+		</if>
+
+
+
+		
+
+		
+
+		
+		
+	</select>
+
+
+	<!-- 降价一级查询 -->
+	<select id="selectOne"
+		resultType="org.apache.commons.collections.map.CaseInsensitiveMap"
+		parameterType="org.apache.commons.collections.map.CaseInsensitiveMap">
+
+
+
+		SELECT DISTINCT subtb.*,(original_price-now_price)/original_price as
+		discount from (
+
+		select cms12.clicks as clicks ,cms12.ccid1 as testid,
+		cms18.aid as
+		pc_id,cms12.aid as carid,cms12.thumb as pic
+		,cms18.`subject` as
+		`name`,
+		case when cms_2.youhuijine is null then
+		cms12.prices else
+		cms12.prices-cms_2.youhuijine end
+
+		as
+		now_price,cms12.prices as original_price,cms_2.relmembers as
+		relmembers,cms_2.youhuijine
+
+		from cms_archives18 cms18
+		inner JOIN
+		cms_aalbums cmsaal
+
+		on cms18.aid=cmsaal.inid
+
+		INNER JOIN cms_archives12
+		cms12
+		on cms12.aid =cmsaal.pid
+
+		left JOIN cms_archives_2 cms_2 ON
+
+		cms_2.aid=cms12.aid
+
+		where cms18.caid=802
+		) subtb
+		JOIN
+
+		(select cms1.*
+		from
+		cms_coclass cms1
+		left join cms_coclass cms2
+		on cms1.pid = cms2.ccid
+		left
+		join cms_coclass cms3
+		on cms2.pid = cms3.ccid
+
+		where cms1.coid = 1
+		AND
+		cms3.ccid = #{brandid,jdbcType=INTEGER}
+		) cartb
+		on
+		cartb.ccid=subtb.testid
+
+
+		<if test="order==1">
+			ORDER BY (original_price-now_price)/original_price DESC
+		</if>
+		<if test="order==2">
+			ORDER BY original_price-now_price DESC
+
+		</if>
+		<if test="order==3">
+
+			ORDER BY original_price-now_price
+		</if>
+
+		<if test="order==4">
+
+			ORDER BY clicks
+		</if>
+
+
+	</select>
+
+
+	<!-- 降价二级查询 -->
+	<select id="selectTwo"
+		resultType="org.apache.commons.collections.map.CaseInsensitiveMap"
+		parameterType="org.apache.commons.collections.map.CaseInsensitiveMap">
+
+		SELECT DISTINCT subtb.*,(original_price-now_price)/original_price as
+		discount from (
+
+		select cms12.clicks as clicks ,cms12.ccid1 as testid,
+		cms18.aid as
+		pc_id,cms12.aid as carid,cms12.thumb as pic
+		,cms18.`subject` as
+		`name`,
+		case when cms_2.youhuijine is null then
+		cms12.prices else
+		cms12.prices-cms_2.youhuijine end
+
+		as
+		now_price,cms12.prices as original_price,cms_2.relmembers as
+		relmembers,cms_2.youhuijine
+
+		from cms_archives18 cms18
+		inner JOIN
+		cms_aalbums cmsaal
+
+		on cms18.aid=cmsaal.inid
+
+		INNER JOIN cms_archives12
+		cms12
+		on cms12.aid =cmsaal.pid
+
+		left JOIN cms_archives_2 cms_2 ON
+
+		cms_2.aid=cms12.aid
+
+		where cms18.caid=802
+		) subtb
+		JOIN
+
+		(select cms1.*
+		from
+		cms_coclass cms1
+		left join cms_coclass cms2
+		on cms1.pid = cms2.ccid
+
+		where cms1.coid = 1
+		AND cms2.ccid = #{brandid,jdbcType=INTEGER}
+		) cartb
+		on cartb.ccid=subtb.testid
+
+
+		<if test="order==1">
+			ORDER BY (original_price-now_price)/original_price DESC
+		</if>
+		<if test="order==2">
+			ORDER BY original_price-now_price DESC
+
+		</if>
+		<if test="order==3">
+
+			ORDER BY original_price-now_price
+		</if>
+
+		<if test="order==4">
+
+			ORDER BY clicks
+		</if>
+
+
+	</select>
+
+
+	<!-- 降价三级查询 -->
+	<select id="selectThree"
+		resultType="org.apache.commons.collections.map.CaseInsensitiveMap"
+		parameterType="org.apache.commons.collections.map.CaseInsensitiveMap">
+
+		SELECT DISTINCT subtb.*,(original_price-now_price)/original_price as
+		discount from (
+
+		select cms12.clicks as clicks ,cms12.ccid1 as testid,
+		cms18.aid as
+		pc_id,cms12.aid as carid,cms12.thumb as pic
+		,cms18.`subject` as
+		`name`,
+		case when cms_2.youhuijine is null then
+		cms12.prices else
+		cms12.prices-cms_2.youhuijine end
+
+		as
+		now_price,cms12.prices as original_price,cms_2.relmembers as
+		relmembers,cms_2.youhuijine
+
+		from cms_archives18 cms18
+		inner JOIN
+		cms_aalbums cmsaal
+
+		on cms18.aid=cmsaal.inid
+
+		INNER JOIN cms_archives12
+		cms12
+		on cms12.aid =cmsaal.pid
+
+		left JOIN cms_archives_2 cms_2 ON
+
+		cms_2.aid=cms12.aid
+
+		where cms18.caid=802
+		) subtb
+		JOIN
+
+		(select cms1.*
+		from
+		cms_coclass cms1
+
+
+		where cms1.coid = 1
+		AND cms1.ccid =
+		#{brandid,jdbcType=INTEGER}
+		) cartb
+		on cartb.ccid=subtb.testid
+
+		<if test="order==1">
+			ORDER BY (original_price-now_price)/original_price DESC
+		</if>
+		<if test="order==2">
+			ORDER BY original_price-now_price DESC
+
+		</if>
+		<if test="order==3">
+
+			ORDER BY original_price-now_price
+		</if>
+
+		<if test="order==4">
+
+			ORDER BY clicks
+		</if>
+
+	</select>
+
+
+
+
+	<!-- 降价四级查询 -->
+	<select id="selectFour"
+		resultType="org.apache.commons.collections.map.CaseInsensitiveMap"
+		parameterType="org.apache.commons.collections.map.CaseInsensitiveMap">
+
+
+		SELECT DISTINCT subtb.*,(original_price-now_price)/original_price as
+		discount from (
+
+		select cms12.clicks as clicks ,cms18.aid as
+		pc_id,cms12.aid as
+		carid,cms12.thumb as pic ,cms18.`subject` as `name`,
+		case when cms_2.youhuijine is null then cms12.prices else
+		cms12.prices-cms_2.youhuijine end
+
+		as now_price,cms12.prices as
+		original_price,cms_2.relmembers as
+		relmembers
+
+		from cms_archives18 cms18
+		inner JOIN cms_aalbums cmsaal
+
+		on cms18.aid=cmsaal.inid
+
+		INNER JOIN
+		cms_archives12 cms12
+		on cms12.aid =cmsaal.pid
+
+		LEFT JOIN cms_archives_2
+		cms_2 ON
+
+		cms_2.aid=cms12.aid
+
+		where cms18.caid=802
+		and cms12.aid =
+		#{brandid,jdbcType=INTEGER}
+		) subtb
+
+		<if test="order==1">
+			ORDER BY (original_price-now_price)/original_price DESC
+		</if>
+		<if test="order==2">
+			ORDER BY original_price-now_price DESC
+
+		</if>
+		<if test="order==3">
+
+			ORDER BY original_price-now_price
+		</if>
+
+		<if test="order==4">
+
+			ORDER BY clicks
+		</if>
+	</select>
+
+
+	<!-- 车型经销商 -->
+	<select id="selectDealers"
+		resultType="org.apache.commons.collections.map.CaseInsensitiveMap"
+		parameterType="org.apache.commons.collections.map.CaseInsensitiveMap">
+		SELECT
+		m.*, c.*
+		FROM
+		cms_members_2 c
+		INNER JOIN cms_members
+		m ON c.mid = m.mid
+		WHERE c.mianccid1 LIKE
+		CONCAT('%,',#{brand_id,jdbcType=INTEGER},',%')
+		AND m.checked = 1
+		AND
+		c.fromaddress IN
+	    <foreach collection="ccidList" index="index" item="item" open="(" close=")" separator=",">
+	        #{item,jdbcType=INTEGER}
+	    </foreach>
+		GROUP BY c.mid;
+	</select>
+
+
+	<!-- 车款经销商 -->
+	<select id="selectCartypeDealers"
+		resultType="org.apache.commons.collections.map.CaseInsensitiveMap"
+		parameterType="org.apache.commons.collections.map.CaseInsensitiveMap">
+	    
+<![CDATA[
+		SELECT
+		mc.mid,mc.company,mc.address, mc.phone, mc.tel,
+		o.cid,
+		MIN(o.oprice) AS oprice
+		FROM
+		cms_members_2 mc
+		INNER JOIN
+		cms_commu_offer o ON mc.mid = o.mid
+		WHERE
+		o.checked = 1
+		AND (
+		o.enddate =
+		0
+		OR o.enddate > #{Currentdate,jdbcType=VARCHAR}
+		)
+		AND mc.fromaddress IN
+]]>	
+		<foreach collection="ccidList" index="index" item="item" open="(" close=")" separator=",">
+	        #{item,jdbcType=INTEGER}
+	    </foreach>
+
+		AND o.aid = #{car_id,jdbcType=INTEGER}
+		GROUP BY
+		mc.mid
+
+
+	</select>
+
+	<!-- 品牌列表 -->
+<!-- 	<select id="selectBrand"
+		resultType="org.apache.commons.collections.map.CaseInsensitiveMap"
+		parameterType="org.apache.commons.collections.map.CaseInsensitiveMap">
+		<![CDATA[
+	    select cms3.letter as groupLetter,cms3.title as groupName,case when  cms3.logo<>'' then cms3.logo else cms3.xitupian end  as grounpPic ,
+		cms3.ccid as grounpId ,cms2.title as secondBrandTitle,cms1.title as brandTypeName,case when cms1.logo<>'' then cms1.logo else cms1.xitupian end as brandTypePic,
+		cms1.ccid as brandTypeId,cms1.minguide,cms1.maxguide
+		from cms_coclass cms1 
+		left join cms_coclass cms2 
+		on cms1.pid = cms2.ccid
+		left join cms_coclass cms3
+		on cms2.pid = cms3.ccid 
+		
+		where cms1.coid = 1 and  cms1.`level`=2
+		order by groupLetter,groupName,grounpid,secondBrandTitle
+	    
+	    
+	     ]]>
+
+	</select> -->
+
+<!--  车型搜索-->
+	<select id="select_Search"
+		resultType="org.apache.commons.collections.map.CaseInsensitiveMap"
+		parameterType="org.apache.commons.collections.map.CaseInsensitiveMap">
+
+<![CDATA[
+		SELECT
+		l2.title,l3.*, CONCAT(l2.title,l3.title) as all_title
+		 from  
+		cms_coclass l3
+		left join cms_coclass l2 on l2.ccid = l3.pid
+		left join cms_coclass l1 on l1.ccid = l2.pid
+		where l3.level = 2 and l3.coid =1
+		and
+		(l3.title LIKE CONCAT('%',#{keyword,jdbcType=VARCHAR},'%')
+		or l2.title LIKE CONCAT('%',#{keyword,jdbcType=VARCHAR},'%')
+		or l1.title LIKE  CONCAT('%',#{keyword,jdbcType=VARCHAR},'%')
+		)
+	   ]]>
+
+	</select>
+	
+	
+	<!-- 违章查询level=2车型查询 -->
+	<select id="select_wz_brands_List"
+	    resultType="org.apache.commons.collections.map.CaseInsensitiveMap"
+		parameterType="org.apache.commons.collections.map.CaseInsensitiveMap">
+	
+	<![CDATA[
+	   SELECT ar.ccid1,aid,`subject`,thumb,prices,ccid13,ca.`title` FROM `cms_archives12` ar , cms_coclass ca 
+       WHERE ar.ccid1 =#{ccid,jdbcType=INTEGER} AND ar.`ccid13` = ca.`ccid` 
+       ORDER BY ca.`vieworder`
+	
+	]]>
+		
+	</select>
+	
+
+</mapper>

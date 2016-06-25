@@ -1,0 +1,206 @@
+package com.cheyooh.service.sdk.action.notify;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+
+import com.cheyooh.service.dal.DAL;
+import com.cheyooh.service.dal.DALFactory;
+import com.cheyooh.service.framework.idata.Cmd;
+import com.cheyooh.service.framework.idata.Result;
+import com.cheyooh.service.framework.idata.ResultXJContent;
+import com.cheyooh.service.sdk.db.dao.SdkNotifyMmdoMapper;
+import com.cheyooh.service.sdk.db.entity.SdkNotifyMmdo;
+import com.cheyooh.service.sdk.db.entity.SdkNotifyMmdoExample;
+
+public class SdktppayNotify extends AbstractNotifyService<Cmd> {
+	private String success_mgs = "success";
+	private String fail_mgs = "error";
+	private String result="";
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.cheyooh.service.framework.basic.Service#verify(com.cheyooh.service
+	 * .framework.idata.Cmd)
+	 */
+	@Override
+	protected Result verify(Cmd cmd) {
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.cheyooh.service.framework.basic.Service#execute(com.cheyooh.service
+	 * .framework.idata.Cmd)
+	 */
+	@Override
+	protected Result execute(Cmd cmd) {
+		DAL dal = DALFactory.createDAL();
+		try {
+			String orderNo = cmd.getServiceContext().getRequest()
+					.getParameter("cpparams");
+			if (StringUtils.isEmpty(orderNo)) {
+				orderNo = "";
+			}
+			String price = cmd.getServiceContext().getRequest()
+					.getParameter("price");
+			if (StringUtils.isEmpty(price)) {
+				price = "";
+			}
+			String mobile = cmd.getServiceContext().getRequest()
+					.getParameter("mobile");
+			if (StringUtils.isEmpty(mobile)) {
+				mobile = "";
+			}
+			String province = cmd.getServiceContext().getRequest()
+					.getParameter("province");
+			if (StringUtils.isEmpty(province)) {
+				province = "";
+			}
+			
+			String orderId = cmd.getServiceContext().getRequest()
+					.getParameter("orderId");
+			if (StringUtils.isEmpty(orderId)) {
+				orderId = "";
+			}
+
+			logger.info("the sdktppay pay notify orderNo =" + orderNo);
+
+			SdkNotifyMmdoMapper sdkNotifyMmdoMapper = dal
+					.getMapper(SdkNotifyMmdoMapper.class);
+			SdkNotifyMmdoExample notifyMmdoExample = new SdkNotifyMmdoExample();
+			notifyMmdoExample.createCriteria().andOrderNoEqualTo(orderNo);
+			SdkNotifyMmdo sdkNotifyMmdo = sdkNotifyMmdoMapper
+					.selectOne(notifyMmdoExample);
+			if (sdkNotifyMmdo != null) {
+				sdkNotifyMmdo.setLinkid(orderId);
+				sdkNotifyMmdo.setNotifyStatus(1);
+				 if(StringUtils.isNotEmpty(mobile)&&StringUtils.isNotBlank(mobile)){
+					 sdkNotifyMmdo.setMobile(mobile);
+				 }
+				 if(StringUtils.isNotEmpty(province)&&StringUtils.isNotBlank(province)){
+					 logger.debug("the sdktppay pay notify province ="+province);
+					 int pro=Integer.valueOf(province);
+					 logger.debug("the sdktppay pay notify pro ="+pro);
+					 int p=0;
+					 switch(pro){
+					 case 1:{p=31;break;}
+					 case 2:{p=53;break;}
+					 case 3:{p=15;break;}
+					 case 4:{p=11;break;}
+					 case 5:{p=22;break;}
+					 case 6:{p=51;break;}
+					 case 7:{p=12;break;}
+					 case 8:{p=64;break;}
+					 case 9:{p=34;break;}
+					 case 10:{p=37;break;}
+					 case 11:{p=14;break;}
+					 case 12:{p=44;break;}
+					 case 13:{p=45;break;}
+					 case 14:{p=65;break;}
+					 case 15:{p=32;break;}
+					 case 16:{p=36;break;}
+					 case 17:{p=13;break;}
+					 case 18:{p=41;break;}
+					 case 19:{p=33;break;}
+					 case 20:{p=46;break;}
+					 case 21:{p=42;break;}
+					 case 22:{p=43;break;}
+					 case 23:{p=62;break;}
+					 case 24:{p=35;break;}
+					 case 25:{p=54;break;}
+					 case 26:{p=52;break;}
+					 case 27:{p=21;break;}
+					 case 28:{p=50;break;}
+					 case 29:{p=61;break;}
+					 case 30:{p=63;break;}
+					 case 31:{p=23;break;}
+					 default:{p=0;break;}
+				 };
+				 logger.debug("the sdktppay pay notify p ="+p);
+				 	if(p!=0){
+					 sdkNotifyMmdo.setKey(String.valueOf(p));
+				 	}
+				 }
+				 sdkNotifyMmdoMapper.updateByPrimaryKey(sdkNotifyMmdo);
+				 result=success_mgs;
+			}else{
+				result=fail_mgs;
+			}
+			dal.commit();
+		} catch (Exception e) {
+			logger.error("the sdktppay pay notify error!", e);
+			result=fail_mgs;
+		} finally {
+			dal.close();
+		}
+		return result(result);
+	}
+
+	private Result result(String mgs) {
+		return new Result(new ResultXJContent(mgs, mgs));
+	}
+	
+	private String requestUrl(String cpId,String cpparams, String appId,
+			String price,String chargeId,String channelId,
+			String orderDate,String province,
+			String provider, String orderId, String mobile){
+		HttpClient httpclient = new DefaultHttpClient();
+		String result="";
+		try {
+			String sendUrl = "http://dev.leyogame.cn/api/m/SdktppayNotify?";
+			StringBuffer query = new StringBuffer(sendUrl);
+			query.append("cpId=").append(cpId);
+			query.append("&cpparams=").append(cpparams);
+			query.append("&appId=").append(appId);
+			query.append("&price=").append(price);
+			query.append("&chargeId=").append(chargeId);
+			query.append("&channelId=").append(channelId);
+			query.append("&orderDate=").append(orderDate);
+			query.append("&province=").append(province);
+			query.append("&provider=").append(provider);
+			query.append("&orderId=").append(orderId);
+			query.append("&mobile=").append(mobile);
+			HttpGet httpget = new HttpGet(query.toString());
+			logger.info("the sdktppay send url =" + query.toString());
+			HttpResponse response = httpclient.execute(httpget);
+			HttpEntity entity = response.getEntity();
+			String content = EntityUtils.toString(entity, "UTF-8");
+			logger.info("the sdktppay send response content - content = "
+					+ content);
+			result=content;
+			return result;
+		} catch (Exception e) {
+			logger.error("the sdktppay request error =" + e, e);
+			return "";
+		} finally {
+			httpclient.getConnectionManager().shutdown();
+		}
+	}
+
+	
+	public static void main(String[] args) {
+		SdktppayNotify t=new SdktppayNotify();
+		String cpId="1026";
+		String cpparams="1512311100560101";
+		String appId="A00047";
+		String price="4";
+		String chargeId="C000000057";
+		String channelId="X4";
+		String orderDate="20151231110127";
+		String province="06";
+		String provider="DX";
+		String orderId="S151231110100fe42d601d409d12";
+		String mobile="18180527761";
+		String s=t.requestUrl(cpId, cpparams, appId, price, chargeId, channelId, orderDate, province, provider, orderId, mobile);
+		System.out.println(s);
+	}
+}

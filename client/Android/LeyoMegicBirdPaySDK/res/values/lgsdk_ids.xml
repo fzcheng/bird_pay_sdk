@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="lgsdk_loading_view_logo" type="id"/>
+    <item name="lgsdk_loading_view_progressbar" type="id"/>
+    <item name="lgsdk_loading_view_text" type="id"/>
+    <item name="lgsdk_game_image_intro_view" type="id"/>
+    <item name="lgsdk_game_view_pager_intro_image" type="id"/>
+    
+</resources>

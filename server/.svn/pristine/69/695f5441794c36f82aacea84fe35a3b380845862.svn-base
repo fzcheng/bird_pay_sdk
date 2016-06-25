@@ -1,0 +1,74 @@
+package com.cheyooh.service.sdk.action.notify;
+
+import java.util.Date;
+
+import com.cheyooh.service.dal.DAL;
+import com.cheyooh.service.dal.DALFactory;
+import com.cheyooh.service.framework.idata.Result;
+import com.cheyooh.service.framework.idata.ResultXJContent;
+import com.cheyooh.service.sdk.db.dao.SdkMmdoSettingMapper;
+import com.cheyooh.service.sdk.db.dao.SdkNotifyMmdoMapper;
+import com.cheyooh.service.sdk.db.entity.SdkMmdoSetting;
+import com.cheyooh.service.sdk.db.entity.SdkMmdoSettingExample;
+import com.cheyooh.service.sdk.db.entity.SdkNotifyMmdo;
+import com.cheyooh.service.sdk.idata.notify.CmdMmdoNotify;
+
+
+public class MmdoNotify extends AbstractNotifyService<CmdMmdoNotify>{
+
+	@Override
+	protected Result verify(CmdMmdoNotify cmd) {
+		
+		return null;
+	}
+	private final Integer OPTYPE=1;
+	@Override
+	protected Result execute(CmdMmdoNotify cmd) {
+		DAL dal=DALFactory.createDAL();
+		try{
+			SdkNotifyMmdoMapper notifyMmdoMapper=dal.getMapper(SdkNotifyMmdoMapper.class);
+			String[] cmdArray=cmd.getServiceContext().getRequest().getParameterValues("cmd");
+			if(cmdArray!=null && cmdArray.length>1){
+				cmd.setCmd(cmdArray[1]);
+			}
+			SdkNotifyMmdo notifyMmdo=new SdkNotifyMmdo();
+			notifyMmdo.setCmd(cmd.getCmd());
+			notifyMmdo.setCreateTime(new Date());
+			notifyMmdo.setKey(cmd.getKey());
+			notifyMmdo.setLinkid(cmd.getLinkid());
+			notifyMmdo.setMobile(cmd.getMobile());
+			notifyMmdo.setSpid(cmd.getSpid());
+			notifyMmdo.setSpnum(cmd.getSpnum());
+			String gameIdString=cmd.getCmd();
+			gameIdString=gameIdString.substring(gameIdString.length()-3, gameIdString.length());
+			notifyMmdo.setGameId(Integer.valueOf(gameIdString));
+			notifyMmdo.setOperationType(OPTYPE);
+			//获取金额
+			SdkMmdoSettingMapper mmdoSettingMapper=dal.getMapper(SdkMmdoSettingMapper.class);
+			SdkMmdoSettingExample mmdoSettingExample=new SdkMmdoSettingExample();
+			mmdoSettingExample.createCriteria().andNumberEqualTo(cmd.getSpnum());
+			SdkMmdoSetting mmdoSetting=mmdoSettingMapper.selectOne(mmdoSettingExample);
+			if(mmdoSetting!=null){
+				notifyMmdo.setAmount(mmdoSetting.getAmount());
+			}
+			notifyMmdoMapper.insertSelective(notifyMmdo);
+			dal.commit();
+		}catch(Exception e){
+			fail("fail");
+		}finally{
+			dal.close();
+		}
+		return success();
+	}
+	
+	
+	private Result success(){
+		return new Result(new ResultXJContent("success","success"));
+	}
+	
+	private Result fail(String msg){
+		//log
+		return new Result(new ResultXJContent(msg,msg));
+	}
+
+}

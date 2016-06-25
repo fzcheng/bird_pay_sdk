@@ -1,0 +1,13 @@
+SDK第四期 & SDK后台第二期（2014-01-17）
+game_sdk
+	表sdk_game，字段长度变化
+	数据库修改说明:sdk_game_payment 添加字段 order_no 
+	添加渠道商表 sdk_channel_partner，修改表sdk_channel，添加字段 pid（渠道商ID，为0表示没有渠道商）；
+	修改sdk_payment，添加字段 pay_cn_name（支付方式中文名）
+	添加银联支付记录 sdk_order_unionpay
+	添加UPAY支付记录 sdk_order_upay
+	添加VPAY支付记录（大额短信）sdk_order_vpay
+	
+game_sdk_jeecg
+	t_s_log外键t_s_log_ibfk_1  修改删除和更新时CASCADE
+	

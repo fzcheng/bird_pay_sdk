@@ -1,0 +1,115 @@
+package com.cheyooh.service.sdk.action.notify;
+
+import org.apache.commons.lang.StringUtils;
+
+import com.cheyooh.service.dal.DAL;
+import com.cheyooh.service.dal.DALFactory;
+import com.cheyooh.service.framework.idata.Cmd;
+import com.cheyooh.service.framework.idata.Result;
+import com.cheyooh.service.framework.idata.ResultXJContent;
+import com.cheyooh.service.sdk.db.dao.SdkNotifyMmdoMapper;
+import com.cheyooh.service.sdk.db.dao.SdkOrderMapper;
+import com.cheyooh.service.sdk.db.dao.SdkOrderMmdoMapper;
+import com.cheyooh.service.sdk.db.entity.SdkNotifyMmdo;
+import com.cheyooh.service.sdk.db.entity.SdkNotifyMmdoExample;
+import com.cheyooh.service.sdk.db.entity.SdkOrder;
+import com.cheyooh.service.sdk.db.entity.SdkOrderExample;
+import com.cheyooh.service.sdk.db.entity.SdkOrderMmdo;
+import com.cheyooh.service.sdk.db.entity.SdkOrderMmdoExample;
+
+
+public class CmccMopingDongmanNotify extends AbstractNotifyService<Cmd> {
+	private String success_mgs = "success";
+	private String fail_mgs = "fail";
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.cheyooh.service.framework.basic.Service#verify(com.cheyooh.service
+	 * .framework.idata.Cmd)
+	 */
+	@Override
+	protected Result verify(Cmd cmd) {
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.cheyooh.service.framework.basic.Service#execute(com.cheyooh.service
+	 * .framework.idata.Cmd)
+	 */
+	@Override
+	protected Result execute(Cmd cmd) {
+		DAL dal = DALFactory.createDAL();
+		try {
+			String clientOrderNum = cmd.getServiceContext().getRequest()
+					.getParameter("clientOrderNum");
+			if (StringUtils.isEmpty(clientOrderNum)) {
+				clientOrderNum = "";
+			}
+
+			String result = cmd.getServiceContext().getRequest()
+					.getParameter("result");
+			if (StringUtils.isEmpty(result)) {
+				result = "";
+			}
+
+			logger.info("the cmccmopingdongman pay notify orderNo =" + clientOrderNum);
+
+			SdkNotifyMmdoMapper sdkNotifyMmdoMapper = dal
+					.getMapper(SdkNotifyMmdoMapper.class);
+			SdkNotifyMmdoExample sdkNotifyMmdoExample = new SdkNotifyMmdoExample();
+			sdkNotifyMmdoExample.createCriteria().andOrderNoEqualTo(clientOrderNum);
+			SdkNotifyMmdo sdkNotifyMmdo = sdkNotifyMmdoMapper
+					.selectOne(sdkNotifyMmdoExample);
+			if (sdkNotifyMmdo == null) {
+				return result(fail_mgs);
+			}
+
+			if (sdkNotifyMmdo.getNotifyStatus() == 1) {
+				return result(success_mgs);
+			}
+
+			int notifyStatus = 0;
+			if ("success".equals(result)) {
+				notifyStatus = 1;
+				SdkOrderMapper sdkOrderMapper=dal.getMapper(SdkOrderMapper.class);
+				SdkOrderExample sdkOrderExample=new SdkOrderExample();
+				sdkOrderExample.createCriteria().andOrderNoEqualTo(clientOrderNum);
+				SdkOrder sdkOrder=sdkOrderMapper.selectOne(sdkOrderExample);
+				if(sdkOrder!=null){
+					sdkOrder.setStatus(1);
+					SdkOrderMmdoMapper sdkOrderMmdoMapper=dal.getMapper(SdkOrderMmdoMapper.class);
+					SdkOrderMmdoExample sdkOrderMmdoExample=new SdkOrderMmdoExample();
+					sdkOrderMmdoExample.createCriteria().andPayIdEqualTo(sdkOrder.getPayId());
+					SdkOrderMmdo sdkOrderMmdo=sdkOrderMmdoMapper.selectOne(sdkOrderMmdoExample);
+					if(sdkOrderMmdo!=null){
+						sdkOrderMmdo.setRespStatus(1);
+						sdkNotifyMmdo.setLinkid(sdkOrderMmdo.getTradeid());
+						sdkOrderMmdoMapper.updateByPrimaryKeySelective(sdkOrderMmdo);
+					}
+					sdkOrderMapper.updateByPrimaryKeySelective(sdkOrder);
+				}
+			} else {
+				notifyStatus = 0;
+			}
+			sdkNotifyMmdo.setNotifyStatus(notifyStatus);
+			sdkNotifyMmdo.setOriginalcode(result);
+			sdkNotifyMmdoMapper.updateByPrimaryKey(sdkNotifyMmdo);
+			dal.commit();
+		} catch (Exception e) {
+			logger.error("the cmccmopingdongman pay notify error!", e);
+			result("Exception: " + e.getMessage() + ", class: ".getClass());
+		} finally {
+			dal.close();
+		}
+		return result(success_mgs);
+	}
+
+	private Result result(String mgs) {
+		return new Result(new ResultXJContent(mgs, mgs));
+	}
+}

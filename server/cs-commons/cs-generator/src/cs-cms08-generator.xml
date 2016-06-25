@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>	 
+	<classPathEntry
+location="lib/mysql-connector-java-5.1.24.jar" />
+		 
+ 	
+ 	
+	<context id="db08cms">
+		<property name="autoDelimitKeywords" value="true"/>
+		<property name="beginningDelimiter" value="`"/>
+		<property name="endingDelimiter" value="`"/>
+		<property name="tinyInt1isBit" value="false"/>
+		
+		<commentGenerator type="org.mybatis.generator.DbCommentGenerator"/>
+		<jdbcConnection 
+			driverClass="com.mysql.jdbc.Driver"
+			connectionURL="jdbc:mysql://192.168.10.187:3306/db08cms" 
+			userId="cheyooh_server"
+			password="cheyooh_server" />
+			
+		<javaModelGenerator  targetProject="../../cs-dal-mappers/trunk/src/main/java" targetPackage="com.cheyooh.service.dal.db.cms08.entity" />
+		<sqlMapGenerator     targetProject="../../cs-dal-mappers/trunk/src/main/resources" targetPackage="com.cheyooh.service.dal.db.cms08.xmlmap"/>
+		<javaClientGenerator targetProject="../../cs-dal-mappers/trunk/src/main/java" targetPackage="com.cheyooh.service.dal.db.cms08.dao" type="XMLMAPPER" />
+		
+		<table schema="" tableName="cms_archives"/>
+		<table schema="" tableName="cms_archives_1"/>
+		<table schema="" tableName="cms_archives_2"/>
+		<table schema="" tableName="cms_archives_18" domainObjectName="CmsArchives_18"/>
+		<table schema="" tableName="cms_archives_21"/>
+		<table schema="" tableName="cms_archives12"/>
+		<table schema="" tableName="cms_archives18"/>
+		<table schema="" tableName="cms_archives_sub"/>
+		<table schema="" tableName="cms_catalogs"/>
+		<table schema="" tableName="cms_channels"/>
+		<table schema="" tableName="cms_cnodes"/>
+		<table schema="" tableName="cms_coclass"/>
+		<table schema="" tableName="cms_commu_news"/>
+		<table schema="" tableName="cms_commu_offer"/>
+		<table schema="" tableName="cms_cotypes"/>
+		<table schema="" tableName="cms_members"/>
+		<table schema="" tableName="cms_members_1"/>
+		<table schema="" tableName="cms_members_12"/>
+		<table schema="" tableName="cms_members_2"/>
+		<table schema="" tableName="cms_members_sub"/>		 
+		
+		<table schema="" tableName="cms_farchives_51"/>
+		<table schema="" tableName="cms_farchives"/>
+		
+		<table schema="" tableName="cms_commu_pinpai"/>
+		<table schema="" tableName="cms_afields"/>
+		<table schema="" tableName="cms_aalbums"/>
+	 
+		
+	</context>
+		 
+</generatorConfiguration>

@@ -1,0 +1,1 @@
+ALTER TABLE `game_oss_jeecg`.`jform_cgreport_head` ADD COLUMN `datasource` varchar(64) COMMENT '数据源' AFTER `content`;

@@ -1,0 +1,467 @@
+package com.cheyooh.service.sdk.db.entity;
+
+import java.util.Date;
+
+public class SdkNotifyMmdo {
+    /**<br/>
+     * 字段: sdk_notify_mmdo.id<br/>
+     * 主键: 自动增长<br/>
+     * 可空: false<br/>
+     * 缺省: <br/>
+     * 长度: 10<br/>
+     * 说明: 主键
+     */
+    @com.cheyooh.service.dal.annotation.AutoIncrementPrimaryKey
+    private Integer id;
+
+    /**<br/>
+     * 字段: sdk_notify_mmdo.linkid<br/>
+     * 可空: true<br/>
+     * 缺省: <br/>
+     * 长度: 64<br/>
+     * 说明: 交易编号
+     */
+    private String linkid;
+
+    /**<br/>
+     * 字段: sdk_notify_mmdo.spid<br/>
+     * 可空: true<br/>
+     * 缺省: <br/>
+     * 长度: 25<br/>
+     * 说明: 业务代码
+     */
+    private String spid;
+
+    /**<br/>
+     * 字段: sdk_notify_mmdo.cmd<br/>
+     * 可空: true<br/>
+     * 缺省: <br/>
+     * 长度: 256<br/>
+     * 说明: 上行指令
+     */
+    private String cmd;
+
+    /**<br/>
+     * 字段: sdk_notify_mmdo.mobile<br/>
+     * 可空: true<br/>
+     * 缺省: <br/>
+     * 长度: 64<br/>
+     * 说明: 手机伪码
+     */
+    private String mobile;
+
+    /**<br/>
+     * 字段: sdk_notify_mmdo.spnum<br/>
+     * 可空: true<br/>
+     * 缺省: <br/>
+     * 长度: 25<br/>
+     * 说明: 端口
+     */
+    private String spnum;
+
+    /**<br/>
+     * 字段: sdk_notify_mmdo.key<br/>
+     * 可空: true<br/>
+     * 缺省: <br/>
+     * 长度: 20<br/>
+     * 说明: 省份
+     */
+    private String key;
+
+    /**<br/>
+     * 字段: sdk_notify_mmdo.game_id<br/>
+     * 可空: true<br/>
+     * 缺省: <br/>
+     * 长度: 10<br/>
+     * 说明: 游戏ID
+     */
+    private Integer gameId;
+
+    /**<br/>
+     * 字段: sdk_notify_mmdo.amount<br/>
+     * 可空: true<br/>
+     * 缺省: <br/>
+     * 长度: 12<br/>
+     * 说明: 订单金额
+     */
+    private Float amount;
+
+    /**<br/>
+     * 字段: sdk_notify_mmdo.create_time<br/>
+     * 可空: true<br/>
+     * 缺省: <br/>
+     * 长度: 19<br/>
+     * 说明: 创建时间
+     */
+    private Date createTime;
+
+    /**<br/>
+     * 字段: sdk_notify_mmdo.operation_type<br/>
+     * 可空: true<br/>
+     * 缺省: <br/>
+     * 长度: 10<br/>
+     * 说明: 运营商类型（1、移动，2、联通，3、电信）
+     */
+    private Integer operationType;
+
+    /**<br/>
+     * 字段: sdk_notify_mmdo.pay_channel_code<br/>
+     * 可空: true<br/>
+     * 缺省: <br/>
+     * 长度: 32<br/>
+     * 说明: 支付通道编号
+     */
+    private String payChannelCode;
+
+    /**<br/>
+     * 字段: sdk_notify_mmdo.additional_status<br/>
+     * 可空: true<br/>
+     * 缺省: <br/>
+     * 长度: 10<br/>
+     * 说明: 是否是补点计费,0:否,1:是
+     */
+    private Integer additionalStatus;
+
+    /**<br/>
+     * 字段: sdk_notify_mmdo.order_no<br/>
+     * 可空: true<br/>
+     * 缺省: <br/>
+     * 长度: 64<br/>
+     * 说明: 表sdk_order的订单编号
+     */
+    private String orderNo;
+
+    /**<br/>
+     * 字段: sdk_notify_mmdo.status_detail<br/>
+     * 可空: true<br/>
+     * 缺省: <br/>
+     * 长度: 32<br/>
+     * 说明: 状态进一步描述(如错误或异常的原因)
+     */
+    private String statusDetail;
+
+    /**<br/>
+     * 字段: sdk_notify_mmdo.originalcode<br/>
+     * 可空: true<br/>
+     * 缺省: <br/>
+     * 长度: 32<br/>
+     * 说明: 返回的错误原始码
+     */
+    private String originalcode;
+
+    /**<br/>
+     * 字段: sdk_notify_mmdo.notify_status<br/>
+     * 可空: false<br/>
+     * 缺省: 1<br/>
+     * 长度: 10<br/>
+     * 说明: 状态:1-成功,0-失败
+     */
+    private Integer notifyStatus;
+
+    /**
+     * @return sdk_notify_mmdo.id: 主键
+     */
+    public Integer getId() {
+        return id;
+    }
+
+    /**<br/>
+     * 字段: sdk_notify_mmdo.id<br/>
+     * 主键: 自动增长<br/>
+     * 可空: false<br/>
+     * 缺省: <br/>
+     * 长度: 10<br/>
+     * @param id: 主键
+     */
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    /**
+     * @return sdk_notify_mmdo.linkid: 交易编号
+     */
+    public String getLinkid() {
+        return linkid;
+    }
+
+    /**<br/>
+     * 字段: sdk_notify_mmdo.linkid<br/>
+     * 可空: true<br/>
+     * 缺省: <br/>
+     * 长度: 64<br/>
+     * @param linkid: 交易编号
+     */
+    public void setLinkid(String linkid) {
+        this.linkid = linkid;
+    }
+
+    /**
+     * @return sdk_notify_mmdo.spid: 业务代码
+     */
+    public String getSpid() {
+        return spid;
+    }
+
+    /**<br/>
+     * 字段: sdk_notify_mmdo.spid<br/>
+     * 可空: true<br/>
+     * 缺省: <br/>
+     * 长度: 25<br/>
+     * @param spid: 业务代码
+     */
+    public void setSpid(String spid) {
+        this.spid = spid;
+    }
+
+    /**
+     * @return sdk_notify_mmdo.cmd: 上行指令
+     */
+    public String getCmd() {
+        return cmd;
+    }
+
+    /**<br/>
+     * 字段: sdk_notify_mmdo.cmd<br/>
+     * 可空: true<br/>
+     * 缺省: <br/>
+     * 长度: 256<br/>
+     * @param cmd: 上行指令
+     */
+    public void setCmd(String cmd) {
+        this.cmd = cmd;
+    }
+
+    /**
+     * @return sdk_notify_mmdo.mobile: 手机伪码
+     */
+    public String getMobile() {
+        return mobile;
+    }
+
+    /**<br/>
+     * 字段: sdk_notify_mmdo.mobile<br/>
+     * 可空: true<br/>
+     * 缺省: <br/>
+     * 长度: 64<br/>
+     * @param mobile: 手机伪码
+     */
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    /**
+     * @return sdk_notify_mmdo.spnum: 端口
+     */
+    public String getSpnum() {
+        return spnum;
+    }
+
+    /**<br/>
+     * 字段: sdk_notify_mmdo.spnum<br/>
+     * 可空: true<br/>
+     * 缺省: <br/>
+     * 长度: 25<br/>
+     * @param spnum: 端口
+     */
+    public void setSpnum(String spnum) {
+        this.spnum = spnum;
+    }
+
+    /**
+     * @return sdk_notify_mmdo.key: 省份
+     */
+    public String getKey() {
+        return key;
+    }
+
+    /**<br/>
+     * 字段: sdk_notify_mmdo.key<br/>
+     * 可空: true<br/>
+     * 缺省: <br/>
+     * 长度: 20<br/>
+     * @param key: 省份
+     */
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    /**
+     * @return sdk_notify_mmdo.game_id: 游戏ID
+     */
+    public Integer getGameId() {
+        return gameId;
+    }
+
+    /**<br/>
+     * 字段: sdk_notify_mmdo.game_id<br/>
+     * 可空: true<br/>
+     * 缺省: <br/>
+     * 长度: 10<br/>
+     * @param gameId: 游戏ID
+     */
+    public void setGameId(Integer gameId) {
+        this.gameId = gameId;
+    }
+
+    /**
+     * @return sdk_notify_mmdo.amount: 订单金额
+     */
+    public Float getAmount() {
+        return amount;
+    }
+
+    /**<br/>
+     * 字段: sdk_notify_mmdo.amount<br/>
+     * 可空: true<br/>
+     * 缺省: <br/>
+     * 长度: 12<br/>
+     * @param amount: 订单金额
+     */
+    public void setAmount(Float amount) {
+        this.amount = amount;
+    }
+
+    /**
+     * @return sdk_notify_mmdo.create_time: 创建时间
+     */
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    /**<br/>
+     * 字段: sdk_notify_mmdo.create_time<br/>
+     * 可空: true<br/>
+     * 缺省: <br/>
+     * 长度: 19<br/>
+     * @param createTime: 创建时间
+     */
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    /**
+     * @return sdk_notify_mmdo.operation_type: 运营商类型（1、移动，2、联通，3、电信）
+     */
+    public Integer getOperationType() {
+        return operationType;
+    }
+
+    /**<br/>
+     * 字段: sdk_notify_mmdo.operation_type<br/>
+     * 可空: true<br/>
+     * 缺省: <br/>
+     * 长度: 10<br/>
+     * @param operationType: 运营商类型（1、移动，2、联通，3、电信）
+     */
+    public void setOperationType(Integer operationType) {
+        this.operationType = operationType;
+    }
+
+    /**
+     * @return sdk_notify_mmdo.pay_channel_code: 支付通道编号
+     */
+    public String getPayChannelCode() {
+        return payChannelCode;
+    }
+
+    /**<br/>
+     * 字段: sdk_notify_mmdo.pay_channel_code<br/>
+     * 可空: true<br/>
+     * 缺省: <br/>
+     * 长度: 32<br/>
+     * @param payChannelCode: 支付通道编号
+     */
+    public void setPayChannelCode(String payChannelCode) {
+        this.payChannelCode = payChannelCode;
+    }
+
+    /**
+     * @return sdk_notify_mmdo.additional_status: 是否是补点计费,0:否,1:是
+     */
+    public Integer getAdditionalStatus() {
+        return additionalStatus;
+    }
+
+    /**<br/>
+     * 字段: sdk_notify_mmdo.additional_status<br/>
+     * 可空: true<br/>
+     * 缺省: <br/>
+     * 长度: 10<br/>
+     * @param additionalStatus: 是否是补点计费,0:否,1:是
+     */
+    public void setAdditionalStatus(Integer additionalStatus) {
+        this.additionalStatus = additionalStatus;
+    }
+
+    /**
+     * @return sdk_notify_mmdo.order_no: 表sdk_order的订单编号
+     */
+    public String getOrderNo() {
+        return orderNo;
+    }
+
+    /**<br/>
+     * 字段: sdk_notify_mmdo.order_no<br/>
+     * 可空: true<br/>
+     * 缺省: <br/>
+     * 长度: 64<br/>
+     * @param orderNo: 表sdk_order的订单编号
+     */
+    public void setOrderNo(String orderNo) {
+        this.orderNo = orderNo;
+    }
+
+    /**
+     * @return sdk_notify_mmdo.status_detail: 状态进一步描述(如错误或异常的原因)
+     */
+    public String getStatusDetail() {
+        return statusDetail;
+    }
+
+    /**<br/>
+     * 字段: sdk_notify_mmdo.status_detail<br/>
+     * 可空: true<br/>
+     * 缺省: <br/>
+     * 长度: 32<br/>
+     * @param statusDetail: 状态进一步描述(如错误或异常的原因)
+     */
+    public void setStatusDetail(String statusDetail) {
+        this.statusDetail = statusDetail;
+    }
+
+    /**
+     * @return sdk_notify_mmdo.originalcode: 返回的错误原始码
+     */
+    public String getOriginalcode() {
+        return originalcode;
+    }
+
+    /**<br/>
+     * 字段: sdk_notify_mmdo.originalcode<br/>
+     * 可空: true<br/>
+     * 缺省: <br/>
+     * 长度: 32<br/>
+     * @param originalcode: 返回的错误原始码
+     */
+    public void setOriginalcode(String originalcode) {
+        this.originalcode = originalcode;
+    }
+
+    /**
+     * @return sdk_notify_mmdo.notify_status: 状态:1-成功,0-失败
+     */
+    public Integer getNotifyStatus() {
+        return notifyStatus;
+    }
+
+    /**<br/>
+     * 字段: sdk_notify_mmdo.notify_status<br/>
+     * 可空: false<br/>
+     * 缺省: 1<br/>
+     * 长度: 10<br/>
+     * @param notifyStatus: 状态:1-成功,0-失败
+     */
+    public void setNotifyStatus(Integer notifyStatus) {
+        this.notifyStatus = notifyStatus;
+    }
+}

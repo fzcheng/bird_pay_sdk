@@ -1,0 +1,288 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/main_bg"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".MainActivity" >
+	
+   <RadioGroup 
+        android:id="@+id/rg_select_env"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        >
+        <RadioButton 
+            android:id="@+id/dev"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="测试环境"
+            />
+        <RadioButton 
+             android:id="@+id/sdk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="正式环境"
+            />
+    </RadioGroup>
+    
+    
+    <EditText 
+        android:id="@+id/et_prop_id"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="输入你的道具ID"
+        />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+            
+            <Button
+                android:id="@+id/alipay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="支付宝计费"
+                android:textColor="@android:color/white"
+                />
+            
+            <Button
+                android:id="@+id/fastPayment_one_fen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="快速支付1分钱"
+                android:textColor="@android:color/white"
+                />
+            
+            <Button
+                android:id="@+id/fastPayment_one_mao"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="快速支付0.1元"
+                android:textColor="@android:color/white"
+                />
+            
+            <Button
+                android:id="@+id/fastPayment_two_mao"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="快速支付0.2元"
+                android:textColor="@android:color/white"
+                />
+            
+            <Button
+                android:id="@+id/fastPayment_six_mao"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="快速支付0.6元"
+                android:textColor="@android:color/white"
+                />
+            
+            <Button
+                android:id="@+id/fastPayment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="快速支付1元"
+                android:textColor="@android:color/white"
+                />
+            <Button 
+                android:id="@+id/fastPayment_two"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="快速支付2元"
+                android:textColor="@android:color/white"
+                />
+            <Button 
+                android:id="@+id/fastPayment_three"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="快速支付3元"
+                android:textColor="@android:color/white"
+                />
+            <Button 
+                android:id="@+id/fastPayment_four"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="快速支付4元"
+                android:textColor="@android:color/white"
+                />
+             <Button 
+                android:id="@+id/fastPayment_five"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="快速支付5元"
+                android:textColor="@android:color/white"
+                />
+            <Button 
+                android:id="@+id/fastPayment_six"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="快速支付6元"
+                android:textColor="@android:color/white"
+                />
+            <Button 
+                android:id="@+id/fastPayment_eight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="快速支付8元"
+                android:textColor="@android:color/white"
+                />
+            <Button 
+                android:id="@+id/fastPayment_ten"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="快速支付10元"
+                android:textColor="@android:color/white"
+                />
+			<Button 
+                android:id="@+id/fastPayment_fifteen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="快速支付15元"
+                android:textColor="@android:color/white"
+                />
+			
+			<Button 
+                android:id="@+id/fastPayment_29"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="快速支付29元"
+                android:textColor="@android:color/white"
+                />
+			
+			<Button 
+                android:id="@+id/fastPayment_30"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="快速支付30元"
+                android:textColor="@android:color/white"
+                />
+			
+            <Button
+                android:id="@+id/buy1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="购买道具0.1元"
+                android:textColor="@android:color/white" />
+            
+            <Button
+                android:id="@+id/buy_one"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="购买道具1元"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/buy2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="购买道具2元"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/buy4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="购买道具4元"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/buy5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="购买道具5元"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/buy6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="购买道具6元"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/buy10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="购买道具10元"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/buy15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="购买道具15元"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/buy20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="购买道具20元"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/buy30"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="购买道具30元"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/buy50"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="购买道具50元"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/user_center_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="修改呢称"
+                android:textColor="@android:color/white" />
+			<Button
+                android:id="@+id/user_center_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="修改密码"
+                android:textColor="@android:color/white" />
+			<Button
+                android:id="@+id/user_center_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="发送绑定手机号码短信"
+                android:textColor="@android:color/white" />
+			<Button
+                android:id="@+id/user_center_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="获取验证码完成绑定手机号码"
+                android:textColor="@android:color/white" />
+			
+			<Button
+                android:id="@+id/download"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="下载"
+                android:textColor="@android:color/white" />
+			
+            <Button
+                android:id="@+id/logout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="注销"
+                android:textColor="@android:color/white" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="lgsdk_text_color_gray_2e2e2e">#2e2e2e</color>
+    <color name="lgsdk_text_color_gray_8b8b8b">#8b8b8b</color>
+    <color name="lgsdk_main_bg_color">#d8d8d8</color>
+    <color name="lgsdk_text_color_orange_d94900">#d94900</color>
+    <color name="lgsdk_account_security_tip_color">#d94900</color>
+    <color name="lgsdk_background_efefef">#efefef</color>
+	<color name="lgsdk_white">#ffffff</color>
+	<color name="lgsdk_text_color_gray_5b5b5b">#5b5b5b</color>
+	<color name="lgsdk_app_background">#ffffff</color>
+	<color name="lgsdk_transparent">#00000000</color>
+	<color name="lgsdk_hint_color">#474747</color>
+	<color name="lgsdk_text_color_gray_a6a5a5">#a6a5a5</color>
+	<color name="lgsdk_game_detail_background">#ffffffff</color>
+	<color name="lgsdk_game_detail_game_name">#8d8377</color>
+	<color name="lgsdk_game_detail_catgory_name">#8fb53c</color>
+	<color name="lgsdk_game_detail_gallery_bg">#e5ded6</color>
+	<color name="lgsdk_list_title_color">#2a2a2a</color>
+    <color name="lgsdk_game_gift_bottom_text_color">#929292</color>
+    <color name="lgsdk_listview_item_head_text_color">#444444</color>
+    <color name="lgsdk_game_gift_text_color">#646464</color>
+	
+    <drawable name="lgsdk_main_bg_drawable">#d8d8d8</drawable>
+    <drawable name="lgsdk_transparent">#00000000</drawable>
+    <drawable name="lgsdk_white">#ffffff</drawable>
+    <drawable name="lgsdk_translucence">#90000000</drawable>
+    <drawable name="lgsdk_list_item_bg_c2c2c2">#c2c2c2</drawable>
+    <drawable name="lgsdk_back_layout_selected">#78a022</drawable>
+    <drawable name="lgsdk_alpha_app_background">#7fe5ded6</drawable>
+</resources>

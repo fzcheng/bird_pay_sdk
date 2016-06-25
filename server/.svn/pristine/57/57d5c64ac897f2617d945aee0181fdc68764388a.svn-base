@@ -1,0 +1,198 @@
+package com.cheyooh.service.sdk.action.notify;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.apache.commons.lang.StringUtils;
+import org.nuxeo.common.xmap.XMap;
+
+import com.cheyooh.service.dal.DAL;
+import com.cheyooh.service.dal.DALFactory;
+import com.cheyooh.service.framework.idata.Cmd;
+import com.cheyooh.service.framework.idata.Result;
+import com.cheyooh.service.framework.idata.ResultXJContent;
+import com.cheyooh.service.sdk.db.dao.SdkNotifyMmdoMapper;
+import com.cheyooh.service.sdk.db.entity.SdkNotifyMmdo;
+import com.cheyooh.service.sdk.db.entity.SdkNotifyMmdoExample;
+import com.cheyooh.service.sdk.idata.gameserver.XmlMmNotifyReq;
+import com.cheyooh.service.sdk.idata.gameserver.XmlMmNotifyResp;
+
+public class CmccMmWaterwestNotify extends AbstractNotifyService<Cmd> {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.cheyooh.service.framework.basic.Service#verify(com.cheyooh.service
+	 * .framework.idata.Cmd)
+	 */
+	@Override
+	protected Result verify(Cmd cmd) {
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.cheyooh.service.framework.basic.Service#execute(com.cheyooh.service
+	 * .framework.idata.Cmd)
+	 */
+	@Override
+	protected Result execute(Cmd cmd) {
+		XmlMmNotifyResp resp = new XmlMmNotifyResp();
+		DAL dal = DALFactory.createDAL();
+		int resultMsg=2; 
+		try {
+			InputStream in = cmd.getServiceContext().getRequest()
+					.getInputStream();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					in, "UTF-8"));
+			StringBuffer xmlBuff = new StringBuffer();
+			String line;
+			while ((line = reader.readLine()) != null) {
+				xmlBuff.append(line);
+			}
+
+			String xml = xmlBuff.toString();
+			
+			logger.info("the cmccmmwaterwest notify xml : " + xml);
+
+			XmlMmNotifyReq notify = parseNotify(xml);
+			
+			String orderNo=notify.getExData();
+			if(StringUtils.isEmpty(notify.getExData())||StringUtils.isBlank(notify.getExData())){
+				orderNo="";
+			}
+			if(StringUtils.isNotBlank(notify.getExData())){
+				orderNo=getdecryptOrderNo(notify.getExData());
+			}
+			
+			logger.info("the cmccmmwaterwest notify orderNo is: " + orderNo);
+			
+			SdkNotifyMmdoMapper sdkNotifyMmdoMapper = dal.getMapper(SdkNotifyMmdoMapper.class);
+			SdkNotifyMmdoExample sdkNotifyMmdoExample=new SdkNotifyMmdoExample();
+			sdkNotifyMmdoExample.createCriteria().andOrderNoEqualTo(orderNo);
+			SdkNotifyMmdo sdkNotifyMmdo=sdkNotifyMmdoMapper.selectOne(sdkNotifyMmdoExample);
+			if(sdkNotifyMmdo!=null){
+				int notifyStatus=0;
+				if(!"00000000000000000000".equals(notify.getOrderId())){
+					notifyStatus=1;
+					resultMsg=0;
+				}else {
+					notifyStatus=0;
+					resultMsg=0;
+				}
+				sdkNotifyMmdo.setLinkid(notify.getTradeId());
+				sdkNotifyMmdo.setNotifyStatus(notifyStatus);
+				sdkNotifyMmdo.setOriginalcode(notify.getOrderId());
+				sdkNotifyMmdoMapper.updateByPrimaryKey(sdkNotifyMmdo);
+			}else{
+				resultMsg=2;
+			}
+			
+			resp.setTransactionID(notify.getTransactionID());
+			resp.setMsgType(notify.getMsgType());
+			resp.setVersion(notify.getVersion());
+			resp.sethRet(resultMsg);
+
+			dal.commit();
+		} catch (Exception e) {
+			resp.sethRet(2);
+			logger.error(e);
+		} finally {
+			dal.close();
+		}
+		return response(resp.toXml());
+	}
+
+	/**
+	 * 对加密字符串进行解密
+	 * 
+	 * @param encryptOrderNo
+	 * @return
+	 */
+	public String getdecryptOrderNo(String encryptOrderNo) {
+		try {
+			String result = "";
+			Date time = new Date();
+			StringBuilder sb = new StringBuilder();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyMMddHHmmss");
+			sb.append(sdf.format(time));
+			String year = sb.toString().substring(0, 2);
+			result = result + year;
+			String temString = encryptOrderNo;
+			String[] s = new String[6];
+			for (int i = 0; i < 5; i++) {
+				s[i] = temString.substring(0, 1);
+				temString = temString.substring(1);
+			}
+			s[5] = encryptOrderNo.substring(5);
+			for (int i = 0; i < s.length - 1; i++) {
+				String s1 = String.valueOf(StrToHex(s[i], 61));
+				if (s1.length() == 1) {
+					s1 = "0" + s1;
+				}
+				result = result + s1;
+			}
+			String s2 = String.valueOf(StrToHex(s[s.length - 1], 61));
+			if (s2.length() == 3) {
+				s2 = "0" + s2;
+			} else if (s2.length() == 2) {
+				s2 = "00" + s2;
+			} else if (s2.length() == 1) {
+				s2 = "000" + s2;
+			}
+			result = result + s2;
+			return result;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	/**
+	 * 其他进制转换成十进制
+	 * 
+	 * @param s
+	 * @param shift
+	 * @return
+	 */
+	public int StrToHex(String s, int shift) {
+		try {
+			String key = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXY";
+			int result = 0;
+			char[] cArray = s.toCharArray();
+			int[] iArray = new int[cArray.length];
+			for (int i = 0; i < cArray.length; i++) {
+				iArray[i] = key.indexOf(cArray[i]);
+			}
+			for (int i = 0; i < s.length(); i++) {
+				result = result
+						+ (iArray[i] * (int) Math.pow(shift,
+								(s.length() - 1 - i)));
+			}
+			return result;
+		} catch (Exception e) {
+			return -1;
+		}
+
+	}
+	
+	private XmlMmNotifyReq parseNotify(String xml) throws Exception {
+		XMap xmap = new XMap();
+		xmap.register(XmlMmNotifyReq.class);
+
+		ByteArrayInputStream in = new ByteArrayInputStream(
+				xml.getBytes("UTF-8"));
+		XmlMmNotifyReq notify = (XmlMmNotifyReq) xmap.load(in);
+
+		return notify;
+	}
+
+	private Result response(String msg) {
+		return new Result(new ResultXJContent(msg, msg));
+	}
+}

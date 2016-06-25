@@ -1,0 +1,9 @@
+INDEX VERSION 1.122+/Users/a/Documents/bird_pay_sdk/.metadata/.plugins/org.eclipse.wst.jsdt.core/indexes
+1353778195.index
+3481241288.index
+4272996868.index
+2154048942.index
+948350896.index
+3798686815.index
+1874848136.index
+2135176094.index

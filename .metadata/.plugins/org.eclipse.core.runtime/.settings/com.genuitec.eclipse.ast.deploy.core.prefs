@@ -1,0 +1,14 @@
+#Wed May 25 19:00:20 CST 2016
+myeclipseTomcatServer.lab-jeecg.isExploded=true
+myeclipseTomcatServer.lab-jeecg.shouldBackup=false
+myeclipseTomcatServer.lab-jeecg.deployIsOverProject=false
+myeclipseTomcatServer.lab-jeecg.isDeployed=true
+myeclipseTomcatServer.lab-jeecg.noFileCopy=false
+myeclipseTomcatServer.lab-jeecg.type=WebDeployment
+myeclipseTomcatServer.lab-jeecg.shouldOverwrite=false
+eclipse.preferences.version=1
+myeclipseTomcatServer.lab-jeecg.isUptoDate=true
+myeclipseTomcatServer.lab-jeecg.altContextRoot=/jeecg-v3-simple
+myeclipseTomcatServer.lab-jeecg.IEARProjectName=
+myeclipseTomcatServer.lab-jeecg.contextRoot=/jeecg-v3-simple
+myeclipseTomcatServer.lab-jeecg.deploymentPath=/Users/a/Documents/bird_pay_sdk/.metadata/.me_tcat/webapps/jeecg-v3-simple

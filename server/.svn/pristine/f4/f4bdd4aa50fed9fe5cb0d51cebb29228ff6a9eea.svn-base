@@ -1,0 +1,81 @@
+package com.cheyooh.service.sdk.action.notify;
+
+import java.util.Date;
+
+import org.apache.commons.lang.StringUtils;
+
+import com.cheyooh.service.dal.DAL;
+import com.cheyooh.service.dal.DALFactory;
+import com.cheyooh.service.framework.idata.Result;
+import com.cheyooh.service.framework.idata.ResultXJContent;
+import com.cheyooh.service.sdk.cfg.Cfg;
+import com.cheyooh.service.sdk.db.dao.SdkNotifyMmdoMapper;
+import com.cheyooh.service.sdk.db.entity.SdkNotifyMmdo;
+import com.cheyooh.service.sdk.idata.CmdMmdoUnicomNotify;
+
+public class MmdoUnicomNotify extends AbstractNotifyService<CmdMmdoUnicomNotify>{
+
+	private static final String  MMPMUNICOMZC = "mmpmunicomzc";
+	@Override
+	protected Result execute(CmdMmdoUnicomNotify cmd) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private final String DELIVRD_MSG="DELIVRD";;
+	private final Integer OPTYPE=2;
+	
+	
+	@Override
+	protected Result verify(CmdMmdoUnicomNotify cmd) {
+		if("1".equals(cmd.getP()) || DELIVRD_MSG.equalsIgnoreCase(cmd.getP())){ 
+			DAL dal=DALFactory.createDAL();
+			try{
+				SdkNotifyMmdoMapper notifyMmdoMapper=dal.getMapper(SdkNotifyMmdoMapper.class);
+				SdkNotifyMmdo notifyMmdo=new SdkNotifyMmdo();
+				String[] cmdArray=cmd.getServiceContext().getRequest().getParameterValues("cmd");
+				if(cmdArray!=null && cmdArray.length>1){
+					cmd.setCmd(cmdArray[1]);
+				}
+				if(StringUtils.isNotEmpty(cmd.getCmd())){
+					String[] splitStringArray=cmd.getCmd().split(Cfg.cfg.getString("mmdo_unicom_spilt", "_"));
+					if(splitStringArray.length>1){
+						String[] gameAndAmountArray=splitStringArray[1].split(Cfg.cfg.getString("mmd_unicom_amount_spilt", "&"));
+						if(gameAndAmountArray.length>1){
+							notifyMmdo.setCmd(cmd.getCmd());
+							notifyMmdo.setCreateTime(new Date());
+							notifyMmdo.setGameId(Integer.valueOf(gameAndAmountArray[0]));
+							notifyMmdo.setKey("");
+							notifyMmdo.setLinkid(cmd.getL());
+							notifyMmdo.setMobile(cmd.getDest());
+							notifyMmdo.setSpid("");
+							notifyMmdo.setSpnum("");
+							notifyMmdo.setAmount(Float.valueOf(gameAndAmountArray[1]));
+							notifyMmdo.setOperationType(OPTYPE);
+							notifyMmdo.setPayChannelCode(MMPMUNICOMZC);
+							notifyMmdoMapper.insertSelective(notifyMmdo);
+							dal.commit();
+							return success();
+						}
+					}
+				}
+				return fail("fail");
+			}finally{
+				dal.close();
+			}
+		}else{
+			fail("fail");
+		}
+		return fail("fail");
+	}
+	private Result success(){
+		return new Result(new ResultXJContent("succ","succ"));
+	}
+	
+	private Result fail(String msg){
+		//log
+		return new Result(new ResultXJContent(msg,msg));
+	}
+	
+
+}

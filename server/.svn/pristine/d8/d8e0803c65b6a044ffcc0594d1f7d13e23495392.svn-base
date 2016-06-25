@@ -1,0 +1,223 @@
+/**
+ * 
+ */
+package com.cheyooh.service.sdk.action.notify;
+
+import java.security.KeyFactory;
+import java.security.PublicKey;
+import java.security.Signature;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
+
+import com.cheyooh.service.dal.DAL;
+import com.cheyooh.service.dal.DALFactory;
+import com.cheyooh.service.framework.idata.Result;
+import com.cheyooh.service.framework.idata.ResultXJContent;
+import com.cheyooh.service.sdk.cfg.Cfg;
+import com.cheyooh.service.sdk.db.dao.SdkNotifyMmdoMapper;
+import com.cheyooh.service.sdk.db.dao.SdkOrderMapper;
+import com.cheyooh.service.sdk.db.dao.SdkOrderMmdoMapper;
+import com.cheyooh.service.sdk.db.dao.SdkWoplusOfflinePaySmsMapper;
+import com.cheyooh.service.sdk.db.entity.SdkNotifyMmdo;
+import com.cheyooh.service.sdk.db.entity.SdkOrder;
+import com.cheyooh.service.sdk.db.entity.SdkOrderMmdo;
+import com.cheyooh.service.sdk.db.entity.SdkWoplusOfflinePaySms;
+import com.cheyooh.service.sdk.idata.notify.CmdWoplusOfflinePmNotify;
+import com.cheyooh.service.sdk.tools.WoplusOfflineBase64;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+/**
+ * @author Merlin
+ * 
+ */
+public class WoplusOfflinePmNotify extends AbstractNotifyService<CmdWoplusOfflinePmNotify> {
+  private static final Integer CHINA_UNICOM = 2;
+  private static final String KEY_ALGORITHM = "RSA";
+  private static final String SIGNATURE_ALGORITHM = "SHA1withRSA";
+  private static final String WOPLUS_OFFLINE = "woplusoffline";
+  private static final ObjectMapper mapper = new ObjectMapper();
+  static {
+    //mapper.setPropertyNamingStrategy(PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES);
+    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+  }
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.cheyooh.service.framework.basic.Service#verify(com.cheyooh.service.framework.idata.Cmd)
+   */
+  @Override
+  protected Result verify(CmdWoplusOfflinePmNotify cmd) {
+    return null;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.cheyooh.service.framework.basic.Service#execute(com.cheyooh.service.framework.idata.Cmd)
+   */
+  @Override
+  protected Result execute(CmdWoplusOfflinePmNotify cmd) {
+    DAL dal = DALFactory.createDAL();
+    try {
+      if (StringUtils.isBlank(cmd.getCpTradeId())) {
+        logger.error("the unicom wo+ offline notify no parameter, cmd = " + cmd.toString());
+        return sendResponse();
+      }
+      
+      Integer payId;
+      try {
+        payId = Integer.valueOf(cmd.getCpTradeId());
+      } catch (Exception e) {
+        logger.error("the unicom wo+ offline notify cpTradeId = " + cmd.getCpTradeId() + ", is not number!", e);
+        return sendResponse();
+      }
+      
+      SdkWoplusOfflinePaySmsMapper paySmsMapper = dal.getMapper(SdkWoplusOfflinePaySmsMapper.class);
+      SdkWoplusOfflinePaySms paySms = paySmsMapper.selectByPrimaryKey(payId);
+      if (paySms == null) {
+        logger.error("the unicom wo+ offline notify can not found the entity in db, cpTradeId = " + cmd.getCpTradeId());
+        return sendResponse();
+      }
+      
+      if (paySms.getStatus() != 0) {
+        logger.error("the unicom wo+ offline notify order have handled, cpTradeId = " + paySms.getId());
+        return sendResponse();
+      }
+      
+      Date time = new Date();
+      String rawData = getJson4Params(cmd.getServiceContext().getRequest());
+      paySms.setUpdatedTime(time);
+      paySms.setNotifyRawData(rawData);
+      if ("200".equals(cmd.getPayStatus()) && verifySign(cmd)) {
+        paySms.setStatus((byte) 1);
+        
+        SdkNotifyMmdo notify = new SdkNotifyMmdo();
+        notify.setAmount(paySms.getMoney());
+        notify.setCmd(paySms.getSmsContent());
+        notify.setCreateTime(time);
+        notify.setGameId(paySms.getGameId());
+        //notify.setKey();
+        notify.setLinkid(cmd.getPayDetailId());
+        notify.setMobile(cmd.getPseudoCode());
+        notify.setOperationType(CHINA_UNICOM);
+        notify.setSpid(paySms.getSmsPort());
+        notify.setSpnum(paySms.getSmsPort());
+        notify.setPayChannelCode(WOPLUS_OFFLINE);
+        SdkNotifyMmdoMapper notifyMmdoMapper = dal.getMapper(SdkNotifyMmdoMapper.class);
+        notifyMmdoMapper.insertSelective(notify);
+        
+        SdkOrderMapper orderMapper = dal.getMapper(SdkOrderMapper.class);
+        SdkOrder order = orderMapper.selectByPrimaryKey(paySms.getOrderNo());
+        if (order != null) {
+          order.setStatus(1);
+          orderMapper.updateByPrimaryKeySelective(order);
+          
+          SdkOrderMmdoMapper orderMmdoMapper = dal.getMapper(SdkOrderMmdoMapper.class);
+          SdkOrderMmdo orderMmdo = orderMmdoMapper.selectByPrimaryKey(order.getPayId());
+          if (orderMmdo != null) {
+            orderMmdo.setRespTime(time);
+            orderMmdo.setRespStatus(1);
+            orderMmdoMapper.updateByPrimaryKeySelective(orderMmdo);
+          } else {
+            logger.error("the unicom wo+ offline notify error, can not found the order mmdo = " + order.getPayId());
+          }
+        } else {
+          logger.error("the unicom wo+ offline notify error, can not found the order = " + paySms.getOrderNo());
+        }
+      } else {
+        paySms.setStatus((byte) 2);
+      }
+      
+      paySmsMapper.updateByPrimaryKeySelective(paySms);
+      dal.commit();
+    } catch (Exception e) {
+      logger.error("the unicom wo+ offline notify error!", e);
+    } finally {
+      dal.close();
+    }
+    return sendResponse();
+  }
+  
+  protected String getJson4Params(HttpServletRequest request) throws Exception {
+    Map<String, String> params = new LinkedHashMap<String, String>();
+    logger.debug("================ param list ================");
+    Set<String> keySet = request.getParameterMap().keySet();
+    for (String key : keySet) {
+      if (key.equals("m")) {
+        continue;
+      }
+      String value = request.getParameter(key);
+      logger.debug(key + " = " + value);
+      params.put(key, value);
+    }
+    logger.debug("================ param ended ===============");
+    return mapper.writeValueAsString(params);
+  }
+  
+  private Result sendResponse() {
+    return new Result(new ResultXJContent("success", "success"));
+  }
+  
+  private boolean verifySign(CmdWoplusOfflinePmNotify cmd) throws Exception {
+    if (StringUtils.isBlank(cmd.getSign())) {
+      logger.error("the unicom wo+ offline notify error, client sign = " + cmd.getSign());
+      return false;
+    }
+    
+    String data = "payDetailId=" + StringUtils.defaultString(cmd.getPayDetailId()) + 
+        "&cpTradeId=" + StringUtils.defaultString(cmd.getCpTradeId()) + 
+        "&productName=" + StringUtils.defaultString(cmd.getProductName()) +
+        "&productType=" + StringUtils.defaultString(cmd.getProductType()) +
+        "&price=" + StringUtils.defaultString(cmd.getPrice()) +
+        "&amount=" + StringUtils.defaultString(cmd.getAmount()) +
+        "&money=" + StringUtils.defaultString(cmd.getMoney()) +
+        "&payStatus=" + StringUtils.defaultString(cmd.getPayStatus()) +
+        "&payType=" + StringUtils.defaultString(cmd.getPayType()) +
+        "&timeStamp=" + StringUtils.defaultString(cmd.getTimeStamp());
+    String publicKey = Cfg.cfg.getString("sdk.external.unicom.woplusoffline.rsa.publickey");
+    // 解密由base64编码的公钥
+    byte[] keyBytes = WoplusOfflineBase64.decode(publicKey);
+
+    // 构造X509EncodedKeySpec对象
+    X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);
+
+    // KEY_ALGORITHM 指定的加密算法
+    KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
+
+    // 取公钥匙对象
+    PublicKey pubKey = keyFactory.generatePublic(keySpec);
+
+    Signature signature = Signature.getInstance(SIGNATURE_ALGORITHM);
+    signature.initVerify(pubKey);
+    byte[] dataBytes = data.getBytes("UTF-8");
+    signature.update(dataBytes);
+    // 验证签名是否正常
+    boolean isRight = signature.verify(WoplusOfflineBase64.decode(cmd.getSign()));
+    return isRight;
+  }
+  
+  public static void main(String[] args) throws Exception {
+    CmdWoplusOfflinePmNotify cmd = new CmdWoplusOfflinePmNotify();
+    cmd.setPayDetailId("201410211341059593");
+    cmd.setCpTradeId("100");
+    cmd.setProductName("100钻石");
+    cmd.setProductType("2");
+    cmd.setPrice("0.05");
+    cmd.setAmount("1");
+    cmd.setMoney("0.05");
+    cmd.setPayStatus("200");
+    cmd.setPayType("1");
+    cmd.setTimeStamp("20141021134105");
+    cmd.setSign("FXOHh4yX//+BhYPOv2c4nSeYcNUy5agoKa5btT5h+I3uGWH3jF9eL5ZztYeDRvCHTSHXfeA2IFbJQi7ieVpJUvXVYQ5vP8P0T3Um2Ptz7S+n2c6rFCAlLE2yFqms2po+3DlRMc8z/1gFDQLkrauD28H8rY3Ijx+dNQqRC6OaU8xYJp5hAgg774eXLYP8xsXLSZ/csQm2BBRQXVjoUPgwhDP+zRepAYPHiX55KkSnerubhdtJHyAaAo47+0S4AZ/KTFvAnWSRREdd6g5VpzHo8q4Aa4BFidQ1wmfLnZPXzQqMJEj8P6kqYf9/X4b6flk3enbBuZhZFry3Oq7/3VHTWQ==");
+    WoplusOfflinePmNotify pm = new WoplusOfflinePmNotify();
+    System.out.println(pm.verifySign(cmd));
+  }
+}

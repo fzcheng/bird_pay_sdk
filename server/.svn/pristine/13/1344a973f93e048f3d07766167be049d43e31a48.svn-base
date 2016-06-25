@@ -1,0 +1,243 @@
+package com.cheyooh.service.sdk.action.notify;
+
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang.StringUtils;
+
+import com.cheyooh.service.dal.DAL;
+import com.cheyooh.service.dal.DALFactory;
+import com.cheyooh.service.framework.idata.Cmd;
+import com.cheyooh.service.framework.idata.Result;
+import com.cheyooh.service.framework.idata.ResultXJContent;
+import com.cheyooh.service.sdk.cfg.Cfg;
+import com.cheyooh.service.sdk.db.dao.SdkNotifyMmdoMapper;
+import com.cheyooh.service.sdk.db.dao.SdkOrderMapper;
+import com.cheyooh.service.sdk.db.dao.SdkOrderMmdoMapper;
+import com.cheyooh.service.sdk.db.entity.SdkNotifyMmdo;
+import com.cheyooh.service.sdk.db.entity.SdkNotifyMmdoExample;
+import com.cheyooh.service.sdk.db.entity.SdkOrder;
+import com.cheyooh.service.sdk.db.entity.SdkOrderExample;
+import com.cheyooh.service.sdk.db.entity.SdkOrderMmdo;
+import com.cheyooh.service.sdk.db.entity.SdkOrderMmdoExample;
+
+public class SdkXqtpayNotify extends AbstractNotifyService<Cmd> {
+
+	private String success_mgs = "<result>1</result>";
+	private String fail_mgs = "<result>0</result>";
+	private String key = Cfg.cfg.getString("sdk.sdkxqtpay.key");
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.cheyooh.service.framework.basic.Service#verify(com.cheyooh.service
+	 * .framework.idata.Cmd)
+	 */
+	@Override
+	protected Result verify(Cmd cmd) {
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.cheyooh.service.framework.basic.Service#execute(com.cheyooh.service
+	 * .framework.idata.Cmd)
+	 */
+	@Override
+	protected Result execute(Cmd cmd) {
+		DAL dal = DALFactory.createDAL();
+		try {
+			String state = cmd.getServiceContext().getRequest()
+					.getParameter("state");
+			if (StringUtils.isEmpty(state)) {
+				state = "";
+			}
+			String customerid = cmd.getServiceContext().getRequest()
+					.getParameter("customerid");
+			if (StringUtils.isEmpty(customerid)) {
+				customerid = "";
+			}
+			String sd51no = cmd.getServiceContext().getRequest()
+					.getParameter("sd51no");
+			if (StringUtils.isEmpty(sd51no)) {
+				sd51no = "";
+			}
+			String sdcustomno = cmd.getServiceContext().getRequest()
+					.getParameter("sdcustomno");
+			if (StringUtils.isEmpty(sdcustomno)) {
+				sdcustomno = "";
+			}
+			String ordermoney = cmd.getServiceContext().getRequest()
+					.getParameter("ordermoney");
+			if (StringUtils.isEmpty(ordermoney)) {
+				ordermoney = "";
+			}
+			if(ordermoney.startsWith(".")){
+				ordermoney="0"+ordermoney;
+			}
+			logger.debug("the sdkxqtpay pay notify ordermoney is :" + ordermoney);
+			String mark = cmd.getServiceContext().getRequest()
+					.getParameter("mark");
+			if (StringUtils.isEmpty(mark)) {
+				mark = "";
+			}
+			String sign = cmd.getServiceContext().getRequest()
+					.getParameter("sign");
+			if (StringUtils.isEmpty(sign)) {
+				sign = "";
+			}
+			String resign = cmd.getServiceContext().getRequest()
+					.getParameter("resign");
+			if (StringUtils.isEmpty(resign)) {
+				resign = "";
+			}
+			String des = cmd.getServiceContext().getRequest()
+					.getParameter("des");
+			if (StringUtils.isEmpty(des)) {
+				des = "";
+			}
+
+			logger.info("the sdkxqtpay pay notify orderNo is :" + sdcustomno);
+
+			String plaintext1 = "customerid=" + customerid + "&sd51no="
+					+ sd51no + "&sdcustomno=" + sdcustomno + "&mark=" + mark
+					+ "&key=" + key;
+			String md5String1 = DigestUtils.md5Hex(plaintext1).toUpperCase();
+			if (!sign.equals(md5String1)) {
+				return result(fail_mgs);
+			}
+			
+			SdkNotifyMmdoMapper sdkNotifyMmdoMapper = dal.getMapper(SdkNotifyMmdoMapper.class);
+			SdkNotifyMmdoExample sdkNotifyMmdoExample = new SdkNotifyMmdoExample();
+			sdkNotifyMmdoExample.createCriteria().andOrderNoEqualTo(sdcustomno);
+			SdkNotifyMmdo sdkNotifyMmdo = sdkNotifyMmdoMapper.selectOne(sdkNotifyMmdoExample);
+			if (sdkNotifyMmdo != null) {
+				int notifyStatus=0;
+				if("1".equals(state)){
+					notifyStatus=1;
+					
+					SdkOrderMapper sdkOrderMapper = dal.getMapper(SdkOrderMapper.class);
+					SdkOrderExample sdkOrderExample = new SdkOrderExample();
+					sdkOrderExample.createCriteria().andOrderNoEqualTo(sdcustomno);
+					SdkOrder sdkOrder = sdkOrderMapper.selectOne(sdkOrderExample);
+					if (sdkOrder != null) {
+						SdkOrderMmdoMapper sdkOrderMmdoMapper = dal
+								.getMapper(SdkOrderMmdoMapper.class);
+						SdkOrderMmdoExample sdkOrderMmdoExample = new SdkOrderMmdoExample();
+						sdkOrderMmdoExample.createCriteria().andPayIdEqualTo(
+								sdkOrder.getPayId());
+						SdkOrderMmdo sdkOrderMmdo = sdkOrderMmdoMapper
+								.selectOne(sdkOrderMmdoExample);
+						if (sdkOrderMmdo != null) {
+							sdkOrder.setStatus(1);
+							sdkOrderMapper.updateByPrimaryKey(sdkOrder);
+							
+							sdkOrderMmdo.setRespStatus(1);
+							sdkOrderMmdoMapper.updateByPrimaryKey(sdkOrderMmdo);
+						}
+					}
+				}else {
+					sdkNotifyMmdo.setStatusDetail(des);
+				}
+				sdkNotifyMmdo.setNotifyStatus(notifyStatus);
+				sdkNotifyMmdo.setLinkid(sd51no);
+				sdkNotifyMmdoMapper.updateByPrimaryKey(sdkNotifyMmdo);
+			}
+			
+//			SdkNotifyMmdoMapper notifyMmdoMapper = dal
+//					.getMapper(SdkNotifyMmdoMapper.class);
+//			SdkNotifyMmdoExample notifyMmdoExample = new SdkNotifyMmdoExample();
+//			notifyMmdoExample.createCriteria().andOrderNoEqualTo(sdcustomno);
+//			SdkNotifyMmdo notifyMmdo = notifyMmdoMapper
+//					.selectOne(notifyMmdoExample);
+//			if (notifyMmdo != null) {
+//				return result(success_mgs);
+//			}
+//			String plaintext1 = "customerid=" + customerid + "&sd51no="
+//					+ sd51no + "&sdcustomno=" + sdcustomno + "&mark=" + mark
+//					+ "&key=" + key;
+//			String md5String1 = DigestUtils.md5Hex(plaintext1).toUpperCase();
+//			if (!sign.equals(md5String1)) {
+//				return result(fail_mgs);
+//			}
+////			String plaintext2 = "sign=" + md5String1 + "&customerid="
+////					+ customerid + "&ordermoney=" + ordermoney + "&sd51no="
+////					+ sd51no + "&state=" + state + "&key=" + key;
+////			String md5String2 = DigestUtils.md5Hex(plaintext2).toUpperCase();
+////			if(!sign.equals(md5String2)){
+////				return result(fail_mgs);
+////			}
+//			if(!"1".equals(state)){
+//				return result(fail_mgs);
+//			}
+//			SdkOrderMapper sdkOrderMapper = dal.getMapper(SdkOrderMapper.class);
+//			SdkOrderExample sdkOrderExample = new SdkOrderExample();
+//			sdkOrderExample.createCriteria().andOrderNoEqualTo(sdcustomno);
+//			SdkOrder sdkOrder = sdkOrderMapper.selectOne(sdkOrderExample);
+//			if (sdkOrder != null) {
+//				SdkOrderMmdoMapper sdkOrderMmdoMapper = dal
+//						.getMapper(SdkOrderMmdoMapper.class);
+//				SdkOrderMmdoExample sdkOrderMmdoExample = new SdkOrderMmdoExample();
+//				sdkOrderMmdoExample.createCriteria().andPayIdEqualTo(
+//						sdkOrder.getPayId());
+//				SdkOrderMmdo sdkOrderMmdo = sdkOrderMmdoMapper
+//						.selectOne(sdkOrderMmdoExample);
+//				if (sdkOrderMmdo != null) {
+//					SdkNotifyMmdo sdkNotifyMmdo = new SdkNotifyMmdo();
+//					sdkNotifyMmdo.setOrderNo(sdcustomno);
+//					sdkNotifyMmdo.setLinkid(sd51no);
+//					sdkNotifyMmdo.setSpid(sdkOrderMmdo.getReqSendContent());
+//					sdkNotifyMmdo.setCmd(sdkOrderMmdo.getReqSendContent());
+//					SdkTelephoneMapper sdkTelephoneMapper = dal
+//							.getMapper(SdkTelephoneMapper.class);
+//					SdkTelephoneExample sdkTelephoneExample = new SdkTelephoneExample();
+//					String imsi="";
+//					if(sdkOrderMmdo.getRespImsi()!=null){
+//						imsi=sdkOrderMmdo.getReqImsi();
+//					}
+//					sdkTelephoneExample.createCriteria().andImsiEqualTo(
+//							imsi);
+//					SdkTelephone sdkTelephone = sdkTelephoneMapper
+//							.selectOne(sdkTelephoneExample);
+//					if (sdkTelephone != null) {
+//						sdkNotifyMmdo.setKey(String.valueOf(sdkTelephone
+//								.getProvinceNo()));
+//						sdkNotifyMmdo.setMobile(sdkTelephone.getMobilephone());
+//					}
+//					sdkNotifyMmdo.setSpnum(sdkOrderMmdo.getReqSendNumber());
+//					sdkNotifyMmdo.setGameId(sdkOrderMmdo.getGameId());
+//					sdkNotifyMmdo.setAmount(sdkOrderMmdo.getReqOrderAmount());
+//					sdkNotifyMmdo.setCreateTime(new Date());
+//					sdkNotifyMmdo.setOperationType(sdkOrderMmdo
+//							.getOperationType());
+//					sdkNotifyMmdo.setPayChannelCode(sdkOrderMmdo
+//							.getPayChannelCode());
+//					sdkNotifyMmdo.setAdditionalStatus(sdkOrderMmdo
+//							.getAdditionalStatus());
+//					
+//					sdkOrder.setStatus(1);
+//					sdkOrderMapper.updateByPrimaryKey(sdkOrder);
+//					
+//					sdkOrderMmdo.setRespStatus(1);
+//					sdkOrderMmdoMapper.updateByPrimaryKey(sdkOrderMmdo);
+//					
+//					SdkNotifyMmdoMapper sdkNotifyMmdoMapper = dal
+//							.getMapper(SdkNotifyMmdoMapper.class);
+//					sdkNotifyMmdoMapper.insertSelective(sdkNotifyMmdo);
+//				}
+//			}
+			dal.commit();
+		} catch (Exception e) {
+			logger.error("the sdkxqtpay pay notify error!", e);
+			result("Exception: " + e.getMessage() + ", class: ".getClass());
+		} finally {
+			dal.close();
+		}
+		return result(success_mgs);
+	}
+
+	private Result result(String mgs) {
+		return new Result(new ResultXJContent(mgs, mgs));
+	}
+}

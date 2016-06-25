@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/jetty">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="/Users/Merlin/Tools/jetty8/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="com.genuitec.runtime.library/com.genuitec.generic_6.0"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.eclipse.jetty.server.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.eclipse.jetty.util.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.eclipse.jetty.webapp_7.1.6.v20100715.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="ChooseWorkspaceDialogSettings">
+		<item value="226" key="DIALOG_Y_ORIGIN"/>
+		<item value="416" key="DIALOG_X_ORIGIN"/>
+	</section>
+	<section name="ExternalProjectImportWizard">
+		<item value="false" key="WizardProjectsImportPage.STORE_ARCHIVE_SELECTED"/>
+		<item value="false" key="WizardProjectsImportPage.STORE_COPY_PROJECT_ID"/>
+		<item value="false" key="WizardProjectsImportPage.STORE_NESTED_PROJECTS"/>
+		<list key="WizardProjectsImportPage.STORE_DIRECTORIES">
+			<item value="D:\magicbirds\SVN\leyosdk\jeecg\sdk-jeecg"/>
+			<item value="D:\magicbirds\SVN\leyosdk\jeecg\lab-jeecg-jetty"/>
+			<item value="D:\magicbirds\SVN\leyosdk\jeecg\lab-jeecg-ext"/>
+			<item value="D:\magicbirds\SVN\leyosdk\jeecg\lab-jeecg"/>
+			<item value="D:\magicbirds\SVN\leyosdk\cs-commons\cs-generator"/>
+		</list>
+		<list key="WizardProjectsImportPage.STORE_ARCHIVES">
+			<item value=""/>
+		</list>
+	</section>
+	<section name="WORKBENCH_SETTINGS">
+		<list key="ENABLED_TRANSFERS">
+		</list>
+	</section>
+</section>

@@ -1,0 +1,2 @@
+alter table game_sdk.`sdk_stat_game_remain` add column `cnt_remain_14` int(11) DEFAULT NULL COMMENT '14日留存人数';
+alter table game_sdk.`sdk_stat_game_remain` add column  `cnt_remain_30` int(11) DEFAULT NULL COMMENT '30日留存人数';

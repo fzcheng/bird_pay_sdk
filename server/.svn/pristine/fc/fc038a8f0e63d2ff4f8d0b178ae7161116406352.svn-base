@@ -1,0 +1,159 @@
+package com.cheyooh.service.sdk.action.notify;
+
+import java.util.Date;
+import java.util.Iterator;
+import java.util.Map;
+import com.cheyooh.service.dal.DAL;
+import com.cheyooh.service.dal.DALFactory;
+import com.cheyooh.service.framework.idata.Result;
+import com.cheyooh.service.framework.idata.ResultXJContent;
+import com.cheyooh.service.sdk.cfg.Cfg;
+import com.cheyooh.service.sdk.db.dao.SdkOrderMapper;
+import com.cheyooh.service.sdk.db.dao.SdkOrderVpayMapper;
+import com.cheyooh.service.sdk.db.entity.SdkOrder;
+import com.cheyooh.service.sdk.db.entity.SdkOrderVpay;
+import com.cheyooh.service.sdk.idata.notify.CmdVpayCallbackNotify;
+import com.cheyooh.tools.http.HttpResult;
+import com.cheyooh.tools.http.HttpUtils;
+import com.cheyooh.tools.http.HttpUtils.HttpRequest;
+import com.tenpay.util.MD5Util;
+
+public class Pay_vpay_callback extends AbstractNotifyService<CmdVpayCallbackNotify>{
+
+	@Override
+	protected Result verify(CmdVpayCallbackNotify cmd) {
+		
+		cmd.getServiceContext().getRequest().getParameterMap();
+		Map requestParams = cmd.getServiceContext().getRequest().getParameterMap();
+		StringBuilder sb=new StringBuilder();
+		for (Iterator iter = requestParams.keySet().iterator(); iter.hasNext();) {
+			String name = (String) iter.next();
+			String[] values = (String[]) requestParams.get(name);
+			String valueStr = "";
+			for (int i = 0; i < values.length; i++) {
+				valueStr = (i == values.length - 1) ? valueStr + values[i]
+						: valueStr + values[i] + ",";
+			}
+			sb.append(name+"="+valueStr+"&");
+			 
+		}
+		// 测试 打印请求
+		logger.error("Pay_vpay_callback_param:"+sb.toString());
+		// 验证
+		String md5=cmd.getOid()+"_"+cmd.getMz();
+		String signMd5=MD5Util.MD5Encode(md5, "UTF-8");
+		if(!signMd5.equalsIgnoreCase(cmd.getMd5())){
+			logger.error("Pay_vpay_callback_param,验证失败:"+sb.toString());
+			return fail();
+		}
+		return null;
+	}
+
+
+	@Override
+	protected Result execute(CmdVpayCallbackNotify cmd) {
+		DAL dal=DALFactory.createDAL();
+		try {
+			SdkOrderMapper sdkOrderMapper=dal.getMapper(SdkOrderMapper.class);
+			SdkOrderVpayMapper sdkOrderVpayMapper=dal.getMapper(SdkOrderVpayMapper.class);
+			SdkOrder order=sdkOrderMapper.selectByPrimaryKey(cmd.getOid());
+			if(order!=null){
+				SdkOrderVpay sdkOrderVpay=sdkOrderVpayMapper.selectByPrimaryKey(order.getPayId());
+				if(sdkOrderVpay!=null){
+					setupOrderStatus(cmd,order,sdkOrderVpay);
+					sdkOrderVpayMapper.updateByPrimaryKeySelective(sdkOrderVpay);
+					sdkOrderMapper.updateByPrimaryKeySelective(order);
+					dal.commit();
+					String info=submitOrder(order,sdkOrderVpay);
+					sdkOrderVpayMapper.updateByPrimaryKeySelective(sdkOrderVpay);
+					sdkOrderMapper.updateByPrimaryKeySelective(order);
+					dal.commit();
+					return success(info);
+				}
+			}
+			return fail();
+			 
+		} catch (Exception e) {
+			logger.error(e);
+			return fail();
+		}finally{
+			dal.close();
+		}
+		 
+	}
+
+	private String submitOrder(SdkOrder order, SdkOrderVpay sdkOrderVpay) {
+		
+		String info="";
+		String baseUrl=Cfg.cfg.getString("vpay_pay_url");
+		StringBuilder sb=new StringBuilder();
+		 
+		
+		sb.append("sp="+ sdkOrderVpay.getReqSp());
+		sb.append("&od="+ sdkOrderVpay.getReqOd());
+		sb.append("&mz="+ String.valueOf(sdkOrderVpay.getReqMz()));
+		sb.append("&spzdy="+ sdkOrderVpay.getReqSpzdy());
+		sb.append("&mob="+ sdkOrderVpay.getReqMob());
+		sb.append("&uid="+ sdkOrderVpay.getReqUid());
+		sb.append("&spreq="+ sdkOrderVpay.getReqSpreq());
+		sb.append("&spsuc="+ sdkOrderVpay.getReqSpsuc());
+		String sppwd=Cfg.cfg.getString("vpay_sppwd");
+		String md5=sdkOrderVpay.getReqSp()+sdkOrderVpay.getReqOd()+sppwd+sdkOrderVpay.getReqMz()+
+				sdkOrderVpay.getReqSpreq()+sdkOrderVpay.getReqSpsuc()+sdkOrderVpay.getReqMob();
+		String signMd5=MD5Util.MD5Encode(md5, "UTF-8");
+		sb.append("&md5="+ signMd5.toUpperCase());
+		baseUrl=baseUrl+"?"+sb.toString();
+		HttpRequest request=HttpUtils.newGetRequest(baseUrl);
+		HttpResult result= request.sendRequest();
+		if(result.isOk()){
+			String content=result.getBody();
+			info=content;
+			logger.info("Pay_vpay_callback_resp:"+content);
+			String[] contentArray=content.split("\\|");
+			if(contentArray.length>0){
+				String notifyStatus=contentArray[0];
+				if(notifyStatus.equals("yhxfsucc")){
+					// 成功
+					sdkOrderVpay.setRespUserEditContent(contentArray[1]);
+					sdkOrderVpay.setRespServerNumber(contentArray[2]);
+					sdkOrderVpay.setRespMob(contentArray[3]);
+					sdkOrderVpay.setRespMz(Integer.valueOf(contentArray[4]));
+					sdkOrderVpay.setRespOb(contentArray[5]);
+					sdkOrderVpay.setRespStatus("yhxfsucc");
+					sdkOrderVpay.setRespSpNo(contentArray[6]);
+					
+				}else if(notifyStatus.equals("yhxffail")){
+					// 失败
+					sdkOrderVpay.setRespStatus("yhxffail");
+					sdkOrderVpay.setRespStatusMsg(contentArray[1]);
+				}
+			}
+		}
+		return info;
+		
+	}
+
+
+	private void setupOrderStatus(CmdVpayCallbackNotify cmd, SdkOrder order,
+			SdkOrderVpay sdkOrderVpay) {
+		
+		sdkOrderVpay.setReqMob(cmd.getMob());
+		sdkOrderVpay.setReqMz(cmd.getMz());
+		sdkOrderVpay.setReqOd(cmd.getOid());
+		sdkOrderVpay.setReqSp(Cfg.cfg.getString("vpay_partner_id"));
+		sdkOrderVpay.setReqSpreq(Cfg.cfg.getString("vpay_notify_url"));
+		sdkOrderVpay.setReqSpsuc(Cfg.cfg.getString("vpay_notify_url"));
+		sdkOrderVpay.setReqSpzdy(order.getOrderNo());
+		sdkOrderVpay.setReqTime(new Date(System.currentTimeMillis()));
+		sdkOrderVpay.setReqUid(cmd.getUid());
+		
+	}
+
+
+	private Result success(String info){
+		return new Result(new ResultXJContent(info,info));
+	}
+	private Result fail(){
+		return new Result(new ResultXJContent("fail","fail"));
+	}
+}

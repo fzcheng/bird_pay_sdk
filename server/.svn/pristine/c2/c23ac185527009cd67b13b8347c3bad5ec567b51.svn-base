@@ -1,0 +1,577 @@
+package com.cheyooh.service.sdk.action.notify;
+
+import java.net.URLDecoder;
+import java.text.MessageFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+
+import com.cheyooh.service.dal.DAL;
+import com.cheyooh.service.dal.DALFactory;
+import com.cheyooh.service.framework.idata.Cmd;
+import com.cheyooh.service.framework.idata.Result;
+import com.cheyooh.service.framework.idata.ResultXJContent;
+import com.cheyooh.service.sdk.db.dao.SdkGameEmbedsdkMapper;
+import com.cheyooh.service.sdk.db.dao.SdkNotifyHwsdkMapper;
+import com.cheyooh.service.sdk.db.dao.SdkNotifyMmdoMapper;
+import com.cheyooh.service.sdk.db.entity.SdkGameEmbedsdk;
+import com.cheyooh.service.sdk.db.entity.SdkGameEmbedsdkExample;
+import com.cheyooh.service.sdk.db.entity.SdkNotifyHwsdk;
+import com.cheyooh.service.sdk.db.entity.SdkNotifyMmdo;
+import com.cheyooh.service.sdk.db.entity.SdkNotifyMmdoExample;
+import com.cheyooh.service.sdk.tools.CommonUtil;
+
+public class HwSDKNotify extends AbstractNotifyService<Cmd> {
+	private static final String payChannelCode = "sdkhuaweipay";
+	private static final String RESPONSE_BODY = "{\"result\":\"%d\"}";
+	// 测试支付公钥，CP需要替换成自己的
+	// public String key =
+	// "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAIYSLknVbI4U2FHjOM1z5mb7+VPXCsIs5vFKuy4/xRQpF/NCx8GBOUR/6SR1YQMFqgIaLcQ+goxI/kOM2b2VjVECAwEAAQ==";
+	private String key = "";
+	private int gameid = 0;
+	// 默认3，表示业务信息错误，比如订单不存在。
+	private int resultCode = 3;
+
+	@Override
+	protected Result verify(Cmd cmd) {
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.cheyooh.service.framework.basic.Service#execute(com.cheyooh.service
+	 * .framework.idata.Cmd)
+	 */
+	@SuppressWarnings("unused")
+	@Override
+	protected Result execute(Cmd cmd) {
+		DAL dal = DALFactory.createDAL();
+		try {
+			HttpServletRequest httpServletRequest = cmd.getServiceContext()
+					.getRequest();
+			httpServletRequest.setCharacterEncoding("UTF-8");
+
+			Map<String, Object> map = new HashMap<String, Object>();
+			Map<String, Object> hwMap = new HashMap<String, Object>();
+			Enumeration<String> paramNames = httpServletRequest
+					.getParameterNames();
+			// 获取所有的参数名
+			while (paramNames.hasMoreElements()) {
+				String name = paramNames.nextElement();
+				// 得到参数名
+				String value = httpServletRequest.getParameter(name);
+				// 通过参数名获取对应的值
+				if ("sign".equals(name) && null != value) {
+					value = URLDecoder.decode(value, "utf-8");
+				}
+				if ("extReserved".equals(name) && null != value) {
+					value = URLDecoder.decode(value, "utf-8");
+				}
+				if ("sysReserved".equals(name) && null != value) {
+					value = URLDecoder.decode(value, "utf-8");
+				}
+				logger.debug("获取的参数值: "
+						+ MessageFormat.format("{0}={1}", name, value));
+				map.put(name, value);
+				if ("m".equals(name)) {
+
+				} else if ("sign".equals(name)) {
+
+				} else if ("signType".equals(name)) {
+
+				} else {
+					hwMap.put(name, value);
+				}
+			}
+
+			if (map == null) {
+				resultCode = 1;
+			}
+
+			/*
+			 * for (Map.Entry<String, Object> me : hwMap.entrySet()) {
+			 * logger.debug("------" + MessageFormat.format("{0}={1}",
+			 * me.getKey(), me.getValue())); }
+			 */
+
+			String result = (String) map.get("result");
+			if (StringUtils.isEmpty(result)) {
+				result = "";
+			}
+
+			String userName = (String) map.get("userName");
+			if (StringUtils.isEmpty(userName)) {
+				userName = "";
+			}
+
+			String productName = (String) map.get("productName");
+			if (StringUtils.isEmpty(productName)) {
+				productName = "";
+			}
+
+			String payType = (String) map.get("payType");
+			if (StringUtils.isEmpty(payType)) {
+				payType = "";
+			}
+
+			String amount = (String) map.get("amount");
+			if (StringUtils.isEmpty(amount)) {
+				amount = "";
+			}
+
+			String orderId = (String) map.get("orderId");
+			if (StringUtils.isEmpty(orderId)) {
+				orderId = "";
+			}
+
+			String notifyTime = (String) map.get("notifyTime");
+			if (StringUtils.isEmpty(notifyTime)) {
+				notifyTime = "";
+			}
+
+			String requestId = (String) map.get("requestId");
+			if (StringUtils.isEmpty(requestId)) {
+				requestId = "";
+			}
+
+			String bankId = (String) map.get("bankId");
+			if (StringUtils.isEmpty(bankId)) {
+				bankId = "";
+			}
+
+			String orderTime = (String) map.get("orderTime");
+			if (StringUtils.isEmpty(orderTime)) {
+				orderTime = "";
+			}
+
+			String tradeTime = (String) map.get("tradeTime");
+			if (StringUtils.isEmpty(tradeTime)) {
+				tradeTime = "";
+			}
+
+			String accessMode = (String) map.get("accessMode");
+			if (StringUtils.isEmpty(accessMode)) {
+				accessMode = "";
+			}
+
+			String spending = (String) map.get("spending");
+			if (StringUtils.isEmpty(spending)) {
+				spending = "";
+			}
+
+			String extReserved = (String) map.get("extReserved");
+			if (StringUtils.isEmpty(extReserved)) {
+				extReserved = "";
+			}
+
+			String sysReserved = (String) map.get("sysReserved");
+			if (StringUtils.isEmpty(sysReserved)) {
+				sysReserved = "";
+			}
+
+			String signType = (String) map.get("signType");
+			if (StringUtils.isEmpty(signType)) {
+				signType = "";
+			}
+
+			String sign = (String) map.get("sign");
+			if (StringUtils.isEmpty(sign)) {
+				sign = "";
+			}
+			logger.debug("the sdkhuaweipay pay notify outTradeId =" + orderId);
+
+			SdkGameEmbedsdkMapper sdkGameEmbedsdkMapper = dal
+					.getMapper(SdkGameEmbedsdkMapper.class);
+			SdkGameEmbedsdkExample sdkGameEmbedsdkExample = new SdkGameEmbedsdkExample();
+			sdkGameEmbedsdkExample.createCriteria()
+					.andPayChannelCodeEqualTo(payChannelCode)
+					.andAppidEqualTo(userName);
+			SdkGameEmbedsdk sdkGameEmbedsdk = sdkGameEmbedsdkMapper
+					.selectOne(sdkGameEmbedsdkExample);
+			if (sdkGameEmbedsdk != null) {
+				logger.debug("已获取到支付密钥 =" + sdkGameEmbedsdk.getAppsecret());
+				logger.debug("已获取到游戏ID =" + sdkGameEmbedsdk.getGameId());
+				key = sdkGameEmbedsdk.getAppsecret();
+				gameid = sdkGameEmbedsdk.getGameId();
+			}
+
+			if (CommonUtil.rsaDoCheck(hwMap, sign, key)) {
+				// 验签成功
+				logger.info("验签成功 the sdkhuaweipay pay notify outTradeId =" + orderId);
+				SdkNotifyMmdoMapper sdkNotifyMmdoMapper = dal
+						.getMapper(SdkNotifyMmdoMapper.class);
+				SdkNotifyMmdoExample sdkNotifyMmdoExample = new SdkNotifyMmdoExample();
+				sdkNotifyMmdoExample.createCriteria()
+						.andPayChannelCodeEqualTo(payChannelCode)
+						.andLinkidEqualTo(orderId);
+				SdkNotifyMmdo sdkNotifyMmdo = sdkNotifyMmdoMapper
+						.selectOne(sdkNotifyMmdoExample);
+				if (sdkNotifyMmdo != null) {
+					// 表示已有订单
+					if (sdkNotifyMmdo.getNotifyStatus() == 1) {
+						// 表示已有订单成功处理过
+						resultCode = 0;
+					} else {
+						// 表示已有订单未成功处理
+						if ("0".equals(result)) {
+							// 表示订单成功，修改相关状态
+							sdkNotifyMmdo.setNotifyStatus(1);
+							resultCode = 0;
+						} else {
+							// 表示订单失败，修改相关状态
+
+							resultCode = 0;
+						}
+						sdkNotifyMmdoMapper
+								.updateByPrimaryKeySelective(sdkNotifyMmdo);
+					}
+				} else {
+					// 表示未处理过的订单，待处理
+
+					// 在华为表回调表添加记录sdk_notify_hwsdk
+					SdkNotifyHwsdk sdkNotifyHwsdk = new SdkNotifyHwsdk();
+					sdkNotifyHwsdk.setOrderid(orderId);
+					sdkNotifyHwsdk.setResult(result);
+					sdkNotifyHwsdk.setUsername(userName);
+					sdkNotifyHwsdk.setProductname(productName);
+					int payTypeInt = parseInteger(payType);
+					sdkNotifyHwsdk.setPaytype(payTypeInt);
+					float amountFloat = Float.valueOf(amount);
+					sdkNotifyHwsdk.setAmount(amountFloat);
+					sdkNotifyHwsdk.setNotifytime(notifyTime);
+					sdkNotifyHwsdk.setRequestid(requestId);
+					sdkNotifyHwsdk.setBankid(bankId);
+					if (StringUtils.isNotEmpty(orderTime)
+							&& StringUtils.isNotBlank(orderTime)) {
+						Date ordertimeDate = StrToDate(orderTime);
+						sdkNotifyHwsdk.setOrdertime(ordertimeDate);
+					}
+					if (StringUtils.isNotEmpty(tradeTime)
+							&& StringUtils.isNotBlank(tradeTime)) {
+						Date tradeTimeDate = StrToDate(tradeTime);
+						sdkNotifyHwsdk.setTradetime(tradeTimeDate);
+					}
+					sdkNotifyHwsdk.setAccessmode(accessMode);
+					if (StringUtils.isNotEmpty(spending)
+							&& StringUtils.isNotBlank(spending)) {
+						float spendingFloat = Float.valueOf(spending);
+						sdkNotifyHwsdk.setSpending(spendingFloat);
+					}
+					sdkNotifyHwsdk.setExtreserved(extReserved);
+					sdkNotifyHwsdk.setSysreserved(sysReserved);
+					sdkNotifyHwsdk.setSigntype(signType);
+					sdkNotifyHwsdk.setSign(sign);
+					Date createTime = new Date();
+					sdkNotifyHwsdk.setCreateTime(createTime);
+					SdkNotifyHwsdkMapper sdkNotifyHwsdkMapper = dal
+							.getMapper(SdkNotifyHwsdkMapper.class);
+					sdkNotifyHwsdkMapper.insert(sdkNotifyHwsdk);
+
+					// 在sdk_notify_mmdo表添加记录
+					SdkNotifyMmdo sdkNotifyMmdoRecord = new SdkNotifyMmdo();
+					sdkNotifyMmdoRecord.setLinkid(orderId);
+					sdkNotifyMmdoRecord.setSpid(productName);
+					sdkNotifyMmdoRecord.setOperationType(0);
+					// sdkNotifyMmdoRecord.setCmd(cmd);
+					// sdkNotifyMmdoRecord.setMobile(mobile);
+					// sdkNotifyMmdoRecord.setSpnum(spnum);
+					// sdkNotifyMmdoRecord.setKey(key);
+					// sdkNotifyMmdoRecord.setAdditionalStatus(additionalStatus);
+					// sdkNotifyMmdoRecord.setOrderNo(orderNo);
+					// sdkNotifyMmdoRecord.setStatusDetail(statusDetail);
+					sdkNotifyMmdoRecord.setGameId(gameid);
+					sdkNotifyMmdoRecord.setAmount(amountFloat);
+					sdkNotifyMmdoRecord.setCreateTime(createTime);
+					sdkNotifyMmdoRecord.setPayChannelCode(payChannelCode);
+					Integer notifyStatus = 0;
+					if ("0".equals(result)) {
+						notifyStatus = 1;
+					}
+					sdkNotifyMmdoRecord.setNotifyStatus(notifyStatus);
+					sdkNotifyMmdoRecord.setOriginalcode(result);
+					sdkNotifyMmdoMapper.insertSelective(sdkNotifyMmdoRecord);
+					resultCode = 0;
+				}
+			} else {
+				// 验签失败
+				logger.info("验签失败 the sdkhuaweipay pay notify outTradeId =" + orderId);
+				resultCode = 1;
+			}
+			dal.commit();
+			return response(resultCode);
+		} catch (Exception e) {
+			logger.error("the sdkhuaweipay pay notify error!", e);
+			return response(resultCode);
+		} finally {
+			dal.close();
+		}
+	}
+
+	private Integer parseInteger(String str) {
+		Integer num = null;
+		try {
+			if (StringUtils.isNotBlank(str)) {
+				num = Integer.valueOf(str);
+			}
+		} catch (NumberFormatException e) {
+			logger.warn("parse number string error! str = " + str);
+		}
+		return num;
+	}
+
+	private Result response(int status) {
+		String res = String.format(RESPONSE_BODY, status);
+		return new Result(new ResultXJContent(res, res));
+	}
+
+	/**
+	 * 测试方法
+	 * 
+	 * @param map
+	 * @return
+	 */
+	private String getContent(Map<String, Object> map) {
+		HttpClient httpclient = new DefaultHttpClient();
+		String result = "";
+		try {
+			String sendUrl = "http://dev.leyogame.cn/api/m/HwSDKNotify";
+			logger.debug("the sdkhuaweipay send api = " + sendUrl);
+			HttpPost httpost = new HttpPost(sendUrl);
+			httpost.setHeader("Content-type",
+					"application/x-www-form-urlencoded");
+			List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+			for (Map.Entry<String, Object> me : map.entrySet()) {
+				String mapKey=me.getKey();
+				switch(mapKey){
+				case "result":{
+						nvps.add(new BasicNameValuePair("result", (String) map
+						.get("result")));
+						break;
+						}
+				case "userName":{
+					nvps.add(new BasicNameValuePair("userName", (String) map
+					.get("userName")));
+					break;
+					}
+				case "productName":{
+					nvps.add(new BasicNameValuePair("productName", (String) map
+					.get("productName")));
+					break;
+					}
+				case "payType":{
+					nvps.add(new BasicNameValuePair("payType", (String) map
+					.get("payType")));
+					break;
+					}
+				case "amount":{
+					nvps.add(new BasicNameValuePair("amount", (String) map
+					.get("amount")));
+					break;
+					}
+				case "orderId":{
+					nvps.add(new BasicNameValuePair("orderId", (String) map
+					.get("orderId")));
+					break;
+					}
+				case "notifyTime":{
+					nvps.add(new BasicNameValuePair("notifyTime", (String) map
+					.get("notifyTime")));
+					break;
+					}
+				case "requestId":{
+					nvps.add(new BasicNameValuePair("requestId", (String) map
+					.get("requestId")));
+					break;
+					}
+				case "bankId":{
+					nvps.add(new BasicNameValuePair("bankId", (String) map
+					.get("bankId")));
+					break;
+					}
+				case "orderTime":{
+					nvps.add(new BasicNameValuePair("orderTime", (String) map
+					.get("orderTime")));
+					break;
+					}
+				case "tradeTime":{
+					nvps.add(new BasicNameValuePair("tradeTime", (String) map
+					.get("tradeTime")));
+					break;
+					}
+				case "accessMode":{
+					nvps.add(new BasicNameValuePair("accessMode", (String) map
+					.get("accessMode")));
+					break;
+					}
+				case "spending":{
+					nvps.add(new BasicNameValuePair("spending", (String) map
+					.get("spending")));
+					break;
+					}
+				case "extReserved":{
+					nvps.add(new BasicNameValuePair("extReserved", (String) map
+					.get("extReserved")));
+					break;
+					}
+				case "sysReserved":{
+					nvps.add(new BasicNameValuePair("sysReserved", (String) map
+					.get("sysReserved")));
+					break;
+					}
+				case "signType":{
+					nvps.add(new BasicNameValuePair("signType", (String) map
+					.get("signType")));
+					break;
+					}
+				case "sign":{
+					nvps.add(new BasicNameValuePair("sign", (String) map
+					.get("sign")));
+					break;
+					}
+				default:break; 
+				}
+			}
+			httpost.setEntity(new UrlEncodedFormEntity(nvps, "UTF-8"));
+			HttpResponse response = httpclient.execute(httpost);
+			HttpEntity entity = response.getEntity();
+			String content = EntityUtils.toString(entity, "UTF-8");
+			result = content;
+			return result;
+		} catch (Exception e) {
+			logger.error("the sdkhuaweipay request error is :" + e, e);
+			return "";
+		} finally {
+			httpclient.getConnectionManager().shutdown();
+		}
+	}
+
+	/**
+	 * 日期转换成字符串
+	 * 
+	 * @param date
+	 * @return str
+	 */
+	public static String DateToStr(Date date) {
+
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String str = format.format(date);
+		return str;
+	}
+
+	/**
+	 * 字符串转换成日期
+	 * 
+	 * @param str
+	 * @return date
+	 */
+	public static Date StrToDate(String str) {
+
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = null;
+		try {
+			date = format.parse(str);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return date;
+	}
+
+	/**
+	 * @param request
+	 * @return 本接口Content-Type是：application/x-www-form-urlencoded，对所有参数，会自动进行编码，
+	 *         接收端收到消息也会自动根据Content-Type进行解码。 同时，接口中参数在发送端并没有进行单独的URLEncode
+	 *         (sign和extReserved
+	 *         、sysReserved参数除外)，所以，在接收端根据Content-Type解码后，即为原始的参数信息。
+	 *         但是HttpServletRequest的getParameter
+	 *         ()方法会对指定参数执行隐含的URLDecoder.decode(),所以，相应参数中如果包含比如"%"，就会发生错误。
+	 *         因此，我们建议通过如下方法获取原始参数信息。
+	 * 
+	 *         注：使用如下方法必须在原始ServletRequest未被处理的情况下进行，否则无法获取到信息。比如，在Struts情况，
+	 *         由于struts层已经对参数进行若干处理，
+	 *         http中InputStream中其实已经没有信息，因此，本方法不适用。要获取原始信息，
+	 *         必须在原始的，未经处理的ServletRequest中进行。
+	 */
+	/*
+	 * public Map<String, Object> getValue(HttpServletRequest request) {
+	 * 
+	 * String line = null; StringBuffer sb = new StringBuffer(); try {
+	 * request.setCharacterEncoding("UTF-8");
+	 * 
+	 * InputStream stream = request.getInputStream(); InputStreamReader isr =
+	 * new InputStreamReader(stream); BufferedReader br = new
+	 * BufferedReader(isr); while ((line = br.readLine()) != null) {
+	 * sb.append(line).append("\r\n"); }
+	 * System.out.println("The original data is : " + sb.toString());
+	 * logger.debug("华为代码获取的参数值: " + "The original data is : " + sb.toString());
+	 * br.close(); } catch (Exception e) { e.printStackTrace(); } catch
+	 * (Throwable e) { e.printStackTrace(); }
+	 * 
+	 * String str = sb.toString(); Map<String, Object> valueMap = new
+	 * HashMap<String, Object>(); if (null == str || "".equals(str)) { return
+	 * valueMap; }
+	 * 
+	 * String[] valueKey = str.split("&"); for (String temp : valueKey) {
+	 * String[] single = temp.split("="); valueMap.put(single[0], single[1]); }
+	 * 
+	 * //
+	 * 接口中，如下参数sign和extReserved、sysReserved是URLEncode的，所以需要decode，其他参数直接是原始信息发送
+	 * ，不需要decode try { String sign = (String) valueMap.get("sign"); String
+	 * extReserved = (String) valueMap.get("extReserved"); String sysReserved =
+	 * (String) valueMap.get("sysReserved");
+	 * 
+	 * if (null != sign) { sign = URLDecoder.decode(sign, "utf-8");
+	 * valueMap.put("sign", sign); } if (null != extReserved) { extReserved =
+	 * URLDecoder.decode(extReserved, "utf-8"); valueMap.put("extReserved",
+	 * extReserved); }
+	 * 
+	 * if (null != sysReserved) { sysReserved = URLDecoder.decode(sysReserved,
+	 * "utf-8"); valueMap.put("sysReserved", sysReserved); }
+	 * 
+	 * } catch (Exception e) { e.printStackTrace(); } return valueMap;
+	 * 
+	 * }
+	 */
+
+	public static void main(String args[]) throws Exception {
+		HwSDKNotify x = new HwSDKNotify();
+		Map<String, Object> map = new HashMap<String, Object>();		
+		map.put("amount", "1.00");
+		map.put("sign",
+				"HoELkQB5CUQzkWT7gLJnvQWBgp3onPLLFxoHMgNtKUUxsc0TN5yYaDJOETP7w3W2yiIVA8NOmV26ct3fOELFKA==");
+		map.put("result", "0");
+		map.put("notifyTime", "1452485056053");
+		map.put("requestId", "2016-01-11-11-57-59-258");
+		map.put("userName", "900086000020107605");
+		map.put("payType", "4");
+		map.put("productName", "1050");
+		map.put("orderId", "A20160111115910173594AFF");
+		String result = x.getContent(map);
+		System.out.println(result);
+
+		// String s="我  men ";
+		// String s1=URLEncoder.encode(s);
+		// String s2=URLDecoder.decode(s1);
+		// System.out.println(s1);
+		// System.out.println(s2);
+	}
+}

@@ -1,0 +1,125 @@
+/**
+ * 
+ */
+package com.cheyooh.service.sdk.action.notify;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Date;
+
+import org.nuxeo.common.xmap.XMap;
+
+import com.cheyooh.service.dal.DAL;
+import com.cheyooh.service.dal.DALFactory;
+import com.cheyooh.service.framework.idata.Cmd;
+import com.cheyooh.service.framework.idata.Result;
+import com.cheyooh.service.framework.idata.ResultXJContent;
+import com.cheyooh.service.sdk.db.dao.SdkNotifyMmdoMapper;
+import com.cheyooh.service.sdk.db.dao.SdkOrderMapper;
+import com.cheyooh.service.sdk.db.entity.SdkNotifyMmdo;
+import com.cheyooh.service.sdk.db.entity.SdkOrder;
+import com.cheyooh.service.sdk.idata.gameserver.XmlMobileMmNotifyReq;
+import com.cheyooh.service.sdk.idata.gameserver.XmlMobileMmNotifyResp;
+
+/**
+ * @author Merlin
+ * 
+ */
+public class MobileMmpmNotify extends AbstractNotifyService<Cmd> {
+	private static final Integer CHINA_MOBILE = 1;
+	private static final String MOBILEMMPM = "mobilemmpm";
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.cheyooh.service.framework.basic.Service#verify(com.cheyooh.service
+	 * .framework.idata.Cmd)
+	 */
+	@Override
+	protected Result verify(Cmd cmd) {
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.cheyooh.service.framework.basic.Service#execute(com.cheyooh.service
+	 * .framework.idata.Cmd)
+	 */
+	@Override
+	protected Result execute(Cmd cmd) {
+		XmlMobileMmNotifyResp resp = new XmlMobileMmNotifyResp();
+		DAL dal = DALFactory.createDAL();
+		try {
+			InputStream in = cmd.getServiceContext().getRequest()
+					.getInputStream();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					in, "UTF-8"));
+			StringBuffer xmlBuff = new StringBuffer();
+			String line;
+			while ((line = reader.readLine()) != null) {
+				xmlBuff.append(line);
+			}
+			String xml = xmlBuff.toString();
+			logger.info("china mobile mm notify xml : " + xml);
+			XmlMobileMmNotifyReq notify = parseNotify(xml);
+
+			SdkOrderMapper orderMapper = dal.getMapper(SdkOrderMapper.class);
+			SdkOrder order = orderMapper.selectByPrimaryKey(notify.getExData());
+			Integer gameId = null;
+			if (order != null) {
+				gameId = order.getGameId();
+			} else {
+				logger.error("china mobile mm notify can not found the order, order no = "
+						+ notify.getExData());
+			}
+
+			SdkNotifyMmdo notifyMmdo = new SdkNotifyMmdo();
+			notifyMmdo.setAmount(notify.getPrice() / 100f);
+			notifyMmdo.setCmd(notify.getPayCode());
+			notifyMmdo.setCreateTime(new Date());
+			notifyMmdo.setGameId(gameId);
+			// notifyMmdo.setKey(key);
+			notifyMmdo.setLinkid(notify.getTradeId());
+			notifyMmdo.setMobile(notify.getFeeMsisdn());
+			notifyMmdo.setOperationType(CHINA_MOBILE);
+			notifyMmdo.setSpid(notify.getPayCode());
+			notifyMmdo.setPayChannelCode(MOBILEMMPM);
+			// notifyMmdo.setSpnum(spnum);
+			SdkNotifyMmdoMapper notifyMmdoDao = dal
+					.getMapper(SdkNotifyMmdoMapper.class);
+			notifyMmdoDao.insertSelective(notifyMmdo);
+
+			resp.setMsgType(notify.getMsgType());
+			resp.setVersion(notify.getVersion());
+			resp.sethRet(0);
+
+			dal.commit();
+		} catch (Exception e) {
+			resp.sethRet(2);
+			logger.error("china mobile mm notify error, the error is :" + e);
+		} finally {
+			dal.close();
+		}
+		return response(resp.toXml());
+	}
+
+	private XmlMobileMmNotifyReq parseNotify(String xml) throws Exception {
+		XMap xmap = new XMap();
+		xmap.register(XmlMobileMmNotifyReq.class);
+
+		ByteArrayInputStream in = new ByteArrayInputStream(
+				xml.getBytes("UTF-8"));
+		XmlMobileMmNotifyReq notify = (XmlMobileMmNotifyReq) xmap.load(in);
+
+		return notify;
+	}
+
+	private Result response(String msg) {
+		return new Result(new ResultXJContent(msg, msg));
+	}
+}

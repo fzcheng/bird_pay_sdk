@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<process name="qingjia" xmlns="http://jbpm.org/4.4/jpdl">
+   <start g="75,107,48,48" name="start1">
+      <transition g="-39,-25" name="to 濉敵璇峰崟" to="濉敵璇峰崟"/>
+   </start>
+   <end g="656,105,48,48" name="end1"/>
+   <task assignee="#{user}" g="221,106,92,52" name="濉敵璇峰崟">
+      <transition g="-36,-21" name="to 鑰佸ぇ鎵瑰噯" to="鑰佸ぇ鎵瑰噯"/>
+   </task>
+   <task assignee="#{laoda}" g="381,105,92,52" name="鑰佸ぇ鎵瑰噯">
+      <transition g="-32,-19" name="to 缁忕悊鎵瑰噯" to="缁忕悊鎵瑰噯"/>
+   </task>
+   <task assignee="#{manager}" g="525,104,92,52" name="缁忕悊鎵瑰噯">
+      <transition g="-50,-22" name="to end1" to="end1"/>
+   </task>
+</process>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="270dip"
+    android:layout_height="wrap_content"
+    android:background="@drawable/lgsdk_main_gray_background"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/lgsdk_text_dialog_title_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/lgsdk_text_dialog_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="#ffffff"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:id="@+id/lgsdk_text_dialog_content_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dip" >
+
+            <!--
+            <ImageView
+                android:id="@+id/text_dialog_icon_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dip"
+                android:maxHeight="100dip"
+                android:maxWidth="100dip" />
+            -->
+
+            <TextView
+                android:id="@+id/lgsdk_text_dialog_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="20dip"
+                android:textColor="@color/lgsdk_text_color_gray_2e2e2e"
+                android:textSize="16sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/lgsdk_text_dialog_button_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dip"
+            android:gravity="center" >
+
+            <Button
+                android:id="@+id/lgsdk_text_dialog_button1"
+                android:layout_width="80dip"
+                android:layout_height="38dip"
+                android:background="@drawable/lgsdk_button_bg_red"
+                android:padding="5dip"
+                android:textColor="#ffffff"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/lgsdk_text_dialog_button2"
+                android:layout_width="80dip"
+                android:layout_height="38dip"
+                android:layout_marginLeft="5dip"
+                android:layout_marginRight="5dip"
+                android:layout_toRightOf="@+id/lgsdk_text_dialog_button1"
+                android:background="@drawable/lgsdk_button_bg_red"
+                android:padding="5dip"
+                android:textColor="#ffffff"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/lgsdk_text_dialog_button3"
+                android:layout_width="80dip"
+                android:layout_height="38dip"
+                android:layout_toRightOf="@+id/lgsdk_text_dialog_button2"
+                android:background="@drawable/lgsdk_button_bg_red"
+                android:padding="5dip"
+                android:textColor="#ffffff"
+                android:textSize="18sp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

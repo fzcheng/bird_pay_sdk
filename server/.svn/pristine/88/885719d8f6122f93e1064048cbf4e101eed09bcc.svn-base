@@ -1,0 +1,92 @@
+1.资讯列表协议
+说明：该流程用于客户端向服务器端获取资讯列表。
+客户端的请求参数如下：
+1.命令参数 m=info_list
+2.pageIndex ----当前页码（从0开始） 
+服务器的回应如下：
+<?xml version="1.0" encoding="utf-8"?>
+<!--current_page:当前页数， total_page：总页数-->
+<info type="info_list" error="0" detail="">
+	<info_list total="3" currentPage = "1" totalPage = "10">
+		<info 	title="标题"
+			summary="简介"
+			type="资讯类型"
+			url="资讯链接"/>
+	</info_list>
+</info>
+
+
+2.游戏礼包列表
+说明：该流程用于客户端向服务器端获取礼包列表。
+客户端的请求参数如下：
+1.命令参数 m=gift_list
+2.pageIndex ----当前页码（从0开始） 
+服务器的回应如下：
+<?xml version="1.0" encoding="utf-8"?>
+<!--current_page:当前页数， total_page：总页数-->
+<info type="gift_list" error="0" detail="">
+	<gift_list total="3" currentPage = "1" totalPage = "10">
+		<!--remain:百分比的数字，0~100, 0-表示抢光了   accept:礼包是否已领取，0--未领取,1--已领取-->
+		<gift	id="礼包id"
+		 	icon_url="www.xxx.com/1.jpg"
+			name="礼包名称"
+			remain="剩余"
+			expiration="过期时间"
+			accept="0"
+			description="礼包详细内容"/>
+	</gift_list>
+</info>
+
+3.领取礼包
+说明：该流程用于客户端向服务器端领取礼包。
+客户端的请求参数如下：
+1.命令参数 m=accept_gift 
+2.gift_id:礼包id
+服务器的回应如下：
+<?xml version="1.0" encoding="utf-8"?>
+<info type="accept_gift" error="0" detail="">
+	<accept_gift vcode="验证码" />
+</info>
+
+4.游戏新服信息
+说明：该流程用于客户端向服务器端获取游戏新服信息。
+客户端的请求参数如下：
+1.命令参数 m=new_game_server 
+服务器的回应如下：
+<?xml version="1.0" encoding="utf-8"?>
+<info type="new_game_server" error="0" detail="">
+	<games total="3" currentPage = "1" totalPage = "10">
+		<!--dl_url为空表示预告游戏，不为空表示可以下载-->
+		<game 
+			package_name="com.android.tempel.run"
+          		name="神庙逃往2"
+	        	dl_url="http://xxx.xxx.xxx.apk"
+          		icon_url="www.xxx.com/1.jpg"
+			type="开服类型"
+			time="开服时间"/>
+	</games>
+</info>
+
+
+5.登录公告
+说明：该流程用于客户端向服务器端获取登录公告。
+客户端的请求参数如下：
+1.命令参数 m=bulletin 
+服务器的回应如下：
+<?xml version="1.0" encoding="utf-8"?>
+<info type="bulletin" error="0" detail="">
+
+	<bulletin content="公告内容" 
+	          type="公告类型"   
+		  url="web页面链接">
+		<!--  type：公告类型，1--表示web页面，2表示游戏下载链接，游戏下载的时候才会有下面的内容-->
+		<game package_name="com.android.tempel.run"
+          		name="神庙逃往2"
+		        dl_url="http://xxx.xxx.xxx.apk"
+          		icon_url="www.xxx.com/1.jpg"
+          		rating="3"
+          		category="休闲类"/>
+	</bulletin>
+</info>
+
+

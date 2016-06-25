@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cheyooh.service.dal.db.misc.dao.MiscDDQMapper">
+	<!-- 避免Mybatis载入时出现空语句异常   --> 
+	<select id="selectTest" resultType="org.apache.commons.collections.map.CaseInsensitiveMap" parameterType="org.apache.commons.collections.map.CaseInsensitiveMap">       
+	   <![CDATA[	   
+	        SELECT 1  
+	    ]]>
+	</select>
+	
+  	<!-- 获取banner -->
+	<select id="selectBanners" resultType="org.apache.commons.collections.map.CaseInsensitiveMap" parameterType="org.apache.commons.collections.map.CaseInsensitiveMap">
+	 <![CDATA[	   
+		SELECT *
+		FROM misc_banner
+		WHERE `location` = #{location,jdbcType=VARCHAR} AND `status` = 1 
+		AND (area = '' OR area = '0' OR area is NULL 
+	]]>
+	<if test="area != ''">OR area LIKE CONCAT('%,', #{area,jdbcType=INTEGER},',%')</if>
+	<![CDATA[)
+		AND (start_time <= #{currentdate,jdbcType=VARCHAR} OR start_time is NULL OR start_time = '0000-00-00' OR start_time = '')
+		AND (end_time >= #{currentdate,jdbcType=VARCHAR} OR end_time is NULL OR end_time = '0000-00-00' OR end_time = '')
+		ORDER BY `display_order` desc
+	]]>
+	</select>
+	
+	  	<!-- 获取违章查询3.0 banner -->
+	<select id="selectWz3Banners" resultType="org.apache.commons.collections.map.CaseInsensitiveMap" parameterType="org.apache.commons.collections.map.CaseInsensitiveMap">
+	<![CDATA[
+		SELECT *
+		FROM misc_banner_wzv3
+		WHERE status = 1
+		AND (area = '' OR area LIKE CONCAT('%,', #{area,jdbcType=INTEGER},',%'))
+		AND (channel = '' OR channel LIKE CONCAT('%,', #{channel,jdbcType=VARCHAR}, ',%'))
+		AND (start_time <= #{currentdate,jdbcType=VARCHAR}  OR start_time = '0000-00-00' OR start_time = '' OR  start_time is null)
+		AND (end_time >= #{currentdate,jdbcType=VARCHAR}  OR end_time = '0000-00-00' OR end_time = '' OR end_time is null)
+		ORDER BY display_order DESC
+	]]>
+	</select>
+
+</mapper>

@@ -1,0 +1,115 @@
+package com.cheyooh.service.sdk.action.notify;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.apache.commons.lang.StringUtils;
+
+import com.cheyooh.service.dal.DAL;
+import com.cheyooh.service.dal.DALFactory;
+import com.cheyooh.service.framework.idata.Cmd;
+import com.cheyooh.service.framework.idata.Result;
+import com.cheyooh.service.framework.idata.ResultXJContent;
+import com.cheyooh.service.sdk.db.dao.SdkNotifyMmdoMapper;
+import com.cheyooh.service.sdk.db.entity.SdkNotifyMmdo;
+import com.cheyooh.service.sdk.db.entity.SdkNotifyMmdoExample;
+
+public class CmccRdoXinhualeshiNotify extends AbstractNotifyService<Cmd> {
+	private String success_mgs = "OK";
+	private String fail_mgs="fail";
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.cheyooh.service.framework.basic.Service#verify(com.cheyooh.service
+	 * .framework.idata.Cmd)
+	 */
+	@Override
+	protected Result verify(Cmd cmd) {
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.cheyooh.service.framework.basic.Service#execute(com.cheyooh.service
+	 * .framework.idata.Cmd)
+	 */
+	@Override
+	protected Result execute(Cmd cmd) {
+		DAL dal = DALFactory.createDAL();
+		Result result=new Result();
+		try {
+			String state = cmd.getServiceContext().getRequest()
+					.getParameter("state");
+			if (StringUtils.isEmpty(state)) {
+				state = "";
+			}			
+			String smsId = cmd.getServiceContext().getRequest()
+					.getParameter("smsId");
+			if (StringUtils.isEmpty(smsId)) {
+				smsId = "";
+			}
+			String moContent = cmd.getServiceContext().getRequest()
+					.getParameter("moContent");
+			if (StringUtils.isEmpty(moContent)) {
+				moContent = "";
+			}else if(StringUtils.isNotBlank(moContent)&&moContent.length()>14){
+				moContent=moContent.substring(moContent.length()-14,moContent.length());
+			}
+			String phone = cmd.getServiceContext().getRequest()
+					.getParameter("phone");
+			if (StringUtils.isEmpty(phone)) {
+				phone = "";
+			}
+			String serviceCode = cmd.getServiceContext().getRequest()
+					.getParameter("serviceCode");
+			if (StringUtils.isEmpty(serviceCode)) {
+				serviceCode = "";
+			}
+						
+			Date time = new Date();
+			StringBuilder sb = new StringBuilder();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyMMddHHmmss");
+			sb.append(sdf.format(time));
+			String year = sb.toString().substring(0, 2);
+			String orderNo=year+moContent;
+			logger.info("the cmccrdoxinhualeshi pay notify orderNo is :" + orderNo);
+
+			SdkNotifyMmdoMapper sdkNotifyMmdoMapper = dal.getMapper(SdkNotifyMmdoMapper.class);
+			SdkNotifyMmdoExample sdkNotifyMmdoExample = new SdkNotifyMmdoExample();
+			sdkNotifyMmdoExample.createCriteria().andOrderNoEqualTo(orderNo);
+			SdkNotifyMmdo sdkNotifyMmdo = sdkNotifyMmdoMapper.selectOne(sdkNotifyMmdoExample);
+			if (sdkNotifyMmdo != null) {
+				int notifyStatus=0;
+				if("DELIVERED".equals(state)){
+					notifyStatus=1;
+				}
+				if(StringUtils.isEmpty(sdkNotifyMmdo.getMobile())||StringUtils.isBlank(sdkNotifyMmdo.getMobile())){
+					sdkNotifyMmdo.setMobile(phone);
+				}else if(!phone.equals(sdkNotifyMmdo.getMobile())){
+					sdkNotifyMmdo.setMobile(phone);
+				}
+				sdkNotifyMmdo.setStatusDetail(state);
+				sdkNotifyMmdo.setNotifyStatus(notifyStatus);
+				sdkNotifyMmdo.setLinkid(smsId);
+				sdkNotifyMmdoMapper.updateByPrimaryKey(sdkNotifyMmdo);
+				result=result(success_mgs);
+			}else {
+				result=result(fail_mgs);
+			}
+			dal.commit();
+		} catch (Exception e) {
+			logger.error("the cmccrdoxinhualeshi pay notify error!", e);
+			result("Exception: " + e.getMessage() + ", class: ".getClass());
+		} finally {
+			dal.close();
+		}
+		return result;
+	}
+
+	private Result result(String mgs) {
+		return new Result(new ResultXJContent(mgs, mgs));
+	}
+}

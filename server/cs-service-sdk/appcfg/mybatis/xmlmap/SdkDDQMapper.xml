@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cheyooh.service.sdk.db.dao.SdkDDQMapper">
+	<!-- 抢礼包   --> 
+	<update id="graspGiftVcode" parameterType="org.apache.commons.collections.map.CaseInsensitiveMap">       
+		<![CDATA[	   	      
+		update sdk_gift_vcode
+		set uid= 
+		case 
+		  when uid is null then #{uid,jdbcType=INTEGER}      
+		  else uid 
+		end,
+		used_time= 
+		case       
+		  when used_time is null then now()      
+		  else used_time 
+		end 
+		where gift_id=#{gift_id,jdbcType=INTEGER} and (uid is null or uid=#{uid,jdbcType=INTEGER}) 
+		order by uid desc 
+		limit 1;
+	  
+		update sdk_gift set remain=
+		case 
+		  when remain>0 then remain-1 
+		  else 0 
+		end 
+		where gift_id=#{gift_id,jdbcType=INTEGER} and ROW_COUNT()>0
+ 		]]>
+	</update>
+	<!-- 查询新服开启 -->
+	<select id="selectGameNewServer" resultType="org.apache.commons.collections.map.CaseInsensitiveMap" parameterType="org.apache.commons.collections.map.CaseInsensitiveMap">
+		<![CDATA[	
+		select ns_id,type,start_time,game_pkg,game_name,game_dl,game_icon , 1 as o1, now()-start_time as o2
+		from sdk_new_server where DATE_FORMAT(start_time,'%Y-%m-%d')=DATE_FORMAT(now(),'%Y-%m-%d')
+		union 
+		select ns_id,type,start_time,game_pkg,game_name,game_dl,game_icon , 2 as o1, start_time-now() as o2
+		from sdk_new_server where DATE_FORMAT(start_time,'%Y-%m-%d')>DATE_FORMAT(now(),'%Y-%m-%d')  
+		union 
+		select ns_id,type,start_time,game_pkg,game_name,game_dl,game_icon , 3 as o1, now()-start_time as o2
+		from sdk_new_server where DATE_FORMAT(start_time,'%Y-%m-%d')<DATE_FORMAT(now(),'%Y-%m-%d') 
+		
+		order by o1 asc, o2 asc
+		]]>
+	</select>
+	
+	<!-- 插入用户登录游戏历史,重复时更新最后登录时间  -->
+	<insert id="insertSdkUserLoginGameOnDuplicateUpdate" parameterType="com.cheyooh.service.sdk.db.entity.SdkUserLoginGame" >    
+	    insert into sdk_user_login_game (`uid`, game_id, first_login_time, 
+	      first_login_channel, first_login_version, last_login_time, 
+	      last_login_channel, last_login_version, login_times
+	      )
+	    values (#{uid,jdbcType=INTEGER}, #{gameId,jdbcType=INTEGER}, #{firstLoginTime,jdbcType=TIMESTAMP}, 
+	      #{firstLoginChannel,jdbcType=VARCHAR}, #{firstLoginVersion,jdbcType=VARCHAR}, #{lastLoginTime,jdbcType=TIMESTAMP}, 
+	      #{lastLoginChannel,jdbcType=VARCHAR}, #{lastLoginVersion,jdbcType=VARCHAR}, 1
+	      )
+	    ON DUPLICATE KEY UPDATE 
+      	login_times=login_times+1,
+      	last_login_time=#{firstLoginTime,jdbcType=TIMESTAMP},
+      	last_login_channel=#{lastLoginChannel,jdbcType=VARCHAR},
+      	last_login_version=#{lastLoginVersion,jdbcType=VARCHAR}
+  </insert>
+</mapper>
