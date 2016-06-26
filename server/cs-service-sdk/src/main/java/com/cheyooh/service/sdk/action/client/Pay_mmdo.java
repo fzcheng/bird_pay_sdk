@@ -71,7 +71,7 @@ import com.cheyooh.service.sdk.idata.ResultPayMmdoCommand;
 import com.cheyooh.service.sdk.idata.ResultPayMmdoCommandList;
 import com.cheyooh.service.sdk.idata.ResultPayMmdoInfo;
 import com.cheyooh.service.sdk.idata.ResultPayMmdoInfoOrderList;
-import com.cheyooh.service.sdk.idata.ResultSdkEhooParam;
+//import com.cheyooh.service.sdk.idata.ResultSdkEhooParam;
 import com.cheyooh.service.sdk.idata.gameserver.BillingPeriodVo;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -111,7 +111,7 @@ public class Pay_mmdo extends AbstractSdkClientService<CmdPay> {
 	private static final String Time_Interval = Cfg.cfg
 			.getString("sdk.game.request.timeinterval");
 	
-	private static final String  sdkehoo= "sdkehoo";
+	//private static final String  sdkehoo= "sdkehoo";
 
 	private static final ObjectMapper mapper = new ObjectMapper();
 	static {
@@ -567,13 +567,13 @@ public class Pay_mmdo extends AbstractSdkClientService<CmdPay> {
 					resultPayMmdoChargeTip.setSendingtip(sendingtip);
 					payinfo.addContent(resultPayMmdoChargeTip);
 
-					if (sdkehoo.equals(channel.getChannelCode())) {
-						ResultSdkEhooParam resultSdkEhooParam = new ResultSdkEhooParam();
-						resultSdkEhooParam.setOrderNo(order.getOrderNo());
-						String chargePoint=mmdoSetting.getContent();
-						resultSdkEhooParam.setChargePoint(chargePoint);
-						payinfo.addContent(resultSdkEhooParam);
-					}
+//					if (sdkehoo.equals(channel.getChannelCode())) {
+//						ResultSdkEhooParam resultSdkEhooParam = new ResultSdkEhooParam();
+//						resultSdkEhooParam.setOrderNo(order.getOrderNo());
+//						String chargePoint=mmdoSetting.getContent();
+//						resultSdkEhooParam.setChargePoint(chargePoint);
+//						payinfo.addContent(resultSdkEhooParam);
+//					}
 					// 保存下发信息
 					String[] numberArray = mmdoSetting.getNumber().split(
 							splitContentString);

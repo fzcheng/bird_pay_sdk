@@ -85,9 +85,4 @@
    <mapper resource="com/cheyooh/service/sdk/db/xmlmap/SdkGamePaysettingMapper.xml"/>
    <mapper resource="com/cheyooh/service/sdk/db/xmlmap/SdkGameShenzhoufuMapper.xml"/>
    <mapper resource="com/cheyooh/service/sdk/db/xmlmap/SdkOrderShenzhoufuMapper.xml"/>
-   <mapper resource="com/cheyooh/service/sdk/db/xmlmap/SdkCmccmmAppcreateMapper.xml"/>
-   <mapper resource="com/cheyooh/service/sdk/db/xmlmap/SdkCmccmmApkcreateMapper.xml"/>
-   <mapper resource="com/cheyooh/service/sdk/db/xmlmap/SdkCmccmmPaycodeMapper.xml"/>
-   <mapper resource="com/cheyooh/service/sdk/db/xmlmap/SdkCmccmmUploadpgMapper.xml"/>
-   <mapper resource="com/cheyooh/service/sdk/db/xmlmap/SdkCmccmmPaycodestatusMapper.xml"/>
 </mappers>	

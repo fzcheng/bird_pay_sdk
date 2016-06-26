@@ -1,0 +1,1049 @@
+2016-06-26 16:42:56,943 [INFO] [com.cheyooh.tools.log.Logger] Create log dir: /Users/fzcheng/Documents/bird_pay_sdk/server/cs-commons/cs-service-dal/logs
+2016-06-26 16:42:56,956 [WARN] [com.cheyooh.service.dal.mybatis.ConfigurationManager] DBCfg class path: /Users/fzcheng/Documents/bird_pay_sdk/server/cs-commons/cs-service-dal/target/test-classes/mybatis
+2016-06-26 16:42:57,031 [INFO] [com.cheyooh.service.dal.TestConcurrentMapperReload] Waiting for all thread exit ...
+2016-06-26 16:42:57,031 [INFO] [com.cheyooh.service.dal.ENVSetup] Copy xmlmap2/MiscDDQMapper_v0.xml -> xmlmap/MiscDDQMapper.xml
+2016-06-26 16:42:57,089 [INFO] [com.cheyooh.tools.cfg.EnvUtil] Load env.cfg from system property: /Users/fzcheng/Documents/bird_pay_sdk/server/cs-commons/cs-service-dal/target/test-classes//env.cfg
+2016-06-26 16:42:57,169 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] found mybatis configurate count: 12 from db.xml
+2016-06-26 16:42:57,170 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: advnews
+2016-06-26 16:42:57,170 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: bbs
+2016-06-26 16:42:57,170 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: cms08
+2016-06-26 16:42:57,170 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: log
+2016-06-26 16:42:57,170 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: message
+2016-06-26 16:42:57,170 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: misc
+2016-06-26 16:42:57,171 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: pub
+2016-06-26 16:42:57,171 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: usedcar
+2016-06-26 16:42:57,171 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: user
+2016-06-26 16:42:57,171 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: wz
+2016-06-26 16:42:57,171 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: message_salve
+2016-06-26 16:42:57,171 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: memory_db
+2016-06-26 16:42:57,192 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/advnews/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 16:42:57,240 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/bbs/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 16:42:57,252 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/cms08/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 16:42:57,273 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/log/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 16:42:57,283 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/message/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 16:42:57,299 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/misc/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 16:42:57,309 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/pub/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 16:42:57,317 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/usedcar/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 16:42:57,326 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/user/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 16:42:57,335 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/wz/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 16:42:57,345 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/message/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 16:42:57,354 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/pub/xmlmap/PubCarMapper.xml, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 16:42:57,365 [ERROR] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Reload exception: org.apache.ibatis.builder.BuilderException: Error resolving class . Cause: org.apache.ibatis.type.TypeException: Could not resolve type alias 'org.apache.commons.collections.map.CaseInsensitiveMap'.  Cause: java.lang.ClassNotFoundException: Cannot find class: org.apache.commons.collections.map.CaseInsensitiveMap
+org.apache.ibatis.builder.BuilderException: Error resolving class . Cause: org.apache.ibatis.type.TypeException: Could not resolve type alias 'org.apache.commons.collections.map.CaseInsensitiveMap'.  Cause: java.lang.ClassNotFoundException: Cannot find class: org.apache.commons.collections.map.CaseInsensitiveMap
+	at org.apache.ibatis.builder.BaseBuilder.resolveClass(BaseBuilder.java:69)
+	at org.apache.ibatis.builder.xml.XMLStatementBuilder.parseStatementNode(XMLStatementBuilder.java:34)
+	at com.cheyooh.service.dal.mybatis.SelfConfiguration.parseStatementNodes(SelfConfiguration.java:564)
+	at com.cheyooh.service.dal.mybatis.SelfConfiguration.buildStatementsForNamespace(SelfConfiguration.java:553)
+	at com.cheyooh.service.dal.mybatis.SelfConfiguration.buildAllStatements(SelfConfiguration.java:507)
+	at com.cheyooh.service.dal.mybatis.SelfConfiguration.getMappedStatements(SelfConfiguration.java:436)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.getMappedStatements(XmlConfiguration.java:368)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.loadCurrentConfigs(ConfigurationManager.java:384)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:350)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+Caused by: org.apache.ibatis.type.TypeException: Could not resolve type alias 'org.apache.commons.collections.map.CaseInsensitiveMap'.  Cause: java.lang.ClassNotFoundException: Cannot find class: org.apache.commons.collections.map.CaseInsensitiveMap
+	at org.apache.ibatis.type.TypeAliasRegistry.resolveAlias(TypeAliasRegistry.java:85)
+	at org.apache.ibatis.builder.BaseBuilder.resolveAlias(BaseBuilder.java:93)
+	at org.apache.ibatis.builder.BaseBuilder.resolveClass(BaseBuilder.java:67)
+	... 11 more
+Caused by: java.lang.ClassNotFoundException: Cannot find class: org.apache.commons.collections.map.CaseInsensitiveMap
+	at org.apache.ibatis.io.ClassLoaderWrapper.classForName(ClassLoaderWrapper.java:173)
+	at org.apache.ibatis.io.ClassLoaderWrapper.classForName(ClassLoaderWrapper.java:72)
+	at org.apache.ibatis.io.Resources.classForName(Resources.java:235)
+	at org.apache.ibatis.type.TypeAliasRegistry.resolveAlias(TypeAliasRegistry.java:81)
+	... 13 more
+2016-06-26 16:42:58,367 [INFO] [com.cheyooh.service.dal.ENVSetup] Copy xmlmap2/MiscDDQMapper_v1.xml -> xmlmap/MiscDDQMapper.xml
+2016-06-26 16:42:59,368 [INFO] [com.cheyooh.service.dal.ENVSetup] Copy xmlmap2/MiscDDQMapper_v2.xml -> xmlmap/MiscDDQMapper.xml
+2016-06-26 16:43:00,370 [INFO] [com.cheyooh.service.dal.ENVSetup] Copy xmlmap2/MiscDDQMapper_v0.xml -> xmlmap/MiscDDQMapper.xml
+2016-06-26 16:43:01,373 [INFO] [com.cheyooh.service.dal.ENVSetup] Copy xmlmap2/MiscDDQMapper_v1.xml -> xmlmap/MiscDDQMapper.xml
+2016-06-26 16:45:50,625 [WARN] [com.cheyooh.service.dal.mybatis.ConfigurationManager] DBCfg class path: /Users/fzcheng/Documents/bird_pay_sdk/server/cs-commons/cs-service-dal/target/test-classes/mybatis
+2016-06-26 16:45:50,692 [INFO] [com.cheyooh.service.dal.TestConcurrentMapperReload] Waiting for all thread exit ...
+2016-06-26 16:45:50,692 [INFO] [com.cheyooh.service.dal.ENVSetup] Copy xmlmap2/MiscDDQMapper_v0.xml -> xmlmap/MiscDDQMapper.xml
+2016-06-26 16:45:50,729 [INFO] [com.cheyooh.tools.cfg.EnvUtil] Load env.cfg from system property: /Users/fzcheng/Documents/bird_pay_sdk/server/cs-commons/cs-service-dal/target/test-classes//env.cfg
+2016-06-26 16:45:50,790 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] found mybatis configurate count: 12 from db.xml
+2016-06-26 16:45:50,790 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: advnews
+2016-06-26 16:45:50,790 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: bbs
+2016-06-26 16:45:50,790 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: cms08
+2016-06-26 16:45:50,790 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: log
+2016-06-26 16:45:50,791 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: message
+2016-06-26 16:45:50,791 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: misc
+2016-06-26 16:45:50,791 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: pub
+2016-06-26 16:45:50,791 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: usedcar
+2016-06-26 16:45:50,791 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: user
+2016-06-26 16:45:50,791 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: wz
+2016-06-26 16:45:50,791 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: message_salve
+2016-06-26 16:45:50,791 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: memory_db
+2016-06-26 16:45:50,810 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/advnews/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 16:45:50,842 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/bbs/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 16:45:50,855 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/cms08/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 16:45:50,876 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/log/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 16:45:50,886 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/message/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 16:45:50,902 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/misc/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 16:45:50,913 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/pub/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 16:45:50,921 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/usedcar/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 16:45:50,929 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/user/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 16:45:50,937 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/wz/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 16:45:50,946 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/message/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 16:45:50,955 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/pub/xmlmap/PubCarMapper.xml, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 16:45:50,963 [ERROR] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Reload exception: org.apache.ibatis.builder.BuilderException: Error resolving class . Cause: org.apache.ibatis.type.TypeException: Could not resolve type alias 'org.apache.commons.collections.map.CaseInsensitiveMap'.  Cause: java.lang.ClassNotFoundException: Cannot find class: org.apache.commons.collections.map.CaseInsensitiveMap
+org.apache.ibatis.builder.BuilderException: Error resolving class . Cause: org.apache.ibatis.type.TypeException: Could not resolve type alias 'org.apache.commons.collections.map.CaseInsensitiveMap'.  Cause: java.lang.ClassNotFoundException: Cannot find class: org.apache.commons.collections.map.CaseInsensitiveMap
+	at org.apache.ibatis.builder.BaseBuilder.resolveClass(BaseBuilder.java:69)
+	at org.apache.ibatis.builder.xml.XMLStatementBuilder.parseStatementNode(XMLStatementBuilder.java:34)
+	at com.cheyooh.service.dal.mybatis.SelfConfiguration.parseStatementNodes(SelfConfiguration.java:564)
+	at com.cheyooh.service.dal.mybatis.SelfConfiguration.buildStatementsForNamespace(SelfConfiguration.java:553)
+	at com.cheyooh.service.dal.mybatis.SelfConfiguration.buildAllStatements(SelfConfiguration.java:507)
+	at com.cheyooh.service.dal.mybatis.SelfConfiguration.getMappedStatements(SelfConfiguration.java:436)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.getMappedStatements(XmlConfiguration.java:368)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.loadCurrentConfigs(ConfigurationManager.java:384)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:350)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+Caused by: org.apache.ibatis.type.TypeException: Could not resolve type alias 'org.apache.commons.collections.map.CaseInsensitiveMap'.  Cause: java.lang.ClassNotFoundException: Cannot find class: org.apache.commons.collections.map.CaseInsensitiveMap
+	at org.apache.ibatis.type.TypeAliasRegistry.resolveAlias(TypeAliasRegistry.java:85)
+	at org.apache.ibatis.builder.BaseBuilder.resolveAlias(BaseBuilder.java:93)
+	at org.apache.ibatis.builder.BaseBuilder.resolveClass(BaseBuilder.java:67)
+	... 11 more
+Caused by: java.lang.ClassNotFoundException: Cannot find class: org.apache.commons.collections.map.CaseInsensitiveMap
+	at org.apache.ibatis.io.ClassLoaderWrapper.classForName(ClassLoaderWrapper.java:173)
+	at org.apache.ibatis.io.ClassLoaderWrapper.classForName(ClassLoaderWrapper.java:72)
+	at org.apache.ibatis.io.Resources.classForName(Resources.java:235)
+	at org.apache.ibatis.type.TypeAliasRegistry.resolveAlias(TypeAliasRegistry.java:81)
+	... 13 more
+2016-06-26 16:45:51,965 [INFO] [com.cheyooh.service.dal.ENVSetup] Copy xmlmap2/MiscDDQMapper_v1.xml -> xmlmap/MiscDDQMapper.xml
+2016-06-26 16:45:52,968 [INFO] [com.cheyooh.service.dal.ENVSetup] Copy xmlmap2/MiscDDQMapper_v2.xml -> xmlmap/MiscDDQMapper.xml
+2016-06-26 16:45:53,970 [INFO] [com.cheyooh.service.dal.ENVSetup] Copy xmlmap2/MiscDDQMapper_v0.xml -> xmlmap/MiscDDQMapper.xml
+2016-06-26 16:45:54,973 [INFO] [com.cheyooh.service.dal.ENVSetup] Copy xmlmap2/MiscDDQMapper_v1.xml -> xmlmap/MiscDDQMapper.xml
+2016-06-26 16:51:28,211 [WARN] [com.cheyooh.service.dal.mybatis.ConfigurationManager] DBCfg class path: /Users/fzcheng/Documents/bird_pay_sdk/server/cs-commons/cs-service-dal/target/test-classes/mybatis
+2016-06-26 16:51:28,285 [INFO] [com.cheyooh.service.dal.TestConcurrentMapperReload] Waiting for all thread exit ...
+2016-06-26 16:51:28,285 [INFO] [com.cheyooh.service.dal.ENVSetup] Copy xmlmap2/MiscDDQMapper_v0.xml -> xmlmap/MiscDDQMapper.xml
+2016-06-26 16:51:28,323 [INFO] [com.cheyooh.tools.cfg.EnvUtil] Load env.cfg from system property: /Users/fzcheng/Documents/bird_pay_sdk/server/cs-commons/cs-service-dal/target/test-classes//env.cfg
+2016-06-26 16:51:28,385 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] found mybatis configurate count: 12 from db.xml
+2016-06-26 16:51:28,386 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: advnews
+2016-06-26 16:51:28,386 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: bbs
+2016-06-26 16:51:28,386 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: cms08
+2016-06-26 16:51:28,387 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: log
+2016-06-26 16:51:28,387 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: message
+2016-06-26 16:51:28,387 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: misc
+2016-06-26 16:51:28,387 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: pub
+2016-06-26 16:51:28,387 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: usedcar
+2016-06-26 16:51:28,387 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: user
+2016-06-26 16:51:28,387 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: wz
+2016-06-26 16:51:28,387 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: message_salve
+2016-06-26 16:51:28,388 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: memory_db
+2016-06-26 16:51:28,405 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/advnews/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 16:51:28,435 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/bbs/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 16:51:28,447 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/cms08/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 16:51:28,467 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/log/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 16:51:28,478 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/message/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 16:51:28,493 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/misc/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 16:51:28,503 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/pub/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 16:51:28,511 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/usedcar/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 16:51:28,519 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/user/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 16:51:28,527 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/wz/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 16:51:28,536 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/message/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 16:51:28,545 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/pub/xmlmap/PubCarMapper.xml, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 16:51:28,553 [ERROR] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Reload exception: org.apache.ibatis.builder.BuilderException: Error resolving class . Cause: org.apache.ibatis.type.TypeException: Could not resolve type alias 'org.apache.commons.collections.map.CaseInsensitiveMap'.  Cause: java.lang.ClassNotFoundException: Cannot find class: org.apache.commons.collections.map.CaseInsensitiveMap
+org.apache.ibatis.builder.BuilderException: Error resolving class . Cause: org.apache.ibatis.type.TypeException: Could not resolve type alias 'org.apache.commons.collections.map.CaseInsensitiveMap'.  Cause: java.lang.ClassNotFoundException: Cannot find class: org.apache.commons.collections.map.CaseInsensitiveMap
+	at org.apache.ibatis.builder.BaseBuilder.resolveClass(BaseBuilder.java:69)
+	at org.apache.ibatis.builder.xml.XMLStatementBuilder.parseStatementNode(XMLStatementBuilder.java:34)
+	at com.cheyooh.service.dal.mybatis.SelfConfiguration.parseStatementNodes(SelfConfiguration.java:564)
+	at com.cheyooh.service.dal.mybatis.SelfConfiguration.buildStatementsForNamespace(SelfConfiguration.java:553)
+	at com.cheyooh.service.dal.mybatis.SelfConfiguration.buildAllStatements(SelfConfiguration.java:507)
+	at com.cheyooh.service.dal.mybatis.SelfConfiguration.getMappedStatements(SelfConfiguration.java:436)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.getMappedStatements(XmlConfiguration.java:368)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.loadCurrentConfigs(ConfigurationManager.java:384)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:350)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+Caused by: org.apache.ibatis.type.TypeException: Could not resolve type alias 'org.apache.commons.collections.map.CaseInsensitiveMap'.  Cause: java.lang.ClassNotFoundException: Cannot find class: org.apache.commons.collections.map.CaseInsensitiveMap
+	at org.apache.ibatis.type.TypeAliasRegistry.resolveAlias(TypeAliasRegistry.java:85)
+	at org.apache.ibatis.builder.BaseBuilder.resolveAlias(BaseBuilder.java:93)
+	at org.apache.ibatis.builder.BaseBuilder.resolveClass(BaseBuilder.java:67)
+	... 11 more
+Caused by: java.lang.ClassNotFoundException: Cannot find class: org.apache.commons.collections.map.CaseInsensitiveMap
+	at org.apache.ibatis.io.ClassLoaderWrapper.classForName(ClassLoaderWrapper.java:173)
+	at org.apache.ibatis.io.ClassLoaderWrapper.classForName(ClassLoaderWrapper.java:72)
+	at org.apache.ibatis.io.Resources.classForName(Resources.java:235)
+	at org.apache.ibatis.type.TypeAliasRegistry.resolveAlias(TypeAliasRegistry.java:81)
+	... 13 more
+2016-06-26 16:51:29,554 [INFO] [com.cheyooh.service.dal.ENVSetup] Copy xmlmap2/MiscDDQMapper_v1.xml -> xmlmap/MiscDDQMapper.xml
+2016-06-26 16:51:30,556 [INFO] [com.cheyooh.service.dal.ENVSetup] Copy xmlmap2/MiscDDQMapper_v2.xml -> xmlmap/MiscDDQMapper.xml
+2016-06-26 16:51:31,559 [INFO] [com.cheyooh.service.dal.ENVSetup] Copy xmlmap2/MiscDDQMapper_v0.xml -> xmlmap/MiscDDQMapper.xml
+2016-06-26 16:51:32,561 [INFO] [com.cheyooh.service.dal.ENVSetup] Copy xmlmap2/MiscDDQMapper_v1.xml -> xmlmap/MiscDDQMapper.xml
+2016-06-26 18:17:43,117 [WARN] [com.cheyooh.service.dal.mybatis.ConfigurationManager] DBCfg class path: /Users/fzcheng/Documents/bird_pay_sdk/server/cs-commons/cs-service-dal/target/test-classes/mybatis
+2016-06-26 18:17:43,184 [INFO] [com.cheyooh.service.dal.TestConcurrentMapperReload] Waiting for all thread exit ...
+2016-06-26 18:17:43,184 [INFO] [com.cheyooh.service.dal.ENVSetup] Copy xmlmap2/MiscDDQMapper_v0.xml -> xmlmap/MiscDDQMapper.xml
+2016-06-26 18:17:43,221 [INFO] [com.cheyooh.tools.cfg.EnvUtil] Load env.cfg from system property: /Users/fzcheng/Documents/bird_pay_sdk/server/cs-commons/cs-service-dal/target/test-classes//env.cfg
+2016-06-26 18:17:43,284 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] found mybatis configurate count: 12 from db.xml
+2016-06-26 18:17:43,284 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: advnews
+2016-06-26 18:17:43,284 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: bbs
+2016-06-26 18:17:43,284 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: cms08
+2016-06-26 18:17:43,284 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: log
+2016-06-26 18:17:43,284 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: message
+2016-06-26 18:17:43,284 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: misc
+2016-06-26 18:17:43,285 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: pub
+2016-06-26 18:17:43,285 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: usedcar
+2016-06-26 18:17:43,285 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: user
+2016-06-26 18:17:43,285 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: wz
+2016-06-26 18:17:43,285 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: message_salve
+2016-06-26 18:17:43,285 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: memory_db
+2016-06-26 18:17:43,306 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/advnews/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 18:17:43,337 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/bbs/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 18:17:43,350 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/cms08/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 18:17:43,370 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/log/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 18:17:43,380 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/message/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 18:17:43,395 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/misc/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 18:17:43,406 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/pub/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 18:17:43,414 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/usedcar/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 18:17:43,422 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/user/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 18:17:43,430 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/wz/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 18:17:43,440 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/message/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 18:17:43,448 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/pub/xmlmap/PubCarMapper.xml, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 18:17:43,456 [ERROR] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Reload exception: org.apache.ibatis.builder.BuilderException: Error resolving class . Cause: org.apache.ibatis.type.TypeException: Could not resolve type alias 'org.apache.commons.collections.map.CaseInsensitiveMap'.  Cause: java.lang.ClassNotFoundException: Cannot find class: org.apache.commons.collections.map.CaseInsensitiveMap
+org.apache.ibatis.builder.BuilderException: Error resolving class . Cause: org.apache.ibatis.type.TypeException: Could not resolve type alias 'org.apache.commons.collections.map.CaseInsensitiveMap'.  Cause: java.lang.ClassNotFoundException: Cannot find class: org.apache.commons.collections.map.CaseInsensitiveMap
+	at org.apache.ibatis.builder.BaseBuilder.resolveClass(BaseBuilder.java:69)
+	at org.apache.ibatis.builder.xml.XMLStatementBuilder.parseStatementNode(XMLStatementBuilder.java:34)
+	at com.cheyooh.service.dal.mybatis.SelfConfiguration.parseStatementNodes(SelfConfiguration.java:564)
+	at com.cheyooh.service.dal.mybatis.SelfConfiguration.buildStatementsForNamespace(SelfConfiguration.java:553)
+	at com.cheyooh.service.dal.mybatis.SelfConfiguration.buildAllStatements(SelfConfiguration.java:507)
+	at com.cheyooh.service.dal.mybatis.SelfConfiguration.getMappedStatements(SelfConfiguration.java:436)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.getMappedStatements(XmlConfiguration.java:368)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.loadCurrentConfigs(ConfigurationManager.java:384)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:350)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+Caused by: org.apache.ibatis.type.TypeException: Could not resolve type alias 'org.apache.commons.collections.map.CaseInsensitiveMap'.  Cause: java.lang.ClassNotFoundException: Cannot find class: org.apache.commons.collections.map.CaseInsensitiveMap
+	at org.apache.ibatis.type.TypeAliasRegistry.resolveAlias(TypeAliasRegistry.java:85)
+	at org.apache.ibatis.builder.BaseBuilder.resolveAlias(BaseBuilder.java:93)
+	at org.apache.ibatis.builder.BaseBuilder.resolveClass(BaseBuilder.java:67)
+	... 11 more
+Caused by: java.lang.ClassNotFoundException: Cannot find class: org.apache.commons.collections.map.CaseInsensitiveMap
+	at org.apache.ibatis.io.ClassLoaderWrapper.classForName(ClassLoaderWrapper.java:173)
+	at org.apache.ibatis.io.ClassLoaderWrapper.classForName(ClassLoaderWrapper.java:72)
+	at org.apache.ibatis.io.Resources.classForName(Resources.java:235)
+	at org.apache.ibatis.type.TypeAliasRegistry.resolveAlias(TypeAliasRegistry.java:81)
+	... 13 more
+2016-06-26 18:17:44,457 [INFO] [com.cheyooh.service.dal.ENVSetup] Copy xmlmap2/MiscDDQMapper_v1.xml -> xmlmap/MiscDDQMapper.xml
+2016-06-26 18:17:45,460 [INFO] [com.cheyooh.service.dal.ENVSetup] Copy xmlmap2/MiscDDQMapper_v2.xml -> xmlmap/MiscDDQMapper.xml
+2016-06-26 18:17:46,462 [INFO] [com.cheyooh.service.dal.ENVSetup] Copy xmlmap2/MiscDDQMapper_v0.xml -> xmlmap/MiscDDQMapper.xml
+2016-06-26 18:17:47,462 [INFO] [com.cheyooh.service.dal.ENVSetup] Copy xmlmap2/MiscDDQMapper_v1.xml -> xmlmap/MiscDDQMapper.xml
+2016-06-26 18:42:24,647 [WARN] [com.cheyooh.service.dal.mybatis.ConfigurationManager] DBCfg class path: /Users/fzcheng/Documents/bird_pay_sdk/server/cs-commons/cs-service-dal/target/test-classes/mybatis
+2016-06-26 18:42:24,720 [INFO] [com.cheyooh.service.dal.TestConcurrentMapperReload] Waiting for all thread exit ...
+2016-06-26 18:42:24,720 [INFO] [com.cheyooh.service.dal.ENVSetup] Copy xmlmap2/MiscDDQMapper_v0.xml -> xmlmap/MiscDDQMapper.xml
+2016-06-26 18:42:24,756 [INFO] [com.cheyooh.tools.cfg.EnvUtil] Load env.cfg from system property: /Users/fzcheng/Documents/bird_pay_sdk/server/cs-commons/cs-service-dal/target/test-classes//env.cfg
+2016-06-26 18:42:24,820 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] found mybatis configurate count: 12 from db.xml
+2016-06-26 18:42:24,820 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: advnews
+2016-06-26 18:42:24,820 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: bbs
+2016-06-26 18:42:24,820 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: cms08
+2016-06-26 18:42:24,820 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: log
+2016-06-26 18:42:24,820 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: message
+2016-06-26 18:42:24,820 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: misc
+2016-06-26 18:42:24,820 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: pub
+2016-06-26 18:42:24,821 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: usedcar
+2016-06-26 18:42:24,821 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: user
+2016-06-26 18:42:24,821 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: wz
+2016-06-26 18:42:24,821 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: message_salve
+2016-06-26 18:42:24,821 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: memory_db
+2016-06-26 18:42:24,841 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/advnews/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 18:42:24,870 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/bbs/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 18:42:24,882 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/cms08/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 18:42:24,904 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/log/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 18:42:24,914 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/message/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 18:42:24,931 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/misc/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 18:42:24,941 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/pub/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 18:42:24,949 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/usedcar/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 18:42:24,957 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/user/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 18:42:24,964 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/wz/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 18:42:24,973 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/message/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 18:42:24,983 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/pub/xmlmap/PubCarMapper.xml, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 18:42:24,990 [ERROR] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Reload exception: org.apache.ibatis.builder.BuilderException: Error resolving class . Cause: org.apache.ibatis.type.TypeException: Could not resolve type alias 'org.apache.commons.collections.map.CaseInsensitiveMap'.  Cause: java.lang.ClassNotFoundException: Cannot find class: org.apache.commons.collections.map.CaseInsensitiveMap
+org.apache.ibatis.builder.BuilderException: Error resolving class . Cause: org.apache.ibatis.type.TypeException: Could not resolve type alias 'org.apache.commons.collections.map.CaseInsensitiveMap'.  Cause: java.lang.ClassNotFoundException: Cannot find class: org.apache.commons.collections.map.CaseInsensitiveMap
+	at org.apache.ibatis.builder.BaseBuilder.resolveClass(BaseBuilder.java:69)
+	at org.apache.ibatis.builder.xml.XMLStatementBuilder.parseStatementNode(XMLStatementBuilder.java:34)
+	at com.cheyooh.service.dal.mybatis.SelfConfiguration.parseStatementNodes(SelfConfiguration.java:564)
+	at com.cheyooh.service.dal.mybatis.SelfConfiguration.buildStatementsForNamespace(SelfConfiguration.java:553)
+	at com.cheyooh.service.dal.mybatis.SelfConfiguration.buildAllStatements(SelfConfiguration.java:507)
+	at com.cheyooh.service.dal.mybatis.SelfConfiguration.getMappedStatements(SelfConfiguration.java:436)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.getMappedStatements(XmlConfiguration.java:368)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.loadCurrentConfigs(ConfigurationManager.java:384)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:350)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+Caused by: org.apache.ibatis.type.TypeException: Could not resolve type alias 'org.apache.commons.collections.map.CaseInsensitiveMap'.  Cause: java.lang.ClassNotFoundException: Cannot find class: org.apache.commons.collections.map.CaseInsensitiveMap
+	at org.apache.ibatis.type.TypeAliasRegistry.resolveAlias(TypeAliasRegistry.java:85)
+	at org.apache.ibatis.builder.BaseBuilder.resolveAlias(BaseBuilder.java:93)
+	at org.apache.ibatis.builder.BaseBuilder.resolveClass(BaseBuilder.java:67)
+	... 11 more
+Caused by: java.lang.ClassNotFoundException: Cannot find class: org.apache.commons.collections.map.CaseInsensitiveMap
+	at org.apache.ibatis.io.ClassLoaderWrapper.classForName(ClassLoaderWrapper.java:173)
+	at org.apache.ibatis.io.ClassLoaderWrapper.classForName(ClassLoaderWrapper.java:72)
+	at org.apache.ibatis.io.Resources.classForName(Resources.java:235)
+	at org.apache.ibatis.type.TypeAliasRegistry.resolveAlias(TypeAliasRegistry.java:81)
+	... 13 more
+2016-06-26 18:42:25,993 [INFO] [com.cheyooh.service.dal.ENVSetup] Copy xmlmap2/MiscDDQMapper_v1.xml -> xmlmap/MiscDDQMapper.xml
+2016-06-26 18:42:26,995 [INFO] [com.cheyooh.service.dal.ENVSetup] Copy xmlmap2/MiscDDQMapper_v2.xml -> xmlmap/MiscDDQMapper.xml
+2016-06-26 18:42:27,998 [INFO] [com.cheyooh.service.dal.ENVSetup] Copy xmlmap2/MiscDDQMapper_v0.xml -> xmlmap/MiscDDQMapper.xml
+2016-06-26 18:42:29,000 [INFO] [com.cheyooh.service.dal.ENVSetup] Copy xmlmap2/MiscDDQMapper_v1.xml -> xmlmap/MiscDDQMapper.xml
+2016-06-26 18:43:58,728 [WARN] [com.cheyooh.service.dal.mybatis.ConfigurationManager] DBCfg class path: /Users/fzcheng/Documents/bird_pay_sdk/server/cs-commons/cs-service-dal/target/test-classes/mybatis
+2016-06-26 18:43:58,801 [INFO] [com.cheyooh.service.dal.TestConcurrentMapperReload] Waiting for all thread exit ...
+2016-06-26 18:43:58,801 [INFO] [com.cheyooh.service.dal.ENVSetup] Copy xmlmap2/MiscDDQMapper_v0.xml -> xmlmap/MiscDDQMapper.xml
+2016-06-26 18:43:58,839 [INFO] [com.cheyooh.tools.cfg.EnvUtil] Load env.cfg from system property: /Users/fzcheng/Documents/bird_pay_sdk/server/cs-commons/cs-service-dal/target/test-classes//env.cfg
+2016-06-26 18:43:58,903 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] found mybatis configurate count: 12 from db.xml
+2016-06-26 18:43:58,903 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: advnews
+2016-06-26 18:43:58,904 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: bbs
+2016-06-26 18:43:58,904 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: cms08
+2016-06-26 18:43:58,904 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: log
+2016-06-26 18:43:58,904 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: message
+2016-06-26 18:43:58,904 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: misc
+2016-06-26 18:43:58,904 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: pub
+2016-06-26 18:43:58,904 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: usedcar
+2016-06-26 18:43:58,904 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: user
+2016-06-26 18:43:58,904 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: wz
+2016-06-26 18:43:58,904 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: message_salve
+2016-06-26 18:43:58,905 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Add: memory_db
+2016-06-26 18:43:58,924 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/advnews/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 18:43:58,953 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/bbs/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 18:43:58,965 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/cms08/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 18:43:58,986 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/log/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 18:43:58,996 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/message/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 18:43:59,012 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/misc/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 18:43:59,024 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/pub/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 18:43:59,032 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/usedcar/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 18:43:59,041 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/user/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 18:43:59,049 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/wz/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 18:43:59,058 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/message/xmlmap/, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 18:43:59,068 [ERROR] [com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder] Exception load resource: com/cheyooh/service/dal/db/pub/xmlmap/PubCarMapper.xml, java.lang.NullPointerException
+java.lang.NullPointerException
+	at org.apache.ibatis.io.Resources.getResourceAsFile(Resources.java:167)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.mapperElement(SelfXMLConfigBuilder.java:239)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parseConfiguration(SelfXMLConfigBuilder.java:86)
+	at com.cheyooh.service.dal.mybatis.SelfXMLConfigBuilder.parse(SelfXMLConfigBuilder.java:67)
+	at com.cheyooh.service.dal.mybatis.XmlConfiguration.loadConfig(XmlConfiguration.java:93)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.checkIfCfgChanged(ConfigurationManager.java:344)
+	at com.cheyooh.service.dal.mybatis.ConfigurationManager.reload(ConfigurationManager.java:301)
+	at com.cheyooh.service.dal.ENVSetup.copyToXmlmap(ENVSetup.java:45)
+	at com.cheyooh.service.dal.TestConcurrentMapperReload$2.run(TestConcurrentMapperReload.java:56)
+2016-06-26 18:43:59,089 [INFO] [com.cheyooh.service.dal.mybatis.ConfigurationManager] Loaded mybatis configs: 12
+2016-06-26 18:44:00,090 [INFO] [com.cheyooh.service.dal.ENVSetup] Copy xmlmap2/MiscDDQMapper_v1.xml -> xmlmap/MiscDDQMapper.xml
+2016-06-26 18:44:00,092 [INFO] [com.cheyooh.service.dal.mybatis.SelfConfiguration] Reload mapper: file:///Users/fzcheng/Documents/bird_pay_sdk/server/cs-commons/cs-service-dal/target/test-classes/mybatis/xmlmap/MiscDDQMapper.xml
+2016-06-26 18:44:01,102 [INFO] [com.cheyooh.service.dal.ENVSetup] Copy xmlmap2/MiscDDQMapper_v2.xml -> xmlmap/MiscDDQMapper.xml
+2016-06-26 18:44:01,104 [INFO] [com.cheyooh.service.dal.mybatis.SelfConfiguration] Reload mapper: file:///Users/fzcheng/Documents/bird_pay_sdk/server/cs-commons/cs-service-dal/target/test-classes/mybatis/xmlmap/MiscDDQMapper.xml
+2016-06-26 18:44:02,116 [INFO] [com.cheyooh.service.dal.ENVSetup] Copy xmlmap2/MiscDDQMapper_v0.xml -> xmlmap/MiscDDQMapper.xml
+2016-06-26 18:44:02,118 [INFO] [com.cheyooh.service.dal.mybatis.SelfConfiguration] Reload mapper: file:///Users/fzcheng/Documents/bird_pay_sdk/server/cs-commons/cs-service-dal/target/test-classes/mybatis/xmlmap/MiscDDQMapper.xml
+2016-06-26 18:44:03,130 [INFO] [com.cheyooh.service.dal.ENVSetup] Copy xmlmap2/MiscDDQMapper_v1.xml -> xmlmap/MiscDDQMapper.xml
+2016-06-26 18:44:03,132 [INFO] [com.cheyooh.service.dal.mybatis.SelfConfiguration] Reload mapper: file:///Users/fzcheng/Documents/bird_pay_sdk/server/cs-commons/cs-service-dal/target/test-classes/mybatis/xmlmap/MiscDDQMapper.xml

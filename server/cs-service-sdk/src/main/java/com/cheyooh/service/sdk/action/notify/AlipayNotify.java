@@ -107,7 +107,7 @@ public class AlipayNotify extends AbstractNotifyService<Cmd> {
 					sdkOrderMapper.updateByPrimaryKey(order);
 					dal.commit();
 					
-					NotifyOrder.doNotify(order);
+					//NotifyOrder.doNotify(order);
 					
 					logger.info("Paid status: "+order.getStatus()+"("+alipay.getNotifyTradeStatus()+"), payid: "+order.getPayId());
 					

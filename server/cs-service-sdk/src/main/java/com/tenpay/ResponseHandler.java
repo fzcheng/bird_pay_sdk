@@ -14,7 +14,7 @@ import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.h2.util.New;
+//import org.h2.util.New;
 
 import com.tenpay.util.MD5Util;
 import com.tenpay.util.TenpayUtil;

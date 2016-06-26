@@ -1,6 +1,6 @@
 /*
  * This file is auto-generated.  DO NOT MODIFY.
- * Original file: /Users/a/Documents/bird_pay_sdk/client/Android/LeyoMegicBirdPaySDK/src/com/legame/paysdk/download/IDownloadFileCallback.aidl
+ * Original file: /Users/fzcheng/Documents/bird_pay_sdk/client/Android/LeyoMegicBirdPaySDK/src/com/legame/paysdk/download/IDownloadFileCallback.aidl
  */
 package com.legame.paysdk.download;
 public interface IDownloadFileCallback extends android.os.IInterface

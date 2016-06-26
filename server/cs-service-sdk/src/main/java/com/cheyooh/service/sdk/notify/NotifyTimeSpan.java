@@ -28,13 +28,13 @@ public class NotifyTimeSpan {
 		return spans.size();
 	}
 	
-	public void setSpans(List<String> ts){		
+	public void setSpans(List<Object> ts){		
 		try{			 
 			if(ts!=null && ts.size()>0){
 				List<TimeSpan> tmp=new ArrayList<TimeSpan>();
 				
-				for(String s:ts){
-					tmp.add(new TimeSpan(s));
+				for(Object s:ts){
+					tmp.add(new TimeSpan((String)s));
 				}
 				
 				if(tmp.size()>0){

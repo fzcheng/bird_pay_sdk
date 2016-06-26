@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.cheyooh.service.dal.db.misc.dao.MiscDDQMapper;
+//import com.cheyooh.service.dal.db.misc.dao.MiscDDQMapper;
 import com.cheyooh.tools.log.Logger;
 
 /**
@@ -78,31 +78,31 @@ public class TestConcurrentMapperReload {
 	
 	
 	private void executeQuery(CountDownLatch cdl,AtomicInteger success){
-		logger.info("Run thread: "+Thread.currentThread().getName());
-		
-		DAL dal=DALFactory.createDAL();
-		try{			 
-			Random rm=new Random();
-			
-			MiscDDQMapper mapper=dal.getMapper(MiscDDQMapper.class);
-			for(int i=0;i<100;i++){	
-				try{ Thread.sleep(1+rm.nextInt(30)); }catch(Exception e){}
-				
-				List<Map<String,Object>> r=mapper.DDQuery("selectTest", null);
-				
-				Assert.assertTrue(r!=null && r.size()==1);								
-				Assert.assertTrue(r.get(0).containsKey("1") || r.get(0).containsKey("a"));
-			 	
-				success.incrementAndGet();
-			}
-		}catch(Exception e){
-			logger.error(e);
-		}finally{
-			dal.close();
-			
-			cdl.countDown();
-			logger.info("Finished thread: "+Thread.currentThread().getName());
-		}
+//		logger.info("Run thread: "+Thread.currentThread().getName());
+//		
+//		DAL dal=DALFactory.createDAL();
+//		try{			 
+//			Random rm=new Random();
+//			
+//			MiscDDQMapper mapper=dal.getMapper(MiscDDQMapper.class);
+//			for(int i=0;i<100;i++){	
+//				try{ Thread.sleep(1+rm.nextInt(30)); }catch(Exception e){}
+//				
+//				List<Map<String,Object>> r=mapper.DDQuery("selectTest", null);
+//				
+//				Assert.assertTrue(r!=null && r.size()==1);								
+//				Assert.assertTrue(r.get(0).containsKey("1") || r.get(0).containsKey("a"));
+//			 	
+//				success.incrementAndGet();
+//			}
+//		}catch(Exception e){
+//			logger.error(e);
+//		}finally{
+//			dal.close();
+//			
+//			cdl.countDown();
+//			logger.info("Finished thread: "+Thread.currentThread().getName());
+//		}
 	}
 	 
 }
